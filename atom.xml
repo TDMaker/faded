@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tdmaker.github.io/faded/</id>
     <title>Gridea</title>
-    <updated>2020-04-01T06:47:50.384Z</updated>
+    <updated>2020-04-01T07:38:45.628Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tdmaker.github.io/faded/"/>
     <link rel="self" href="https://tdmaker.github.io/faded/atom.xml"/>
@@ -10,6 +10,44 @@
     <logo>https://tdmaker.github.io/faded/images/avatar.png</logo>
     <icon>https://tdmaker.github.io/faded/favicon.ico</icon>
     <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[重要的正则表达式]]></title>
+        <id>https://tdmaker.github.io/faded/post/important-regular-expressions/</id>
+        <link href="https://tdmaker.github.io/faded/post/important-regular-expressions/">
+        </link>
+        <updated>2020-04-01T07:30:46.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="火车车次">火车车次</h2>
+<p><code>/^[GCDZTSPKXLY1-9]\d{1,4}$/</code></p>
+<h2 id="手机机身码imei">手机机身码(IMEI)</h2>
+<p><code>/^\d{15,17}$/</code></p>
+<h2 id="必须带端口号的网址或ip">必须带端口号的网址(或ip)</h2>
+<p><code>/^(((ht|f)tps?):\/\/)?[\w\-]+(\.[\w\-]+)+:\d{0,5}\/?/</code></p>
+<h2 id="网址支持端口和参数和参数">网址(支持端口和&quot;?+参数&quot;和&quot;#+参数)</h2>
+<p><code>/^(((ht|f)tps?):\/\/)?[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&amp;:\/~+#]*[\w\-@?^=%&amp;\/~+#])?$/</code></p>
+<h2 id="统一社会信用代码">统一社会信用代码</h2>
+<p><code>/^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$/</code></p>
+<h2 id="迅雷链接">迅雷链接</h2>
+<p><code>/^thunderx?:\/\/[a-zA-Z\d]+=$/</code></p>
+<h2 id="ed2k链接宽松匹配">ed2k链接(宽松匹配)</h2>
+<p><code>/^ed2k:\/\/\|file\|.+\|\/$/</code></p>
+<h2 id="磁力链接宽松匹配">磁力链接(宽松匹配)</h2>
+<p><code>/^magnet:\?xt=urn:btih:[0-9a-fA-F]{40,}.*$/</code></p>
+<h2 id="子网掩码">子网掩码</h2>
+<p><code>/^(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(?:\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/</code></p>
+<h2 id="linux文件夹路径">Linux&quot;文件夹&quot;路径</h2>
+<p><code>/^\/(\w+\/?)+$/</code></p>
+<h2 id="linux文件路径">Linux&quot;文件&quot;路径</h2>
+<p><code>/^\/(\w+\/)+\w+\.\w+$/</code></p>
+<h2 id="window下文件夹路径">Window下&quot;文件夹&quot;路径</h2>
+<p><code>/^[a-zA-Z]:\\(?:\w+\\?)*$/</code></p>
+<h2 id="window下文件路径">Window下&quot;文件&quot;路径</h2>
+<p><code>/^[a-zA-Z]:\\(?:\w+\\)*\w+\.\w+$/</code></p>
+<h2 id="a股代码">A股代码</h2>
+<p><code>/^(s[hz]|S[HZ])(000[\d]{3}|002[\d]{3}|300[\d]{3}|600[\d]{3}|60[\d]{4})$/</code></p>
+<h2 id="大于等于0-小于等于150-支持小数位出现5-如1455-用于判断考卷分数">大于等于0, 小于等于150, 支持小数位出现5, 如145.5, 用于判断考卷分数</h2>
+<p><code>/^150$|^(?:\d|[1-9]\d|1[0-4]\d)(?:.5)?$/</code></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://tdmaker.github.io/faded/post/hello-gridea/</id>

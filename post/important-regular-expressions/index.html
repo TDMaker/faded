@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Hello Gridea | Gridea</title>
+<title>重要的正则表达式 | Gridea</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,15 +18,13 @@
 
 
 
-    <meta name="description" content="👏  欢迎使用 Gridea ！
-✍️  Gridea 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...
-
-Github
-Gridea 主页
-示例网站
-特性👇
-📝  你可以使用最酷的 Markdo..." />
-    <meta name="keywords" content="Gridea" />
+    <meta name="description" content="火车车次
+/^[GCDZTSPKXLY1-9]\d{1,4}$/
+手机机身码(IMEI)
+/^\d{15,17}$/
+必须带端口号的网址(或ip)
+/^(((ht|f)tps?):\/\/)?[\w\-]+(\.[\w\-]+)+:\d{0..." />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
@@ -97,45 +95,52 @@ Gridea 主页
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Hello Gridea</h2>
-            <div class="post-date">2018-12-12</div>
-            
-              <div class="feature-container" style="background-image: url('https://tdmaker.github.io/faded//post-images/hello-gridea.png')">
-              </div>
+            <h2 class="post-title">重要的正则表达式</h2>
+            <div class="post-date">2020-04-01</div>
             
             <div class="post-content" v-pre>
-              <p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+              <h2 id="火车车次">火车车次</h2>
+<p><code>/^[GCDZTSPKXLY1-9]\d{1,4}$/</code></p>
+<h2 id="手机机身码imei">手机机身码(IMEI)</h2>
+<p><code>/^\d{15,17}$/</code></p>
+<h2 id="必须带端口号的网址或ip">必须带端口号的网址(或ip)</h2>
+<p><code>/^(((ht|f)tps?):\/\/)?[\w\-]+(\.[\w\-]+)+:\d{0,5}\/?/</code></p>
+<h2 id="网址支持端口和参数和参数">网址(支持端口和&quot;?+参数&quot;和&quot;#+参数)</h2>
+<p><code>/^(((ht|f)tps?):\/\/)?[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&amp;:\/~+#]*[\w\-@?^=%&amp;\/~+#])?$/</code></p>
+<h2 id="统一社会信用代码">统一社会信用代码</h2>
+<p><code>/^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$/</code></p>
+<h2 id="迅雷链接">迅雷链接</h2>
+<p><code>/^thunderx?:\/\/[a-zA-Z\d]+=$/</code></p>
+<h2 id="ed2k链接宽松匹配">ed2k链接(宽松匹配)</h2>
+<p><code>/^ed2k:\/\/\|file\|.+\|\/$/</code></p>
+<h2 id="磁力链接宽松匹配">磁力链接(宽松匹配)</h2>
+<p><code>/^magnet:\?xt=urn:btih:[0-9a-fA-F]{40,}.*$/</code></p>
+<h2 id="子网掩码">子网掩码</h2>
+<p><code>/^(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(?:\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/</code></p>
+<h2 id="linux文件夹路径">Linux&quot;文件夹&quot;路径</h2>
+<p><code>/^\/(\w+\/?)+$/</code></p>
+<h2 id="linux文件路径">Linux&quot;文件&quot;路径</h2>
+<p><code>/^\/(\w+\/)+\w+\.\w+$/</code></p>
+<h2 id="window下文件夹路径">Window下&quot;文件夹&quot;路径</h2>
+<p><code>/^[a-zA-Z]:\\(?:\w+\\?)*$/</code></p>
+<h2 id="window下文件路径">Window下&quot;文件&quot;路径</h2>
+<p><code>/^[a-zA-Z]:\\(?:\w+\\)*\w+\.\w+$/</code></p>
+<h2 id="a股代码">A股代码</h2>
+<p><code>/^(s[hz]|S[HZ])(000[\d]{3}|002[\d]{3}|300[\d]{3}|600[\d]{3}|60[\d]{4})$/</code></p>
+<h2 id="大于等于0-小于等于150-支持小数位出现5-如1455-用于判断考卷分数">大于等于0, 小于等于150, 支持小数位出现5, 如145.5, 用于判断考卷分数</h2>
+<p><code>/^150$|^(?:\d|[1-9]\d|1[0-4]\d)(?:.5)?$/</code></p>
 
             </div>
             
-              <div class="tag-container">
-                
-                  <a href="https://tdmaker.github.io/faded/tag/Ocqfzle0f/" class="tag">
-                    Gridea
-                  </a>
-                
-              </div>
             
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://tdmaker.github.io/faded/post/hello-gridea/">
+                  <h3 class="post-title">
+                    Hello Gridea
+                  </h3>
+                </a>
+              </div>
             
 
             
