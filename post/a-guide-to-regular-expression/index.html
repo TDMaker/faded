@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>正则表达式简介 | Gridea</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://tdmaker.github.io/faded//favicon.ico?v=1585789972785">
+<link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="基本语句
+锚点：^ 和 $
+^The 匹配任何以“The”开头的字符串。
+end$ 匹配以“end”为结尾的字符串。
+^The end$ 匹配从“The”开始到“end”结束的字符串。
+roar 匹配任何带有文本“roar”的字符串。
+
+数..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://tdmaker.github.io/faded/">
+        <img src="https://tdmaker.github.io/faded//images/avatar.png?v=1585789972785" class="site-logo">
+        <h1 class="site-title">Gridea</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://tdmaker.github.io/faded//atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">正则表达式简介</h2>
+            <div class="post-date">2020-04-02</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="基本语句">基本语句</h2>
+<h3 id="锚点-和">锚点：<code>^</code> 和 <code>$</code></h3>
+<p><code>^The</code> 匹配任何以“The”开头的字符串。<br>
+<code>end$</code> 匹配以“end”为结尾的字符串。<br>
+<code>^The end$</code> 匹配从“The”开始到“end”结束的字符串。<br>
+<code>roar</code> 匹配任何带有文本“roar”的字符串。</p>
+<!-- more -->
+<h3 id="数量符-和-和-和">数量符：<code>*</code> 和 <code>+</code> 和 <code>?</code> 和 <code>{}</code></h3>
+<p><code>abc*</code> 匹配在“ab”后面跟着 0 个或多个“c”的字符串。<br>
+<code>abc+</code> 匹配在“ab”后面跟着 1 个或多个“c”的字符串。<br>
+<code>abc?</code> 匹配在“ab”后面跟着 0 个或 1 个“c”的字符串。<br>
+<code>abc{2}</code> 匹配在“ab”后面跟着 2 个“c”的字符串。<br>
+<code>abc{2,}</code> 匹配在“ab”后面跟着 2 个或更多“c”的字符串。<br>
+<code>abc{2,5}</code> 匹配在“ab”后面跟着 2 到 5 个“c”的字符串。<br>
+<code>a(bc)*</code> 匹配在“a”后面跟着 0 个或更多“bc”序列的字符串。<br>
+<code>a(bc){2,5}</code> 匹配在“a”后面跟着 2 到 5 个“bc”序列的字符串。</p>
+<h3 id="或运算符-和">或运算符：<code>|</code> 和 <code>[]</code></h3>
+<p><code>a(b|c)</code> 匹配在“a”后面跟着“b”或“c”的字符串。<br>
+<code>a[bc]</code> 匹配在“a”后面跟着“b”或“c”的字符串。</p>
+<h3 id="字符类d-和-w-和-s-和">字符类：<code>\d</code> 和 <code>\w</code> 和 <code>\s</code> 和 <code>.</code></h3>
+<p><code>\d</code> 匹配数字型的单个字符。<br>
+<code>\w</code> 匹配单个词字（字母加下划线）。<br>
+<code>\s</code> 匹配单个空格字符（包括制表符和换行符）。<br>
+<code>.</code> 匹配任意字符。<br>
+使用 <code>.</code> 运算符需要非常小心，因为常见类或排除型字符类都要更快与精确。<code>\d</code>、<code>\w</code> 和 <code>\s</code> 同样有它们各自的排除型字符类，即 <code>\D</code>、<code>\W</code> 和 <code>\S</code>。例如 <code>\D</code> 将执行与 <code>\d</code> 完全相反的匹配方法：<br>
+<code>\D</code> 匹配单个非数字型的字符。<br>
+为了正确地匹配，我们必须使用转义符反斜杠 <code>\</code> 定义我们需要匹配的符号 <code>^.[$()|*+?{\</code>，因为我们可能认为这些符号在原文本中有特殊的含义。<br>
+<code>\$\d</code> 匹配在单个数字前有符号“$”的字符串。<br>
+注意我们同样能匹配 non-printable 字符，例如 Tab 符 <code>\t</code>、换行符 <code>\n</code> 和回车符 <code>\r</code>。</p>
+<h3 id="flags">Flags</h3>
+<p>模式的结尾我们通常可以指定以下 flag 配置或它们的组合：</p>
+<ul>
+<li>g（global）在第一次完成匹配后并不会返回结果，它会继续搜索剩下的文本。</li>
+<li>m（multi line）允许使用^和$匹配一行的开始和结尾，而不是整个序列。</li>
+<li>i（insensitive）令整个表达式不区分大小写（例如/aBc/i 将匹配 AbC）。</li>
+</ul>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://tdmaker.github.io/faded/post/important-regular-expressions/">
+                  <h3 class="post-title">
+                    重要的正则表达式
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>
