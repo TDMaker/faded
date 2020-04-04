@@ -1,0 +1,221 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>一些常用的正则表达式案例 | Typhoeus</title>
+<link rel="shortcut icon" href="https://tdmaker.github.io/faded//favicon.ico?v=1585971499051">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="一些常用的正则表达式案例 | Typhoeus - Atom Feed" href="https://tdmaker.github.io/faded//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="正则大全 https://any86.github.io/any-rule/
+
+
+火车车次 /^[GCDZTSPKXLY1-9]\d{1,4}$/
+手机机身码(IMEI) /^\d{15,17}$/
+必须带端口号的网址(或ip) /^(((..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://tdmaker.github.io/faded/">
+  <img class="avatar" src="https://tdmaker.github.io/faded//images/avatar.png?v=1585971499051" alt="">
+  </a>
+  <h1 class="site-title">
+    Typhoeus
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              一些常用的正则表达式案例
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-04-01
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>正则大全 <a href="https://any86.github.io/any-rule/">https://any86.github.io/any-rule/</a></p>
+<!-- more -->
+<ul>
+<li>火车车次 <code>/^[GCDZTSPKXLY1-9]\d{1,4}$/</code></li>
+<li>手机机身码(IMEI) <code>/^\d{15,17}$/</code></li>
+<li>必须带端口号的网址(或ip) <code>/^(((ht|f)tps?):\/\/)?[\w\-]+(\.[\w\-]+)+:\d{0,5}\/?/</code></li>
+<li>网址(支持端口和&quot;?+参数&quot;和&quot;#+参数) <code>/^(((ht|f)tps?):\/\/)?[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&amp;:\/~+#]*[\w\-@?^=%&amp;\/~+#])?$/</code></li>
+<li>统一社会信用代码 <code>/^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$/</code></li>
+<li>迅雷链接 <code>/^thunderx?:\/\/[a-zA-Z\d]+=$/</code></li>
+<li>ed2k链接(宽松匹配) <code>/^ed2k:\/\/\|file\|.+\|\/$/</code></li>
+<li>磁力链接(宽松匹配) <code>/^magnet:\?xt=urn:btih:[0-9a-fA-F]{40,}.*$/</code></li>
+<li>子网掩码 <code>/^(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(?:\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/</code></li>
+<li>Linux&quot;文件夹&quot;路径 <code>/^\/(\w+\/?)+$/</code></li>
+<li>Linux&quot;文件&quot;路径 <code>/^\/(\w+\/)+\w+\.\w+$/</code></li>
+<li>Window下&quot;文件夹&quot;路径 <code>/^[a-zA-Z]:\\(?:\w+\\?)*$/</code></li>
+<li>Window下&quot;文件&quot;路径 <code>/^[a-zA-Z]:\\(?:\w+\\)*\w+\.\w+$/</code></li>
+<li>A股代码 <code>/^(s[hz]|S[HZ])(000[\d]{3}|002[\d]{3}|300[\d]{3}|600[\d]{3}|60[\d]{4})$/</code></li>
+<li>考卷分数 <code>/^150$|^(?:\d|[1-9]\d|1[0-4]\d)(?:.5)?$/</code> 大于等于0, 小于等于150, 支持小数位出现5, 如145.5</li>
+<li>校验密码强度 <code>^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$</code> 密码的强度必须是包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间。<br>
+<code>/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\_)\w{8,20}$/</code> 只允许字母数字下划线，必须含有大小写和数字和下划线</li>
+<li>校验中文 <code>^[\\u4e00-\\u9fa5]{0,}$</code></li>
+<li>由数字、26个英文字母或下划线组成的字符串 <code>^\\w+$</code></li>
+<li>校验E-Mail 地址 <code>[\\w!#$%&amp;'*+/=?^_</code>{|}~-]+(?:\.[\w!#$%&amp;'*+/=?^_<code>{|}~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?</code></li>
+<li>校验日期 <code>^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$</code> “yyyy-mm-dd“ 格式的日期校验，已考虑平闰年。</li>
+<li>校验金额 <code>^[0-9]+(.[0-9]{2})?$</code> 金额校验，精确到2位小数。</li>
+<li>判断IE的版本 <code>^.*MSIE [5-8](?:\\.[0-9]+)?(?!.*Trident\\/[5-9]\\.0).*$</code></li>
+<li>校验IPv4地址 <code>\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b</code></li>
+<li>校验IPv6地址 <code>(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))</code></li>
+<li>提取URL链接 <code>^(f|ht){1}(tp|tps):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&amp;=]*)?</code></li>
+<li>文件路径及扩展名校验 <code>^([a-zA-Z]\\:|\\\\)\\\\([^\\\\]+\\\\)*[^\\/:*?&quot;&lt;&gt;|]+\\.txt(l)?$</code> 验证windows下文件路径和扩展名（以 .txt 文件为例）</li>
+<li>提取Color Hex Codes <code>^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$</code></li>
+<li>提取网页图片 <code>\\&lt; *[img][^\\\\&gt;]*[src] *= *[\\&quot;\\']{0,1}([^\\&quot;\\'\\ &gt;]*)</code></li>
+<li>提取页面超链接 <code>(&lt;a\\s*(?!.*\\brel=)[^&gt;]*)(href=&quot;https?:\\/\\/)((?!(?:(?:www\\.)?'.implode('|(?:www\\.)?', $follow_list).'))[^&quot;]+)&quot;((?!.*\\brel=)[^&gt;]*)(?:[^&gt;]*)&gt;</code></li>
+<li>查找CSS属性 <code>^\\s*[a-zA-Z\\-]+\\s*[:]{1}\\s[a-zA-Z0-9\\s.#]+[;]{1}</code></li>
+<li>抽取注释 <code>&lt;!--(.*?)--&gt;</code></li>
+<li>匹配HTML标签 <code>&lt;\\/?\\w+((\\s+\\w+(\\s*=\\s*(?:&quot;.*?&quot;|'.*?'|[\\^'&quot;&gt;\\s]+))?)+\\s*|\\s*)\\/?&gt;</code></li>
+<li>银行卡四位一空格 <code>str.replace(/\s/g, '').replace(/(.{4})/g, &quot;$1 &quot;);</code></li>
+<li>用户名正则 <code>/^[a-zA-Z0-9_-]{4,16}$/</code> 4到16位（字母，数字，下划线，减号）</li>
+<li>密码正则 <code>^[a-zA-Z]\w{5,17}$</code> 以字母开头，长度在6~18之间，只能包含字母、数字和下划线</li>
+<li>强密码正则 <code>/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&amp;*? ]).*$/</code> 最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符</li>
+<li>QQ 号正则 <code>/^[1-9][0-9]{4,10}$/</code></li>
+<li>微信号正则 <code>/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/</code> 6至20位，以字母开头，字母，数字，减号，下划线</li>
+<li>特殊字符正则 <code>/[&quot;'&lt;&gt;%;)(&amp;+]+-!！@#$~/</code></li>
+<li>域名正则 <code>[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(/.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+/.?</code></li>
+<li>车牌号正则 <code>/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/</code></li>
+<li>护照正则 <code>/^(P\d{7}|G\d{7,8}|TH\d{7,8}|S\d{7,8}|A\d{7,8}|L\d{7,8}|\d{9}|D\d+|1[4,5]\d{7})$/</code></li>
+<li>固定电话正则 <code>(\(\d{3,4}\)|\d{3,4}-|\s)?\d{8}</code></li>
+<li>邮政编码正则 <code>[1-9]{1}(\d+){5}</code></li>
+<li>经度正则 <code>/^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,6})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,6}|180)$/</code></li>
+<li>维度正则 <code>/^(\-|\+)?([0-8]?\d{1}\.\d{0,6}|90\.0{0,6}|[0-8]?\d{1}|90)$/</code></li>
+<li></li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://tdmaker.github.io/faded/post/hello-gridea/">
+              <h3 class="post-title">
+                Hello Gridea
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://tdmaker.github.io/faded//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
