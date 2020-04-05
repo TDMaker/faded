@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tdmaker.github.io/faded/</id>
     <title>Typhoeus</title>
-    <updated>2020-04-05T10:20:45.994Z</updated>
+    <updated>2020-04-05T10:23:39.247Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tdmaker.github.io/faded/"/>
     <link rel="self" href="https://tdmaker.github.io/faded/atom.xml"/>
@@ -1384,7 +1384,7 @@ $(&quot;select &gt; option:selected&quot;)
 <blockquote>
 <p><a href="https://www.jianshu.com/p/a6a8c0afac5f">多种银行卡正则</a></p>
 </blockquote>
-<pre><code>var bankcardList = [{
+<pre><code class="language-javascript">var bankcardList = [{
     bankName: &quot;中国邮政储蓄银行&quot;,
     bankCode: &quot;PSBC&quot;,
     patterns: [{
