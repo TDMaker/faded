@@ -1,0 +1,322 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>jQuery——选择器 | Typhoeus</title>
+<link rel="shortcut icon" href="https://tdmaker.github.io/faded//favicon.ico?v=1586081912249">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="jQuery——选择器 | Typhoeus - Atom Feed" href="https://tdmaker.github.io/faded//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="基本选择器
+🎼 ID 选择器：
+// 选中 id 为 myDiv 的元素，速度最快
+$(&quot;#myDiv&quot;)
+
+🎼 类选择器：
+// 选中 class 属性为 red 的所有元素
+$(&quot;.red&quot;)..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://tdmaker.github.io/faded/">
+  <img class="avatar" src="https://tdmaker.github.io/faded//images/avatar.png?v=1586081912249" alt="">
+  </a>
+  <h1 class="site-title">
+    Typhoeus
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              jQuery——选择器
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-04-05
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="基本选择器">基本选择器</h1>
+<h2 id="id-选择器">🎼 ID 选择器：</h2>
+<pre><code class="language-javascript">// 选中 id 为 myDiv 的元素，速度最快
+$(&quot;#myDiv&quot;)
+</code></pre>
+<h2 id="类选择器">🎼 类选择器：</h2>
+<pre><code class="language-javascript">// 选中 class 属性为 red 的所有元素
+$(&quot;.red&quot;)
+</code></pre>
+<h2 id="元素选择器">🎼 元素选择器：</h2>
+<pre><code class="language-javascript">// 选中所有 div 元素
+$(&quot;div&quot;)
+</code></pre>
+<h2 id="通配符选择器">🎼 通配符选择器：</h2>
+<pre><code class="language-javascript">// 选中所有元素
+$(&quot;*&quot;)
+</code></pre>
+<h2 id="复合选择器">🎼 复合选择器：</h2>
+<pre><code class="language-javascript">// 选中所有 span 元素和所有 id 为 myDiv 的元素
+$(&quot;span,#myDiv&quot;)
+</code></pre>
+<h1 id="层次选择器">层次选择器</h1>
+<h2 id="选择器1-选择器2">🎼 选择器1 选择器2：</h2>
+<pre><code class="language-javascript">// 选中 body 内的所有 div 元素
+$(&quot;body div&quot;)
+</code></pre>
+<h2 id="选择器1-选择器2-2">🎼 选择器1 &gt; 选择器2：</h2>
+<pre><code class="language-javascript">// 选中 body 内的所有直接 div 元素，不查找间接元素
+$(&quot;body &gt; div&quot;)
+</code></pre>
+<h2 id="选择器1-选择器2-3">🎼 选择器1 + 选择器2：</h2>
+<pre><code class="language-javascript">// 选中 body 内的所有 div 元素
+$(&quot;body div&quot;)
+</code></pre>
+<h2 id="选择器1-~-选择器2">🎼 选择器1 ~ 选择器2：</h2>
+<pre><code class="language-javascript">// 选中 body 内的所有 div 元素
+$(&quot;body div&quot;)
+</code></pre>
+<h1 id="基本过滤选择器">基本过滤选择器</h1>
+<h2 id="第一个元素选择器">🎼 第一个元素选择器</h2>
+<pre><code class="language-javascript">// 选中第一个 div 元素
+$(&quot;div:first&quot;)
+</code></pre>
+<h2 id="最后一个元素选择器">🎼 最后一个元素选择器</h2>
+<pre><code class="language-javascript">// 选中最后一个 div 元素
+$(&quot;div:last&quot;)
+</code></pre>
+<h2 id="排除选择器">🎼 排除选择器</h2>
+<pre><code class="language-javascript">// 选中 class 不为 red 的所有 div 元素
+$(&quot;div:not(.red)&quot;)
+</code></pre>
+<h2 id="偶数选择器">🎼 偶数选择器</h2>
+<pre><code class="language-javascript">// 选中索引值为偶数的 div 元素
+$(&quot;div:even&quot;)
+</code></pre>
+<h2 id="奇数选择器">🎼 奇数选择器</h2>
+<pre><code class="language-javascript">// 选中索引值为奇数的 div 元素
+$(&quot;div:odd&quot;)
+</code></pre>
+<h2 id="索引值选择器">🎼 索引值选择器</h2>
+<pre><code class="language-javascript">// 选中索引值为 2 的 div 元素
+$(&quot;div:eq(2)&quot;)
+// 选中索引值大于 2 的 div 元素
+$(&quot;div:gt(2)&quot;)
+// 选中索引值小于2的 div 元素
+$(&quot;div:lt(2)&quot;)
+</code></pre>
+<h1 id="内容过滤选择器">内容过滤选择器</h1>
+<pre><code class="language-javascript">// 选中所有包含文本 ok 的 div 元素
+$(&quot;div:contains(ok)&quot;)
+// 选中所有为空的 div 元素
+$(&quot;div:empty&quot;)
+// 选中所有包含 class 为 red 的 div 元素
+$(&quot;div:has(.red)&quot;)
+// 选中所有不为空的 div 元素
+$(&quot;div:parent&quot;)
+</code></pre>
+<h1 id="可见性过滤选择器">可见性过滤选择器</h1>
+<pre><code class="language-javascript">// 选中所有不可见的 div 元素
+$(&quot;div:hidden&quot;)
+// 选中所有可见的 div 元素
+$(&quot;div:visible&quot;)
+</code></pre>
+<h1 id="属性过滤选择器">属性过滤选择器</h1>
+<pre><code class="language-javascript">// 选中所有包含属性 title 的 div 元素
+$(&quot;div[title]&quot;)
+// 选中所有属性 title 等于 ok 的 div 元素
+$(&quot;div[title=ok]&quot;)
+// 选中所有属性 title 不等于 ok 的 div 元素
+$(&quot;div[title!=ok]&quot;)
+// 选中所有属性 title 值以 ok 开头的 div 元素
+$(&quot;div[title^=ok]&quot;)
+// 选中所有属性 title 值含有 ok 的 div 元素
+$(&quot;div[title*=ok]&quot;)
+// 选中所有包含属性 id，并且属性 title 值以 ok 开头的 div 元素
+$(&quot;div[id][title^=ok]&quot;)
+</code></pre>
+<h1 id="子元素过滤选择器">子元素过滤选择器</h1>
+<pre><code class="language-javascript">// 选中所有是第二个子结点的 div 元素
+$(&quot;div:nth-child(2)&quot;)
+// 选中所有是第一个子结点的 div 元素
+$(&quot;div:first-child&quot;)
+// 选中所有是最后一个子结点的 div 元素
+$(&quot;div:last-child&quot;)
+// 选中所有是唯一子结点的 div 元素
+$(&quot;div:only-child&quot;)
+</code></pre>
+<h1 id="表单属性过滤选择器">表单属性过滤选择器</h1>
+<pre><code class="language-javascript">// 选中表单内可用 input
+$(&quot;#form1 input:enabled&quot;)
+// 选中表单内不可用 input
+$(&quot;#form1 input:disabled&quot;)
+// 选中表单内所有选中的元素
+$(&quot;#form1 input:checked&quot;)
+// 选中下拉列表中选中的元素
+$(&quot;select &gt; option:selected&quot;)
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%9F%BA%E6%9C%AC%E9%80%89%E6%8B%A9%E5%99%A8">基本选择器</a>
+<ul>
+<li><a href="#id-%E9%80%89%E6%8B%A9%E5%99%A8">🎼 ID 选择器：</a></li>
+<li><a href="#%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8">🎼 类选择器：</a></li>
+<li><a href="#%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8">🎼 元素选择器：</a></li>
+<li><a href="#%E9%80%9A%E9%85%8D%E7%AC%A6%E9%80%89%E6%8B%A9%E5%99%A8">🎼 通配符选择器：</a></li>
+<li><a href="#%E5%A4%8D%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A8">🎼 复合选择器：</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B1%82%E6%AC%A1%E9%80%89%E6%8B%A9%E5%99%A8">层次选择器</a>
+<ul>
+<li><a href="#%E9%80%89%E6%8B%A9%E5%99%A81-%E9%80%89%E6%8B%A9%E5%99%A82">🎼 选择器1 选择器2：</a></li>
+<li><a href="#%E9%80%89%E6%8B%A9%E5%99%A81-%E9%80%89%E6%8B%A9%E5%99%A82-2">🎼 选择器1 &gt; 选择器2：</a></li>
+<li><a href="#%E9%80%89%E6%8B%A9%E5%99%A81-%E9%80%89%E6%8B%A9%E5%99%A82-3">🎼 选择器1 + 选择器2：</a></li>
+<li><a href="#%E9%80%89%E6%8B%A9%E5%99%A81-~-%E9%80%89%E6%8B%A9%E5%99%A82">🎼 选择器1 ~ 选择器2：</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">基本过滤选择器</a>
+<ul>
+<li><a href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8">🎼 第一个元素选择器</a></li>
+<li><a href="#%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8">🎼 最后一个元素选择器</a></li>
+<li><a href="#%E6%8E%92%E9%99%A4%E9%80%89%E6%8B%A9%E5%99%A8">🎼 排除选择器</a></li>
+<li><a href="#%E5%81%B6%E6%95%B0%E9%80%89%E6%8B%A9%E5%99%A8">🎼 偶数选择器</a></li>
+<li><a href="#%E5%A5%87%E6%95%B0%E9%80%89%E6%8B%A9%E5%99%A8">🎼 奇数选择器</a></li>
+<li><a href="#%E7%B4%A2%E5%BC%95%E5%80%BC%E9%80%89%E6%8B%A9%E5%99%A8">🎼 索引值选择器</a></li>
+</ul>
+</li>
+<li><a href="#%E5%86%85%E5%AE%B9%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">内容过滤选择器</a></li>
+<li><a href="#%E5%8F%AF%E8%A7%81%E6%80%A7%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">可见性过滤选择器</a></li>
+<li><a href="#%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">属性过滤选择器</a></li>
+<li><a href="#%E5%AD%90%E5%85%83%E7%B4%A0%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">子元素过滤选择器</a></li>
+<li><a href="#%E8%A1%A8%E5%8D%95%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4%E9%80%89%E6%8B%A9%E5%99%A8">表单属性过滤选择器</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://tdmaker.github.io/faded/post/regular-expression-pattern-matching/">
+              <h3 class="post-title">
+                正则表达式——匹配
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://tdmaker.github.io/faded//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

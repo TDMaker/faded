@@ -2,23 +2,17 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>关于 | Typhoeus</title>
+<title>正则表达式——匹配 | Typhoeus</title>
 <link rel="shortcut icon" href="https://tdmaker.github.io/faded//favicon.ico?v=1586081912249">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="关于 | Typhoeus - Atom Feed" href="https://tdmaker.github.io/faded//atom.xml">
+<link rel="alternate" type="application/atom+xml" title="正则表达式——匹配 | Typhoeus - Atom Feed" href="https://tdmaker.github.io/faded//atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
-
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
-..." />
+    <meta name="description" content="💊(?:pattern)
+非获取匹配，匹配 pattern 但不获取匹配结果，不进行存储供以后使用。这在使用或字符“(|)”来组合一个模式的各个部分是很有用。例如“industr(?:y|ies)”就是一个比“industry|indus..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -81,39 +75,39 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              关于
+              正则表达式——匹配
             </h2>
             <div class="post-info">
               <span>
-                2019-01-25
+                2020-04-05
               </span>
               <span>
-                1 min read
+                2 min read
               </span>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
-</blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+                <h1 id="pattern">💊(?:pattern)</h1>
+<p>非获取匹配，匹配 pattern 但不获取匹配结果，不进行存储供以后使用。这在使用或字符“<code>(|)</code>”来组合一个模式的各个部分是很有用。例如“<code>industr(?:y|ies)</code>”就是一个比“<code>industry|industries</code>”更简略的表达式。</p>
+<h1 id="pattern-2">💊 (?=pattern)</h1>
+<p>非获取匹配，正向肯定预查，在任何匹配 pattern 的字符串开始处匹配查找字符串，该匹配不需要获取供以后使用。例如，“<code>Windows(?=95|98|NT|2000)</code>”能匹配“Windows2000”中的“Windows”，但不能匹配“Windows3.1”中的“Windows”。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。</p>
+<h1 id="pattern-3">💊 (?!pattern)</h1>
+<p>非获取匹配，正向否定预查，在任何不匹配 pattern 的字符串开始处匹配查找字符串，该匹配不需要获取供以后使用。例如“<code>Windows(?!95|98|NT|2000)</code>”能匹配“Windows3.1”中的“Windows”，但不能匹配“Windows2000”中的“Windows”。</p>
+<h1 id="pattern-4">💊 (?&lt;=pattern)</h1>
+<p>非获取匹配，反向肯定预查，与正向肯定预查类似，只是方向相反。例如，“<code>(?&lt;=95|98|NT|2000)Windows</code>”能匹配“2000Windows”中的“Windows”，但不能匹配“3.1Windows”中的“Windows”。</p>
+<h1 id="pattern-5">💊 (?&lt;!pattern)</h1>
+<p>非获取匹配，反向否定预查，与正向否定预查类似，只是方向相反。例如“<code>(?&lt;!95|98|NT|2000)Windows</code>”能匹配“3.1Windows”中的“Windows”，但不能匹配“2000Windows”中的“Windows”。这个地方不正确，有问题</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
-</ul>
-</li>
+<li><a href="#pattern">💊(?:pattern)</a></li>
+<li><a href="#pattern-2">💊 (?=pattern)</a></li>
+<li><a href="#pattern-3">💊 (?!pattern)</a></li>
+<li><a href="#pattern-4">💊 (?&lt;=pattern)</a></li>
+<li><a href="#pattern-5">💊 (?&lt;!pattern)</a></li>
 </ul>
 
               </div>
@@ -121,6 +115,15 @@
           </article>
         </div>
 
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://tdmaker.github.io/faded/post/su-cai-wang-zhan/">
+              <h3 class="post-title">
+                设计师网站
+              </h3>
+            </a>
+          </div>
         
 
         

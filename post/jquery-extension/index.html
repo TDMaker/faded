@@ -1,0 +1,300 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>jQuery——拓展 | Typhoeus</title>
+<link rel="shortcut icon" href="https://tdmaker.github.io/faded//favicon.ico?v=1586081912249">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="jQuery——拓展 | Typhoeus - Atom Feed" href="https://tdmaker.github.io/faded//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="😲 extend函数
+$.extend(target,[object1],[onjectN])
+$.extend([deep],target,object1,[objectN])
+var obj1 = {
+	height: 100,
+	w..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://tdmaker.github.io/faded/">
+  <img class="avatar" src="https://tdmaker.github.io/faded//images/avatar.png?v=1586081912249" alt="">
+  </a>
+  <h1 class="site-title">
+    Typhoeus
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              jQuery——拓展
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-04-05
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="extend函数">😲 extend函数</h1>
+<p><code>$.extend(target,[object1],[onjectN])</code><br>
+<code>$.extend([deep],target,object1,[objectN])</code></p>
+<pre><code class="language-javascript">var obj1 = {
+	height: 100,
+	width: 100,
+	length: 100,
+	div: {
+		x: 100,
+		y: 100
+	}
+};
+var obj2 = {
+	height: 200,
+	width: 200,
+	div: {
+		x: 200
+	}
+};
+$.extend(obj1, obj2);
+console.log(obj1.height);
+console.log(obj1.div.y);
+//result:200,undefined
+</code></pre>
+<p>当使用true参数时，</p>
+<pre><code class="language-javascript">var obj1 = {
+	height: 100,
+	width: 100,
+	length: 100,
+	div: {
+		x: 100,
+		y: 100
+	}
+};
+var obj2 = {
+	height: 200,
+	width: 200,
+	div: {
+		x: 200
+	}
+};
+$.extend(true, obj1, obj2);
+console.log(obj1.height);
+console.log(obj1.div.y);
+//result:200,100
+</code></pre>
+<p>拓展jQuery的公共函数</p>
+<pre><code class="language-javascript">$.extend({
+	minValue: function(a, b) {
+		return a &gt; b ? a: b
+	}
+});
+var a = prompt(&quot;input a&quot;);
+var b = prompt(&quot;input b&quot;);
+console.log($.minValue(a, b));
+</code></pre>
+<p><code>$.fn.extend()</code> 方法可以创建 jQuery 对象方法</p>
+<pre><code class="language-javascript">$.fn.extend({
+	test: function() {
+		alert(&quot;click &quot; + $(this).html() + &quot; this is test function&quot;);
+	}
+});
+$(&quot;#fnExtend&quot;).click(function() {
+	$(this).test();
+});
+</code></pre>
+<h1 id="自定义jquery函数">😲 自定义jQuery函数</h1>
+<h2 id="添加新的全局函数">🤗 添加新的全局函数</h2>
+<pre><code class="language-javascript">$.clickDiv = function(node) {
+	console.log(node.text() + &quot; click&quot;);
+};
+$(&quot;div&quot;).click(function() {
+	$.clickDiv($(this));
+});
+</code></pre>
+<h2 id="通过-extend-函数添加全局函数">🤗 通过 <code>extend</code> 函数添加全局函数</h2>
+<pre><code class="language-javascript">$.extend({
+	foo: function() {
+		alert(&quot;this is a new function 'foo()'&quot;);
+	}
+});
+$.foo();
+</code></pre>
+<h2 id="使用命名空间">🤗 使用命名空间</h2>
+<pre><code class="language-javascript">$.myPluin = {
+	ale: function() {
+		alert(&quot;function from myPluin&quot;);
+	}
+};
+$.nextPluin = {
+	ale: function() {
+		alert(&quot;function from nextPluin&quot;);
+	}
+}
+$.myPluin.ale();
+$.nextPluin.ale();
+</code></pre>
+<h1 id="自定义选择器">😲 自定义选择器</h1>
+<pre><code class="language-javascript">$.myPluin = {
+	ale: function() {
+		alert(&quot;function from myPluin&quot;);
+	}
+};
+$.nextPluin = {
+	ale: function() {
+		alert(&quot;function from nextPluin&quot;);
+	}
+};
+index = -1; //定义全局变量 index
+jQuery.expr[&quot;:&quot;].le = function(elem, i, match) {
+	// return i&gt;match[3]-0||i==match[3]
+	console.log(index);
+    index++;
+	return index &gt; match[3] - 0; // 返回索引大于 3 的元素
+};
+$(&quot;p:le(2)&quot;).css(&quot;color&quot;, &quot;red&quot;);
+// 返回元素索引值大于等于 2 的元素
+$.myPluin.ale();
+$.nextPluin.ale();
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#extend%E5%87%BD%E6%95%B0">😲 extend函数</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89jquery%E5%87%BD%E6%95%B0">😲 自定义jQuery函数</a>
+<ul>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E5%85%A8%E5%B1%80%E5%87%BD%E6%95%B0">🤗 添加新的全局函数</a></li>
+<li><a href="#%E9%80%9A%E8%BF%87-extend-%E5%87%BD%E6%95%B0%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80%E5%87%BD%E6%95%B0">🤗 通过 <code>extend</code> 函数添加全局函数</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4">🤗 使用命名空间</a></li>
+</ul>
+</li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%89%E6%8B%A9%E5%99%A8">😲 自定义选择器</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://tdmaker.github.io/faded/post/jquery-selectors/">
+              <h3 class="post-title">
+                jQuery——选择器
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://tdmaker.github.io/faded//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
