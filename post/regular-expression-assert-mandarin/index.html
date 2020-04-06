@@ -1,0 +1,549 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>正则表达式——断言人话版 | Typhoeus</title>
+<link rel="shortcut icon" href="https://tdmaker.github.io/faded//favicon.ico?v=1586164493056">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="正则表达式——断言人话版 | Typhoeus - Atom Feed" href="https://tdmaker.github.io/faded//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+这次不会说我的正则教程没写全了吧？？
+
+零宽断言
+
+断言：俗话的断言就是“我断定什么什么”，而正则中的断言，就是说正则可以指明在指定内容的前面或后面会出现满足指定规则的内容，意思正则也可以像人类那样断定什么什么，比如“ss1aa2bb3”..." />
+    <meta name="keywords" content="正则表达式" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://tdmaker.github.io/faded/">
+  <img class="avatar" src="https://tdmaker.github.io/faded//images/avatar.png?v=1586164493056" alt="">
+  </a>
+  <h1 class="site-title">
+    Typhoeus
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              正则表达式——断言人话版
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-04-06
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+                <a href="https://tdmaker.github.io/faded/tag/regular-expression/" class="post-tag">
+                  # 正则表达式
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <blockquote>
+<p><a href="https://juejin.im/post/5b9e7b6ce51d450e8a65ed6b">这次不会说我的正则教程没写全了吧？？</a></p>
+</blockquote>
+<h1 id="零宽断言">零宽断言</h1>
+<ul>
+<li><strong>断言</strong>：俗话的断言就是“我断定什么什么”，而正则中的断言，就是说正则可以指明在指定内容的前面或后面会出现满足指定规则的内容，意思正则也可以像人类那样断定什么什么，比如“ss1aa2bb3”，正则可以用断言找出 aa2 前面有 bb3，也可以找出 aa2 后面有 ss1。</li>
+<li><strong>零宽</strong>：就是没有宽度，在正则中，断言只是匹配位置，不占字符，也就是说，匹配结果里是不会返回断言本身。</li>
+</ul>
+<p>假设我们要用爬虫抓取 csdn 里的文章阅读量。通过查看源代码可以看到文章阅读量这个内容是这样的结构：</p>
+<pre><code class="language-html">&lt;span class=&quot;read-count&quot;&gt;阅读数：641&lt;/span&gt;
+</code></pre>
+<p>需要获得这里边的‘641’有很多种办法，但如果使用正则应该怎么匹配呢？下面先讲一下几种类型的断言：</p>
+<h2 id="正向先行断言正前瞻">💡正向先行断言（正前瞻）</h2>
+<ul>
+<li>语法：<code>(?=pattern)</code>；</li>
+<li>作用：匹配 pattern 表达式的前面内容，不返回本身。</li>
+</ul>
+<p>要取到阅读量，在正则表达式中就意味着要能匹配到‘<code>&lt;/span&gt;</code>’前面的数字内容，按照上所说的正向先行断言可以匹配表达式前面的内容，那意思就是：<code>(?=&lt;/span&gt;)</code> 就可以匹配到前面的内容了。</p>
+<pre><code class="language-javascript">const regExp = /.+(?=&lt;\/span&gt;)/;
+const str = &quot;&lt;span class=\&quot;read-count\&quot;&gt;阅读数：641&lt;/span&gt;&quot;
+console.log(regExp.exec(str));
+// 匹配结果：
+[
+ '&lt;span class=&quot;read-count&quot;&gt;阅读数：641',
+ index: 0,
+ input: '&lt;span class=&quot;read-count&quot;&gt;阅读数：641&lt;/span&gt;',
+ groups: undefined
+]
+</code></pre>
+<p>仅匹配前面的数字：</p>
+<pre><code class="language-javascript">const regExp = /\d+(?=&lt;\/span&gt;)/;
+const str = &quot;&lt;span class=\&quot;read-count\&quot;&gt;阅读数：641&lt;/span&gt;&quot;
+console.log(regExp.exec(str));
+// 匹配结果：
+[
+ '641',
+ index: 29,
+ input: '&lt;span class=&quot;read-count&quot;&gt;阅读数：641&lt;/span&gt;',
+ groups: undefined
+]
+</code></pre>
+<h2 id="正向后行断言正后顾">💡正向后行断言（正后顾）:</h2>
+<ul>
+<li>语法：<code>(?&lt;=pattern)</code>；</li>
+<li>作用：匹配 pattern 表达式的后面的内容，不返回本身。</li>
+</ul>
+<p>有先行就有后行，先行是匹配前面的内容，那后行就是匹配后面的内容啦。上面的栗子，我们也可以用后行断言来处理。</p>
+<pre><code class="language-javascript">const regExp= /(?&lt;=&lt;span class=\&quot;read-count\&quot;&gt;阅读数：)\d+/;
+const str = &quot;&lt;span class=\&quot;read-count\&quot;&gt;阅读数：641&lt;/span&gt;&quot;
+console.log(regExp.exec(str));
+// 匹配结果
+[
+ '641',
+ index: 29,
+ input: '&lt;span class=&quot;read-count&quot;&gt;阅读数：641&lt;/span&gt;',
+ groups: undefined
+]
+</code></pre>
+<h2 id="负向先行断言负前瞻">💡负向先行断言（负前瞻）</h2>
+<ul>
+<li>语法：<code>(?!pattern)</code>；</li>
+<li>作用：匹配非 pattern 表达式的前面内容，不返回本身。</li>
+</ul>
+<p>有正向也有负向，负向在这里其实就是非的意思。举个栗子：比如有一句 “我爱祖国，我是祖国的花朵”，现在要找到不是 “的花朵”前面的“祖国”，用正则就可以这样写：<code>祖国(?!的花朵)</code>。</p>
+<h2 id="负向后行断言负后顾">💡负向后行断言（负后顾）</h2>
+<ul>
+<li>语法：<code>(?&lt;!pattern)</code>；</li>
+<li>作用：匹配非 pattern 表达式的后面内容，不返回本身。</li>
+</ul>
+<h1 id="捕获和非捕获">捕获和非捕获</h1>
+<p>单纯说到捕获，他的意思是匹配表达式，但捕获通常和分组联系在一起，也就是“捕获组”。捕获组：匹配子表达式的内容，把匹配结果保存到内存中数字编号或显示命名的组里，以深度优先进行编号，之后可以通过序号或名称来使用这些匹配结果。<br>
+而根据命名方式的不同，又可以分为两种组：</p>
+<h2 id="数字编号捕获组">💡数字编号捕获组</h2>
+<ul>
+<li>语法：<code>(exp)</code>；</li>
+<li>解释：从表达式左侧开始，每出现一个左括号和它对应的右括号之间的内容为一个分组，在分组中，第 0 组为整个表达式，第一组开始为分组。</li>
+</ul>
+<p>比如固定电话的：020-85653333，它的正则表达式为：<code>(0\d{2})-(\d{8})</code>，按照左括号的顺序，这个表达式有如下分组：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>编号</th>
+<th>分组</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td><code>(0\d{2})-(\d{8})</code></td>
+<td>020-85653333</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td><code>(0\d{2})</code></td>
+<td>020</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td><code>(\d{8})</code></td>
+<td>85653333</td>
+</tr>
+</tbody>
+</table>
+<p>下面来验证一下：</p>
+<pre><code class="language-javascript">const str = '020-85653333';
+const regExp=/(0\d{2})-(\d{8})/;
+console.log(regExp.exec(str));
+// 输出结果：
+[
+ '020-85653333',
+ '020',
+ '85653333',
+ index: 0,
+ input: '020-85653333',
+ groups: undefined
+]
+</code></pre>
+<p>可见，分组个数是2，但是因为第0个为整个表达式本身，因此也一起输出了。</p>
+<h2 id="命名编号捕获组">💡命名编号捕获组：</h2>
+<ul>
+<li>语法：<code>(?&lt;name&gt;exp)</code>；</li>
+<li>解释：分组的命名由表达式中的name指定。</li>
+</ul>
+<p>比如区号也可以这样写: <code>(?&lt;quhao&gt;\0\d{2})-(?&lt;haoma&gt;\d{8})</code>，按照左括号的顺序，这个表达式有如下分组：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>名称</th>
+<th>分组</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td><code>(0\d{2})-(\d{8})</code></td>
+<td>020-85653333</td>
+</tr>
+<tr>
+<td>1</td>
+<td>quhao</td>
+<td><code>(0\d{2})</code></td>
+<td>020</td>
+</tr>
+<tr>
+<td>2</td>
+<td>haoma</td>
+<td><code>(\d{8})</code></td>
+<td>85653333</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-javascript">const str = '020-85653333';
+const regExp=/(?&lt;quhao&gt;0\d{2})-(?&lt;haoma&gt;\d{8})/;
+console.log(regExp.exec(str));
+// 输出结果：
+[
+ '020-85653333',
+ '020',
+ '85653333',
+ index: 0,
+ input: '020-85653333',
+ groups: [Object: null prototype] { quhao: '020', haoma: '85653333' }
+]
+</code></pre>
+<h2 id="非捕获组">💡非捕获组：</h2>
+<ul>
+<li>语法：(?:exp)；</li>
+<li>解释：和捕获组刚好相反，它用来标识那些不需要捕获的分组，说的通俗一点，就是你可以根据需要去保存你的分组。</li>
+</ul>
+<p>比如上面的正则表达式，程序不需要用到第一个分组，那就可以这样写：<code>1(?:\0\d{2})-(\d{8})</code>。</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>编号</th>
+<th>分组</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td><code>(0\d{2})-(\d{8})</code></td>
+<td>020-85653333</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td><code>(\d{8})</code></td>
+<td>85653333</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-javascript">const str = '020-85653333';
+const regExp=/(?:0\d{2})-(\d{8})/;
+console.log(regExp.exec(str));
+// 运行结果：
+[
+ '020-85653333',
+ '85653333',
+ index: 0,
+ input: '020-85653333',
+ groups: undefined
+]
+</code></pre>
+<h1 id="反向引用">反向引用</h1>
+<p>上面讲到捕获，我们知道：<strong>捕获会返回一个捕获组，这个分组是保存在内存中，不仅可以在正则表达式外部通过程序进行引用，也可以在正则表达式内部进行引用，这种引用方式就是反向引用</strong>。<br>
+根据捕获组的命名规则，反向引用可分为：</p>
+<ul>
+<li>数字编号组反向引用：<code>\k</code> 或 <code>\number</code>；</li>
+<li>命名编号组反向引用：<code>\k</code>或者 <code>\'name'</code>。</li>
+</ul>
+<p>捕获组通常是和反向引用一起使用的。上面说到捕获组是匹配子表达式的内容按序号或者命名保存起来以便使用。注意两个字眼：“<strong>内容</strong>” 和 “<strong>使用</strong>”，这里所说的“<strong>内容</strong>”，是匹配结果，而不是子表达式本身。这里所说的“<strong>使用</strong>”的作用主要是用来查找一些重复的内容或者做替换指定字符。</p>
+<p>还是举栗子吧：比如要查找一串字母 &quot;aabbbbgbddesddfiid&quot; 里成对的字母，如果按照我们之前学到的正则，什么区间啊限定啊断言啊可能是办不到的，现在我们先用程序思维理一下思路：</p>
+<ol>
+<li>匹配到一个字母；</li>
+<li>匹配第下一个字母，检查是否和上一个字母是否一样；</li>
+<li>如果一样，则匹配成功，否则失败；</li>
+</ol>
+<p>这里的思路 2 中匹配下一个字母时，需要用到上一个字母，那怎么记住上一个字母呢？这下子捕获就有用处啦，我们可以利用捕获把上一个匹配成功的内容用来作为本次匹配的条件。好了，有思路就要实践，首先匹配一个字母：<code>\w</code>，我们需要做成分组才能捕获，因此写成这样：<code>(\w)</code>，那这个表达式就有一个捕获组：<code>(\w)</code>，然后我们要用这个捕获组作为条件，那就可以：<code>(\w)\1</code>，这样就大功告成了，可能有人不明白了，<code>\1</code> 是什么意思呢？<br>
+还记得捕获组有两种命名方式吗，一种是是根据<strong>捕获分组顺序命名</strong>，一种是<strong>自定义命名</strong>来作为捕获组的命名。在默认情况下都是以<strong>数字</strong>来命名，而且数字命名的顺序是从 1 开始的。因此要引用第一个捕获组，根据反向引用的数字命名规则 就需要 <code>\k&lt;1&gt;</code> 或者 <code>\1</code> 当然，通常都是是后者。<br>
+我们来测试一下：</p>
+<pre><code class="language-javascript">const str = 'aabbbbgbddesddfiid';
+const regExp=/(\w)\1/g;
+console.log(str.match(regExp));
+运行结果：
+[ 'aa', 'bb', 'bb', 'dd', 'dd', 'ii' ]
+</code></pre>
+<p>再举个替换的例子，假如想要把字符串中 abc 换成 a：</p>
+<pre><code class="language-javascript">const str = 'abcbbabcbcgbddesddfiid';
+const regExp=/(a)(b)c/g;
+console.log(str.replace(regExp, '$1'));
+// 输出结果：
+abcbbabcbcgbddesddfiid
+</code></pre>
+<h1 id="贪婪和非贪婪">贪婪和非贪婪</h1>
+<h2 id="贪婪">💡贪婪</h2>
+<p><strong>贪婪匹配</strong>：当正则表达式中包含能接受重复的限定符时，通常的行为是（在使整个表达式能得到匹配的前提下）匹配尽可能多的字符，这匹配方式叫做贪婪匹配。<br>
+<strong>特性</strong>：一次性读入整个字符串进行匹配，每当不匹配就舍弃最右边一个字符，继续匹配，依次匹配和舍弃（这种匹配-舍弃的方式也叫做<strong>回溯</strong>），直到匹配成功或者把整个字符串舍弃完为止，因此它是一种最大化的数据返回，能多不会少。<br>
+前面我们讲过重复限定符，其实这些限定符就是贪婪量词，比如表达式：<code>\d{3,6}</code> 用来匹配 3 到 6 位数字，在这种情况下，它是一种贪婪模式的匹配，也就是假如字符串里有 6 个数字可以匹配，那它就是全部匹配到。例如：</p>
+<pre><code class="language-javascript">const str = &quot;61762828 176 2991 871&quot;;
+const regExp=/\d{3,6}/g;
+console.log(str.match(regExp));
+// 输出结果：
+[ '617628', '176', '2991', '871' ]
+</code></pre>
+<p>由结果可见：本来字符串中的“61762828”这一段，其实只需要出现3个（617）就已经匹配成功了的，但是他并不满足，而是匹配到了最大能匹配的字符，也就是6个。<br>
+一个量词就如此贪婪了，那有人会问，如果多个贪婪量词凑在一起，那他们是如何支配自己的匹配权的呢？是这样的，多个贪婪在一起时，如果字符串能满足他们各自最大程度的匹配时，就互不干扰，但如果不能满足时，会根据<strong>深度优先原则</strong>，也就是从左到右的每一个贪婪量词，优先最大数量的满足，剩余再分配下一个量词匹配。</p>
+<pre><code class="language-javascript">const str = &quot;61762828 176 2991 87321&quot;;
+const regExp=/(\d{1,2})(\d{3,4})/g;
+console.log(str.match(regExp));
+// 输出结果：
+[ '617628', '2991', '87321' ]
+</code></pre>
+<p>解答：</p>
+<ul>
+<li>“617628” 是前面的 <code>\d{1,2}</code> 匹配出了 61，后面的匹配出了 7628；</li>
+<li>“2991”是前面的 <code>\d{1,2}</code> 匹配出了 2 ，后面的匹配出了 991(满足匹配优先，再最大程度的贪婪)；</li>
+<li>“87321”是前面的 <code>\d{1,2}</code> 匹配出了 87，后面的匹配出了 321。</li>
+</ul>
+<h2 id="懒惰非贪婪">💡懒惰（非贪婪）</h2>
+<p><strong>懒惰匹配</strong>：当正则表达式中包含能接受重复的限定符时，通常的行为是（在使整个表达式能得到匹配的前提下）匹配尽可能少的字符，这匹配方式叫做懒惰匹配。<br>
+<strong>特性</strong>：从左到右，从字符串的最左边开始匹配，每次试图不读入字符匹配，匹配成功，则完成匹配，否则读入一个字符再匹配，依此循环（读入字符、匹配）直到匹配成功或者把字符串的字符匹配完为止。<br>
+懒惰量词是在贪婪量词后面加个“<code>?</code>”。</p>
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*?</code></td>
+<td>重复任意次，但尽可能少重复</td>
+</tr>
+<tr>
+<td><code>+?</code></td>
+<td>重复 1 次或更多次，但尽可能少重复</td>
+</tr>
+<tr>
+<td><code>??</code></td>
+<td>重复 0 次或 1 次，但尽可能少重复</td>
+</tr>
+<tr>
+<td><code>{n,m}?</code></td>
+<td>重复 n 到 m 次，但尽可能少重复</td>
+</tr>
+<tr>
+<td><code>{n,}?</code></td>
+<td>重复 n 次以上，但尽可能少重复</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-javascript">const str = &quot;61762828 176 2991 87321&quot;;
+const regExp=/(\d{1,2}?)(\d{3,4})/g;
+console.log(str.match(regExp));
+// 输出结果：
+[ '61762', '2991', '87321' ]
+</code></pre>
+<p>解答：</p>
+<ul>
+<li>“61762”是左边的懒惰匹配出 6，右边的贪婪匹配出 1762；</li>
+<li>“2991”是左边的懒惰匹配出 2，右边的贪婪匹配出 991；</li>
+<li>“87321”左边的懒惰匹配出 8，右边的贪婪匹配出 7321。</li>
+</ul>
+<h1 id="反义">反义</h1>
+<p>前面说到元字符的都是要匹配什么什么，当然如果你想反着来，不想匹配某些字符，正则也提供了一些常用的反义元字符：</p>
+<table>
+<thead>
+<tr>
+<th>元字符</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\W</code></td>
+<td>匹配任意不是字母，数字，下划线，汉字的字符</td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td>匹配任意不是空白符的字符</td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td>匹配任意非数字的字符</td>
+</tr>
+<tr>
+<td><code>\B</code></td>
+<td>匹配不是单词开头或结束的位置</td>
+</tr>
+<tr>
+<td><code>[^x]</code></td>
+<td>匹配除了 x 以外的任意字符</td>
+</tr>
+<tr>
+<td><code>[^aeiou]</code></td>
+<td>匹配除了 aeiou 这几个字母以外的任意字符</td>
+</tr>
+</tbody>
+</table>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E9%9B%B6%E5%AE%BD%E6%96%AD%E8%A8%80">零宽断言</a>
+<ul>
+<li><a href="#%E6%AD%A3%E5%90%91%E5%85%88%E8%A1%8C%E6%96%AD%E8%A8%80%E6%AD%A3%E5%89%8D%E7%9E%BB">💡正向先行断言（正前瞻）</a></li>
+<li><a href="#%E6%AD%A3%E5%90%91%E5%90%8E%E8%A1%8C%E6%96%AD%E8%A8%80%E6%AD%A3%E5%90%8E%E9%A1%BE">💡正向后行断言（正后顾）:</a></li>
+<li><a href="#%E8%B4%9F%E5%90%91%E5%85%88%E8%A1%8C%E6%96%AD%E8%A8%80%E8%B4%9F%E5%89%8D%E7%9E%BB">💡负向先行断言（负前瞻）</a></li>
+<li><a href="#%E8%B4%9F%E5%90%91%E5%90%8E%E8%A1%8C%E6%96%AD%E8%A8%80%E8%B4%9F%E5%90%8E%E9%A1%BE">💡负向后行断言（负后顾）</a></li>
+</ul>
+</li>
+<li><a href="#%E6%8D%95%E8%8E%B7%E5%92%8C%E9%9D%9E%E6%8D%95%E8%8E%B7">捕获和非捕获</a>
+<ul>
+<li><a href="#%E6%95%B0%E5%AD%97%E7%BC%96%E5%8F%B7%E6%8D%95%E8%8E%B7%E7%BB%84">💡数字编号捕获组</a></li>
+<li><a href="#%E5%91%BD%E5%90%8D%E7%BC%96%E5%8F%B7%E6%8D%95%E8%8E%B7%E7%BB%84">💡命名编号捕获组：</a></li>
+<li><a href="#%E9%9D%9E%E6%8D%95%E8%8E%B7%E7%BB%84">💡非捕获组：</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%8D%E5%90%91%E5%BC%95%E7%94%A8">反向引用</a></li>
+<li><a href="#%E8%B4%AA%E5%A9%AA%E5%92%8C%E9%9D%9E%E8%B4%AA%E5%A9%AA">贪婪和非贪婪</a>
+<ul>
+<li><a href="#%E8%B4%AA%E5%A9%AA">💡贪婪</a></li>
+<li><a href="#%E6%87%92%E6%83%B0%E9%9D%9E%E8%B4%AA%E5%A9%AA">💡懒惰（非贪婪）</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%8D%E4%B9%89">反义</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://tdmaker.github.io/faded/post/regular-expression-nfa/">
+              <h3 class="post-title">
+                正则表达式——NFA
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://tdmaker.github.io/faded//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
