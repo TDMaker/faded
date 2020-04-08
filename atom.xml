@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tdmaker.github.io/faded/</id>
     <title>Typhoeus</title>
-    <updated>2020-04-08T08:27:47.050Z</updated>
+    <updated>2020-04-08T08:28:57.378Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tdmaker.github.io/faded/"/>
     <link rel="self" href="https://tdmaker.github.io/faded/atom.xml"/>
@@ -16,7 +16,15 @@
         <link href="https://tdmaker.github.io/faded/post/blockchain-commercial-survey/">
         </link>
         <updated>2020-04-08T07:36:36.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-信息共享信息对齐-提高效率">1 信息共享——信息对齐、提高效率</h1>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://cloud.tencent.com/developer/article/1082599">区块链商用调查</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://cloud.tencent.com/developer/article/1082599">区块链商用调查</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="1-信息共享信息对齐-提高效率">1 信息共享——信息对齐、提高效率</h1>
 <p>这应该是区块链最简单的应用场景，就是信息互通有无。</p>
 <h2 id="11-传统的信息共享的痛点">1.1 传统的信息共享的痛点</h2>
 <ol>
