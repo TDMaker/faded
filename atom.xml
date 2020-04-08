@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tdmaker.github.io/faded/</id>
     <title>Typhoeus</title>
-    <updated>2020-04-08T03:29:27.418Z</updated>
+    <updated>2020-04-08T08:27:47.050Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tdmaker.github.io/faded/"/>
     <link rel="self" href="https://tdmaker.github.io/faded/atom.xml"/>
@@ -11,12 +11,181 @@
     <icon>https://tdmaker.github.io/faded/favicon.ico</icon>
     <rights>All rights reserved 2020, Typhoeus</rights>
     <entry>
+        <title type="html"><![CDATA[区块链——商用调查]]></title>
+        <id>https://tdmaker.github.io/faded/post/blockchain-commercial-survey/</id>
+        <link href="https://tdmaker.github.io/faded/post/blockchain-commercial-survey/">
+        </link>
+        <updated>2020-04-08T07:36:36.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-信息共享信息对齐-提高效率">1 信息共享——信息对齐、提高效率</h1>
+<p>这应该是区块链最简单的应用场景，就是信息互通有无。</p>
+<h2 id="11-传统的信息共享的痛点">1.1 传统的信息共享的痛点</h2>
+<ol>
+<li>要么是统一由一个中心进行信息发布和分发，要么是彼此之间定时批量对账（典型的每天一次），对于有时效性要求的信息共享，难以达到实时共享。</li>
+<li>信息共享的双方缺少一种相互信任的通信方式，难以确定收到的信息是否是对方发送的。</li>
+</ol>
+<h2 id="12-区块链-信息共享">1.2 区块链 + 信息共享</h2>
+<p>首先，区块链本身就是需要保持各个节点的数据一致性的，可以说是自带信息共享功能；其次，实时的问题通过区块链的 P2P 技术可以实现；最后，利用区块链的不可篡改和共识机制，可构建其一条安全可靠的信息共享通道。<br>
+也行你会有这样的疑问：解决上面的问题，不用区块链技术，我自己建个加密通道也可以搞定啊！但我想说，既然区块链技术能够解决这些问题，并且增加节点非常方便，在你没有已经建好一套安全可靠的信息共享系统之前，为什么不用区块链技术呢？</p>
+<h1 id="2-版权保护不可篡改-永久保存">2 版权保护——不可篡改、永久保存</h1>
+<h2 id="21-传统鉴证证明的痛点">2.1 传统鉴证证明的痛点</h2>
+<ol>
+<li>流程复杂：以版权保护为例，现有鉴证证明方式，登记时间长，且费用高。</li>
+<li>公信力不足：以法务存证为例，个人或中心化的机构存在篡改数据的可能，公信力难以得到保证。</li>
+</ol>
+<h2 id="22-区块链-鉴证证明">2.2 区块链 + 鉴证证明</h2>
+<ol>
+<li>流程简化：区块链应用到鉴证证明后，无论是登记还是查询都非常方便，无需再奔走于各个部门之间，</li>
+<li>安全可靠：区块链的去中心化存储，保证没有一家机构可以任意篡改数据，</li>
+</ol>
+<h2 id="23-应用案例">2.3 应用案例</h2>
+<p>区块链在鉴权证明领域的应用有版权保护、法务存证等，下面以版权保护为例，简单说下如何区块链如何实现版权登记和查询。</p>
+<ol>
+<li>电子身份证：将“申请人+发布时间+发布内容”等版权信息加密后上传，版权信息用于唯一区块链 ID，相当拥有了一张电子身份证。</li>
+<li>时间戳保护：版权信息存储时，是加上时间戳信息的，如右雷同，可用于证明先后。</li>
+<li>可靠性保证：区块链的去中心化存储、私钥签名、不可篡改的特性提升了鉴权信息的可靠性。</li>
+</ol>
+<p>2016 年 8 月，由 Onchain、微软（中国）、法大大等多个机构在北京成立了电子存证区块链联盟“法链”。</p>
+<p>2017 年 12 月，微众银行、仲裁委（广州仲裁委）、杭州亦笔科技有限公司共同推出的仲裁联盟链，用于司法场景下的存证；2018 年 3 月，广州首个“仲裁链”判决书出炉。</p>
+<h1 id="3-物流链溯源防伪">3 物流链——溯源防伪</h1>
+<p><img src="https://tdmaker.github.io/faded//post-images/1586332032829.png" alt="" loading="lazy"><br>
+商品从生产商到消费者手中，需要经历多个环节（流程可能如上图所示），跨境购物则更加复杂；中间环节经常出问题，消费者很容易购买的假货。而假货问题正是困扰着各大商家和平台，至今无解。</p>
+<h2 id="31-传统是防伪溯源手段">3.1 传统是防伪溯源手段</h2>
+<p>以一直受假冒伪劣产品困扰的茅台酒的防伪技术为例，2000 年起，其酒盖里有一个唯一的 RFID 标签，可通过手机等设备以 NFC 方式读出，然后通过茅台的 APP 进行校验，以此防止伪造产品。<br>
+咋一看，这种防伪效果非常可靠。但 2016 年还是引爆了茅台酒防伪造假，虽然通过 NFC 方式验证 OK，但经茅台专业人士鉴定为假酒。后来，在“国酒茅台防伪溯源系统”数据库审计中发现 80 万条假的防伪标签记录，系防伪技术公司人员参与伪造；随后，茅台改用安全芯片防伪标签。</p>
+<p>但这里暴露出来的痛点并没有解决，即防伪信息掌握在某个中心机构中，有权限的人可以任意修改。(备注：茅台的这种防伪方式，也衍生了旧瓶回收，旧瓶装假酒的产业，防伪道路任重而道远)。</p>
+<p>2017 年 05 月贵阳数博会上，小马哥就建议茅台防伪使用区块链；那么区块链和物流链的结合有什么优势呢？</p>
+<h2 id="32-区块链物流链">3.2 区块链+物流链</h2>
+<ol>
+<li>区块链没有中心化节点，各节点是平等的，掌握单个节点无法实现修改数据；需要掌控足够多的节点，才可能伪造数据，大大提高伪造数据的成本。</li>
+<li>区块链天生的开放、透明，使得任何人都可以公开查询，伪造数据被发现的概率大增。</li>
+<li>区块链的数据不可篡改性，也保证了已销售出去的产品信息已永久记录，无法通过简单复制防伪信息蒙混过关，实现二次销售。</li>
+<li>物流链的所有节点上区块链后，商品从生产商到消费者手里都有迹可循，形成完整链条；商品缺失的环节越多，将暴露出其是伪劣产品概率更大。</li>
+</ol>
+<p>##3.3 应用案例<br>
+目前，入局物流链的玩家较多，包括腾讯、阿里、京东、沃尔玛等。</p>
+<p>据说，阿里的菜鸟在海淘进口应用区块链上，走在了前面，已经初步实现海外商品溯源，国际物流及进口申报溯源、境内物流溯源；下一步就是生产企业溯源了。下图是网上流传的关于阿里的菜鸟在海淘场景运用区块链的示意图。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332241430.jpg" alt="" loading="lazy"></p>
+<h1 id="4-供应链金融解决中小微企业融资难">4 供应链金融——解决中小微企业融资难</h1>
+<h2 id="41-传统的供应链单点融资">4.1 传统的供应链单点融资</h2>
+<p>在一般供应链贸易中，从原材料的采购、加工、组装到销售的各企业间都涉及到资金的支出和收入，而企业的资金支出和收入是有时间差的，这就形成了资金缺口，多数需要进行融资生产。我们先来看个简单的供应链，如下图：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332350132.png" alt="" loading="lazy"><br>
+我们再来看看图中各个角色的融资情况：</p>
+<ol>
+<li>核心企业或大企业：规模大、信用好，议价能力强，通过先拿货后付款，延长账期将资金压力传导给后续供应商；此外，其融资能力也是最强的。</li>
+<li>一级供应商：通过核心企业的债权转让，可以获得银行的融资。</li>
+<li>其他供应商（多数是中小微企业）：规模小、发展不稳定、信用低，风险高，难以获得银行的贷款；也无法想核心企业一样有很长的账期；一般越小的企业其账期越短，微小企业还需要现金拿货。这样一出一入对比就像是：中小微企业无息借钱给大企业做生意。</li>
+</ol>
+<h2 id="42-区块链-供应链金融">4.2 区块链 + 供应链金融</h2>
+<p>面对，上述供应链里的中小微企业融资难问题，主要原因是银行和中小企业之间缺乏一个有效的信任机制。</p>
+<p>假如供应链所有节点上链后，通过区块链的私钥签名技术，保证了核心企业等的数据可靠性；而合同、票据等上链，是对资产的数字化，便于流通，实现了价值传递。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332493469.png" alt="" loading="lazy"><br>
+如上图所示，在区块链解决了数据可靠性和价值流通后，银行等金融机构面对中小企业的融资，不再是对这个企业进行单独评估；而是站在整个供应链的顶端，通过信任核心企业的付款意愿，对链条上的票据、合同等交易信息进行全方位分析和评估。即借助核心企业的信用实力以及可靠的交易链条，为中小微企业融资背书，实现从单环节融资到全链条融资的跨越，从而缓解中小微企业融资难问题。</p>
+<h1 id="5-跨境支付提高效率-降低费用">5 跨境支付——提高效率、降低费用</h1>
+<h2 id="51-传统跨境支付">5.1 传统跨境支付</h2>
+<p><img src="https://tdmaker.github.io/faded//post-images/1586332579435.png" alt="" loading="lazy"><br>
+跨境支付涉及多种币种，存在汇率问题，传统跨境支付非常依赖于第三方机构，大致的简化模型如上图所示，存在着两个问题；</p>
+<ol>
+<li>流程繁琐，结算周期长：传统跨境支付基本都是非实时的，银行日终进行交易的批量处理，通常一笔交易需要 24 小时以上才能完成；某些银行的跨境支付看起来是实时的，但实际上，是收款银行基于汇款银行的信用做了一定额度的垫付，在日终再进行资金清算和对账，业务处理速度慢。</li>
+<li>手续费高：传统跨境支付模式存在大量人工对账操作，加之依赖第三方机构，导致手续费居高不下，麦肯锡《2016 全球支付》报告数据显示，通过代理行模式完成一笔跨境支付的平均成本在 25 美元到 35 美元之间。</li>
+</ol>
+<h2 id="52-区块链-跨境支付">5.2 区块链 + 跨境支付</h2>
+<p>这些问题的存在，很大原因还是信息不对称，没有建立有效的信任机制。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332873742.png" alt="" loading="lazy"><br>
+如上图所示，区块链的引入，解决了跨境支付信息不对称的问题，并建立起一定程度的信任机制；带来了两个好处。</p>
+<ol>
+<li>效率提高，费用降低：接入区块链技术后，通过公私钥技术，保证数据的可靠性，再通过加密技术和去中心，达到数据不可篡改的目的，最后，通过 P2P 技术，实现点对点的结算；去除了传统中心转发，提高了效率，降低了成本(也展望了普及跨境小额支付的可能性)。</li>
+<li>可追溯，符合监管需求：传统的点对点结算不能不规模应用，除了信任问题，还有就是存在监管漏洞（点对点私下交易，存在洗黑钱的风险），而区块链的交易透明，信息公开，交易记录永久保存实现了可追溯，符合监管的需求。</li>
+</ol>
+<h1 id="6-资产数字化便于资产流通">6 资产数字化——便于资产流通</h1>
+<h2 id="61-实体资产存在的问题">6.1 实体资产存在的问题</h2>
+<ol>
+<li>实体资产往往难以分割，不便于流通</li>
+<li>实体资产的流通难以监控，存在洗黑钱等风险</li>
+</ol>
+<h2 id="62-区块链实现资产数字化">6.2 区块链实现资产数字化</h2>
+<ol>
+<li>资产数字化后，易于分割、流通方便，交易成本低</li>
+<li>用区块链技术实现资产数字化后，所有资产交易记录公开、透明、永久存储、可追溯，完全符合监管需求</li>
+</ol>
+<h2 id="63-应用案例">6.3 应用案例</h2>
+<p>还是以腾讯的微黄金应用为例，继续借用腾讯区块链官网（trustsql.qq.com）上的图片，可以看到，在资产数字化之后，流通更为方便了，不再依赖于发行机构；且购买 0.001g 黄金成为了可能，降低了参与门槛。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586333034775.png" alt="" loading="lazy"></p>
+<h1 id="7-代币去中介-去信任">7 代币——去中介、去信任</h1>
+<p>本来不像把代币加进来的，但说到区块链，始终绕不开代币；因区块链脱胎于比特币，天生具有代币的属性，目前区块链最成功的应用也正是比特币。</p>
+<h2 id="71-传统货币存在的问题">7.1 传统货币存在的问题</h2>
+<ol>
+<li>传统的货币发行权掌握在国家手中，存在着货币滥发的风险
+<ul>
+<li>货币滥发案例 1：元朝自 1271 年建立后，依然四处征战，消耗大量的钱财和粮食，为了财政问题，长期滥发货币，造成严重通货膨胀，多数百姓生活在水生火热中，导致流民四起，国家大乱，1368 年，不可一世的元朝成了只有 97 年短命鬼，走向了灭亡。</li>
+<li>货币滥发案例 2：1980 年津巴布韦独立，后因土改失败，经济崩溃，政府入不敷出，开始印钞；2001 年时 100 津巴布韦币可兑换约 1 美元；2009 年 1 月，津央行发行 100 万亿面值新津元（如下图）加速货币崩溃，最终津元被废弃，改用“美元化”货币政策。2017 年津巴布韦发生政变，总统穆加贝被赶下台。</li>
+</ul>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://tdmaker.github.io/faded//post-images/1586333225353.png" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>传统的记账权掌握在一个中心化的中介机构手中，存在中介系统瘫痪、中介违约、中介欺瞒、甚至是中介耍赖等风险。<br>
+2013 年 3 月，塞浦路斯为获得救助，对银行储户进行一次性征税约 58 亿欧元, 向不低于 10 万欧元的存款一次性征税 9.9%，向低于 10 万欧元的一次性征税 6.75%。<br>
+2017 年 4 月，民生银行 30 亿假理财事件暴露，系一支行行长伪造保本保息理财产品所致，超过 150 名投资者被套。</li>
+</ol>
+<h2 id="72-区块链如何解决这些问题">7.2 区块链如何解决这些问题</h2>
+<p><img src="https://tdmaker.github.io/faded//post-images/1586334038696.png" alt="" loading="lazy"><br>
+比特币解决了货币在发行和记账环节的信任问题，我们来看下比特币是如何一一破解上面的两个问题。</p>
+<h3 id="721-滥发问题">7.2.1 滥发问题</h3>
+<p>比特币的获取只能通过挖矿获得，且比特币总量为 2100 万个，在发行环节解决了货币滥发的问题；</p>
+<h3 id="722-账本修改问题">7.2.2 账本修改问题</h3>
+<p>比特币的交易记录通过链式存储和去中心化的全球节点构成网络来解决账本修改问题。</p>
+<h3 id="723-链式存储">7.2.3 链式存储</h3>
+<p>可以简单理解为：存储记录的块是一块连着一块的，形成一个链条；除第一个块的所有区块都的记录包含了前一区块的校验信息，改变任一区块的信息，都将导致后续区块校验出错。因为这种关联性，中间也无法插入其他块，所以修改已有记录是困难的。</p>
+<h3 id="724-去中心化节点">7.2.4 去中心化节点</h3>
+<p>可以简单理解为：全球的中心节点都是平等的，都拥有一模一样的账本，所以，任一节点出问题都不影响账本记录。而要修改账本，必须修改超过全球一半的节点才能完成；而这在目前看来几乎不可能。</p>
+<p>既然账本无法修改，那要是记账的时候作弊呢？</p>
+<p>首先，比特币的每条交易记录是有私钥签名的，别人伪造不了这个记录。你能修改的仅仅自己发起的交易记录。</p>
+<p>其次，是关于记账权问题：比特币的记账权，通过工作量证明获得，可以简单理解为：通过算法确定同一时刻，全球只有一个节点获得了记账权，基本规律是谁拥有的计算资源越多，谁获得记账权的概率越大，只有超过全网一半的算力，才可能实现双花。</p>
+<h3 id="725-备注">7.2.5 备注</h3>
+<p>比特币的模式是不可复制的，比特币已经吸引了全球绝大多数的算力，从而降低 51% 攻击发生等问题；其他的复制品基本无法获得相应的算力保证。</p>
+<p>目前，比特币还存在着 51% 和效率低等问题有待解决，另外，关于交易本身的信任问题是个社会问题，比特币是没有解决的，也解决不了的。</p>
+<h2 id="73-应用案例">7.3 应用案例</h2>
+<p>最具代表性的当然是比特币，也不用多说了。</p>
+<p>备注：代币这块真的不看好，比特币目前吸引了全球绝大部分的算力，有独一无二的算力资源作为支撑还稍好一点，其他的代币和传统的货币相比，其背后缺乏国家和武力为其做信用背书，且夺取了国家发币带来的各种好处（如宏观调控），仔细想想就知道有多不靠谱。</p>
+<h1 id="8-小结">8 小结</h1>
+<p>区块链应用的场景肯定还有很多，但很多都还不大明朗，暂时就先梳理以上7种场景，顺便归纳一下。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586334430353.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[区块链——六大核心算法]]></title>
+        <id>https://tdmaker.github.io/faded/post/blockchain-core-algorithms/</id>
+        <link href="https://tdmaker.github.io/faded/post/blockchain-core-algorithms/">
+        </link>
+        <updated>2020-04-08T03:37:59.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MjM5ODc2Mzk2MA==&amp;mid=2451745390&amp;idx=1&amp;sn=49cfe1109265da6cbc66e2a78e61857e&amp;chksm=b113c6b986644fafcc2a50cac866e0bc2348294218698769cb4bacc25121326efdeb1712e023&amp;mpshare=1&amp;scene=23&amp;srcid=0530alUeRaZnqCIi8dj1jEm5#rd">区块链技术六大核心算法</a></p>
+</blockquote>
+<h1 id="拜占庭协定">拜占庭协定</h1>
+<p>拜占庭的故事大概是这么说的：拜占庭帝国拥有巨大的财富，周围 10 个邻邦垂诞已久，但拜占庭高墙耸立，固若金汤，没有一个单独的邻邦能够成功入侵。任何单个邻邦入侵的都会失败，同时也有可能自身被其他 9 个邻邦入侵。拜占庭帝国防御能力如此之强，至少要有十个邻邦中的一半以上同时进攻，才有可能攻破。然而，如果其中的一个或者几个邻邦本身答应好一起进攻，但实际过程出现背叛，那么入侵者可能都会被歼灭。于是每一方都小心行事，不敢轻易相信邻国。这就是拜占庭将军问题。</p>
+<p>在这个分布式网络里：每个将军都有一份实时与其他将军同步的消息账本。账本里有每个将军的签名都是可以验证身份的。如果有哪些消息不一致，可以知道消息不一致的是哪些将军。尽管有消息不一致的，只要超过半数同意进攻，少数服从多数，共识达成。</p>
+<p>由此，在一个分布式的系统中，尽管有坏人，坏人可以做任意事情（不受protocol限制），比如不响应、发送错误信息、对不同节点发送不同决定、不同错误节点联合起来干坏事等等。但是，只要大多数人是好人，就完全有可能去中心化地实现共识。</p>
+<h1 id="非对称加密技术">非对称加密技术</h1>
+<p>在上述拜占庭协定中，如果 10 个将军中的几个同时发起消息，势必会造成系统的混乱，造成各说各的攻击时间方案，行动难以一致。谁都可以发起进攻的信息，但由谁来发出呢？其实这只要加入一个成本就可以了，即：一段时间内只有一个节点可以传播信息。当某个节点发出统一进攻的消息后，各个节点收到发起者的消息必须签名盖章，确认各自的身份。</p>
+<p>在如今看来，非对称加密技术完全可以解决这个签名问题。非对称加密算法的加密和解密使用不同的两个密钥.这两个密钥就是我们经常听到的“公钥”和“私钥”。公钥和私钥一般成对出现, 如果消息使用公钥加密,那么需要该公钥对应的私钥才能解密; 同样，如果消息使用私钥加密,那么需要该私钥对应的公钥才能解密。</p>
+<h1 id="容错问题">容错问题</h1>
+<p>我们假设在此网络中，消息可能会丢失、损坏、延迟、重复发送，并且接受的顺序与发送的顺序不一致。此外，节点的行为可以是任意的：可以随时加入、退出网络，可以丢弃消息、伪造消息、停止工作等，还可能发生各种人为或非人为的故障。我们的算法对由共识节点组成的共识系统，提供的容错能力，这种容错能力同时包含安全性和可用性，并适用于任何网络环境。</p>
+<h1 id="paxos-算法一致性算法">Paxos 算法（一致性算法）</h1>
+<p>Paxos算法解决的问题是一个分布式系统如何就某个值（决议）达成一致。一个典型的场景是，在一个分布式数据库系统中，如果各节点的初始状态一致，每个节点都执行相同的操作序列，那么他们最后能得到一个一致的状态。为保证每个节点执行相同的命令序列，需要在每一条指令上执行一个“一致性算法”以保证每个节点看到的指令一致。一个通用的一致性算法可以应用在许多场景中，是分布式计算中的重要问题。 节点通信存在两种模型：共享内存和消息传递。Paxos 算法就是一种基于消息传递模型的一致性算法。</p>
+<h1 id="共识机制">共识机制</h1>
+<p>区块链共识算法主要是工作量证明和权益证明。拿比特币来说，其实从技术角度来看可以把 PoW 看做重复使用的 Hashcash，生成工作量证明在概率上来说是一个随机的过程。开采新的机密货币，生成区块时，必须得到所有参与者的同意，那矿工必须得到区块中所有数据的 PoW 工作证明。与此同时矿工还要时时观察调整这项工作的难度，因为对网络要求是平均每 10 分钟生成一个区块。</p>
+<h1 id="分布式存储">分布式存储</h1>
+<p>分布式存储是一种数据存储技术，通过网络使用每台机器上的磁盘空间，并将这些分散的存储资源构成一个虚拟的存储设备，数据分散的存储在网络中的各个角落。所以，分布式存储技术并不是每台电脑都存放完整的数据，而是把数据切割后存放在不同的电脑里。就像存放 100 个鸡蛋，不是放在同一个篮子里，而是分开放在不同的地方，加起来的总和是 100 个。</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[区块链——入门]]></title>
         <id>https://tdmaker.github.io/faded/post/blockchain-introduction/</id>
         <link href="https://tdmaker.github.io/faded/post/blockchain-introduction/">
         </link>
         <updated>2020-04-08T02:56:09.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-涉及到的技术">1 涉及到的技术</h1>
+        <content type="html"><![CDATA[<p>狭义来讲，区块链是一种按照时间顺序将数据区块以顺序相连的方式组合成的一种链式数据结构， 并以密码学方式保证的不可篡改和不可伪造的分布式账本。广义来讲，区块链技术是利用块链式数据结构来验证与存储数据、利用分布式节点共识算法来生成和更新数据、利用密码学的方式保证数据传输和访问的安全、利用由自动化脚本代码组成的智能合约来编程和操作数据的一种全新的分布式基础架构与计算范式。</p>
+<h1 id="1-涉及到的技术">1 涉及到的技术</h1>
 <ul>
 <li>密码学</li>
 <li>分布式一致性协议</li>
@@ -24,13 +193,26 @@
 <li>智能合约编程语言等。</li>
 </ul>
 <h1 id="2-区块链的分类">2 区块链的分类</h1>
-<p>按照参与方式：公开链、私有链、联盟链。</p>
-<h2 id="21-公开链">2.1 公开链</h2>
-<p>公有链的任何节点都是向任何人开放的，每个人都可以参与到这个区块链中的计算，而且任何人都可以下载获得完整区块链数据，即全部账本。</p>
-<h2 id="22-私有链">2.2 私有链</h2>
-<p>在某些区块链的应用场景下，开发者并不希望任何人都可以参与这个系统，因此建立一种不对外公开、只有被许可的节点才可以参与并且查看所有数据的私有区块链，私有链一般适用于特定机构的内部数据管理与审计。</p>
-<h2 id="23-联盟链">2.3 联盟链</h2>
-<p>联盟链是指参与每个节点的权限都完全对等，各节点在不需要完全互信的情况下就可以实现数据的可信交换，联盟链的各个节点通常有与之对应的实体机构组织，通过授权后才能加入或退出网络。联盟链是一种公司与公司、组织与组织之间达成联盟的模式。</p>
+<p>区块链严格定义上被划分为 3 种类型：公有链，私有链、和联盟链，但是在实际应用中单一的某种链常常无法满足用户需求，就出现了多种类型的结合，比如私有链 + 联盟链、联盟链 + 公有链等不同组合形式，最后产生了侧链和互联链。掌握了这 5 种区块链类型的各自特点，是理解和设计区块链网络系统架构的基础和核心，其重要性不言而喻。</p>
+<h2 id="21-公有链public-blockchains">2.1 公有链（Public blockchains）</h2>
+<p>公有链是对所有人公开，用户不需要注册和授权就能够匿名访问网络和区块，任何人都可以自由加入和退出网络，并参与记账和交易。</p>
+<p>公有链是真正完全意义上的去中心化区块链，它通过密码学（非对称加密）算法保证了交易的安全性和不可篡改性，在陌生的网络（非安全）环境中，建立了互信和共识机制。在公有链中共识机制一般是工作量证明（POW）和权益证明（POS）。</p>
+<p>公有链因为人人可参与，无需授权的特点又被称为非许可链，即不需要验证身份即可参与一切网络活动。目前比特币、以太坊、超级账本、大多数山寨币以及智能合约都是建立在公有链上，其中公有链的始祖是比特币区块链。</p>
+<p>公有链适用于数字货币、电子商务、互联网金融、知识产权等应用场景。</p>
+<h2 id="22-联盟链consortium-blockchains">2.2 联盟链（Consortium blockchains）</h2>
+<p>联盟链仅限于联盟成员，因其只针对成员开放全部或部分功能，所以联盟链上的读写权限、以及记账规则都按联盟规则来“私人定制”。联盟链上的共识过程由预先选好的节点控制，一般来说，他适用于机构间的交易、结算、或清算等 B2B 场景。比如人民银行开发一个基于联盟链的结算、清算系统，工建中农等银行作为联盟成员加入这个系统，获得相应的授权，就可以实时进行不同银行之间的实时结算、清算，与现有的中心化系统相比，这样不仅大大提升了结算、清算效率，几乎不需要人工参与，还能大大降低结算、清算成本。联盟链几乎不采用工作量证明共识机制而是采用权益证明或PBTF等共识算法。</p>
+<p>联盟链由参与成员机构共同维护，并提供了对参与成员的管理、认证、授权、监控、审计等全套安全管理功能。2015 年成立的 R3 联盟，就是银行业的一个联盟链，目前已加入的成员多达 40 多个，包括世界著名的银行摩根大通、汇丰、高盛等。</p>
+<p>联盟链适用于行业协会、高级别机构组织、大型连锁企业对下属单位和分管机构的交易和监管。</p>
+<h2 id="23-私有链private-blockchain">2.3 私有链（Private blockchain）</h2>
+<p>私有链对单独的个人或实体开放，仅在私有组织，比如公司内部使用，私有链上的读写权限，参与记账的权限都由私有组织来制定。比如企业内部的办公审批、财务审计；政府行业的预算和执行。私有链的主要价值在于提供安全、可塑源，不可篡改，自动执行，这是传统系统很难同时做到的。</p>
+<p>因为私有链加入结点少，所以交易速度快。私有链的交易速度可以比任何其他的区块链都快，甚至接近了并不是一个区块链的常规数据库的速度。而且因为就算少量的节点，也都具有很高的信任度，所以并不需要每个节点来验证一个交易(无需挖矿)。</p>
+<p>由于私有链和联盟链都需要授权加入和访问，私有链和联盟链也被称作许可链。</p>
+<p>私有链适用于企业、组织内部。</p>
+<h2 id="24-侧链side-chains">2.4 侧链（Side Chains）</h2>
+<p>严格来说侧链不是区块链的一种类型，它只是在现实应用中，开发者对区块链的一种延伸（扩展），而特别取了个绰号。目前，市场上公开的虚拟货币系统，绝大多数都是基于比特币系统进行规则修改或扩展而来，因为比特币的设计规则已十分固定，难以做出较大修改和扩展，于是这些代币系统的开发者门干脆以比特币平台为基础，重构出一条区块链，然后使用新的规则，发布新的虚拟货币，这条重构出来的区块链就被称为侧链。普遍认为能和比特币区块链进行交互，并能与比特币挂钩的区块链就是侧链。</p>
+<p>侧链目前主要适用于代币发行。</p>
+<h2 id="25-互联链intechains">2.5 互联链（InteChains）</h2>
+<p>互联链就是各种不同的区块链之间的互联互通所形成的一个更大的生态区块链。比如电商平台公有链 + 物流公有链 + 物流联盟链 + 银行联盟链 +.....，它们之间的相互协作、通讯、共识、就是一个典型的互联链。</p>
 <h1 id="3-区块链的工作量证明机制">3 区块链的工作量证明机制</h1>
 <h2 id="31-powproof-of-power-工作量证明机制">3.1 POW：proof of power, 工作量证明机制</h2>
 <p>PoW（工作量证明），也就是像比特币的挖矿机制，矿工通过把网络尚未记录的现有交易打包到一个区块，然后不断遍历尝试来寻找一个随机数，使得新区块加上随机数的哈希值满足一定的难度条件，例如前面 10 位是零。找到满足条件的随机数，就相当于确定了区块链最新的一个区块，也相当于获得了区块链的本轮记账权。矿工把满足挖矿难度条件的区块在网络中广播出去，全网其他节点在验证该区块满足挖矿难度条件，同时区块里的交易数据符合协议规范后，将各自把该区块链接到自己版本的区块链上，从而在全网形成对当前网络状态的共识。</p>
@@ -56,10 +238,52 @@
 <li>优点：实现秒级的快速共识机制，保证一致性。</li>
 <li>缺点：去中心化程度不如公有链上的共识机制；更适合多方参与的多中心商业模式。</li>
 </ul>
-<h2 id="41-拜占庭将军问题-byzantine-generals-problem-bgp">4.1 拜占庭将军问题 /Byzantine Generals Problem/ BGP</h2>
-<p>由莱斯利·兰波特在其同名论文中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算机通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。</p>
-<h2 id="42-改进型实用拜占庭容错-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错 /Practical Byzantine Fault Tolerance/ PBFT</h2>
-<p>PBET 共识机制是少数服从多数，根据信息在分布式网络中节点间互相交换后各节点列出所有得到的信息，一个节点代表一票，选择大多数的结果作为解决办法。PBET 将容错量控制在全部节点数的 $$\bar{x}$$，即如只要有超过2/3 的正常节点，整个系统便可正常运作。</p>
+<h2 id="41-拜占庭将军问题-byzantine-generals-problem-bgp">4.1 拜占庭将军问题/ Byzantine Generals Problem/ BGP</h2>
+<p><a href="http://lamport.azurewebsites.net/pubs/byz.pdf">拜占庭将军问题</a>由莱斯利·兰波特在其同名论文中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算机通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。</p>
+<h2 id="42-改进型实用拜占庭容错-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错/ Practical Byzantine Fault Tolerance/ PBFT</h2>
+<p>PBET 共识机制是少数服从多数，根据信息在分布式网络中节点间互相交换后各节点列出所有得到的信息，一个节点代表一票，选择大多数的结果作为解决办法。PBET 将容错量控制在全部节点数的 1/3，即如只要有超过 2/3 的正常节点，整个系统便可正常运作。</p>
+<h2 id="43-授权拜占庭容错算法-delegated-byzantine-fault-tolerance-dbft">4.3 授权拜占庭容错算法/ Delegated Byzantine Fault Tolerance /dBFT</h2>
+<p>dBFT，是基于持有权益比例来选出专门的记账人（记账节点），然后记账人之间通过拜占庭容错算法（即少数服从多数的投票机制）来达成共识，决定动态参与节点。dBFT 可以容忍任何类型的错误，且专门的多个记账人使得每一个区块都有最终性、不会分叉。</p>
+<h2 id="44-联邦拜占庭协议-federated-byzantine-agreement-fba">4.4 联邦拜占庭协议/ Federated Byzantine Agreement / FBA</h2>
+<p>联邦拜占庭协议的主要特性是去中心化和任意行为容错，通过分布式的方法，达到法定人数或者节点足够的群体能达成共识，每一个节点不需要依赖相同的参与者就能决定信任的对象来完成共识。</p>
+<h1 id="5-图灵完备">5 图灵完备</h1>
+<p>一切可计算的问题都能计算，这样的虚拟机或者编程语言就叫图灵完备的。</p>
+<h2 id="51-图灵完备的系统和图灵完备的语言">5.1 图灵完备的系统和图灵完备的语言</h2>
+<p>一个能计算出每个<strong>图灵可计算函数</strong>（Turing-computable function）的计算系统被称为图灵完备的。一个语言是图灵完备的，意味着该语言的计算能力与一个<strong>通用图灵机</strong> （Universal Turing Machine）相当，这也是现代计算机语言所能拥有的最高能力。</p>
+<h2 id="52-图灵完备深入解释">5.2 图灵完备深入解释</h2>
+<p>在可计算理论中，当一组数据操作的规则（一组指令集，编程语言，或者元胞自动机）满足任意数据按照一定的顺序可以计算出结果，被称为<strong>图灵完备</strong>（turing complete）。一个有图灵完备指令集的设备被定义为通用计算机。如果是图灵完备的，它（计算机设备）有能力执行条件跳转（“if” 和 “goto”语句）以及改变内存数据。 如果某个东西展现出了图灵完备，它就有能力表现出可以模拟原始计算机，而即使最简单的计算机也能模拟出最复杂的计算机。所有的通用编程语言和现代计算机的指令集都是图灵完备的（C++ template 就是图灵完备的），都能解决内存有限的问题。图灵完备的机器都被定义有无限内存，但是机器指令集却通常定义为只工作在特定的，有限数量的 RAM 上。</p>
+<h2 id="53-图灵完备优缺点">5.3 图灵完备优缺点</h2>
+<p>图灵完备意味着你的语言可以做到能够用图灵机能做到的所有事情，可以解决所有的可计算问题。 图灵不完备也不是没有意义，有些场景我们需要限制语言本身。 如限制循环和递归，可以保证该语言能写的程序一定是终止的。图灵不完备会更安全些，图灵完备会更智能些。</p>
+<h2 id="54比特币的图灵非完备性">5.4比特币的图灵非完备性</h2>
+<p>比特币脚本语言包含许多操作，但都故意限定为一种重要的方式——没有循环或者复杂流控制功能以外的其他条件的流控制。这样就保证了脚本语言的图灵非完备性，这意味着脚本的复杂性有限，交易可执行的次数也可预见。脚本并不是一种通用语言，施加的这些限制确保该语言不被用于创造无限循环或其它类型的逻辑炸弹，这样的炸弹可以植入在一笔交易中，通过引起拒绝服务的方式攻击比特币网络。受限制的语言能防止交易激活机制被人当作薄弱环节而加以利用。</p>
+<h2 id="55-以太坊是一个图灵完备的区块链">5.5 以太坊是一个图灵完备的区块链</h2>
+<p>以太坊的核心就是能够运行“无所不能”的智能合约，拥有图灵完备的编程语言，比如 Solidity，可以解决所有可计算问题。</p>
+<h1 id="6-零知识证明">6 零知识证明</h1>
+<p>“零知识证明”－zero-knowledge proof，是由S.Goldwasser、S.Micali及C.Rackoff在20世纪80年代初提出的。它指的是证明者能够在不向验证者提供任何有用的信息的情况下，使验证者相信某个论断是正确的。零知识证明实质上是一种涉及两方或更多方的协议，即两方或更多方完成一项任务所需采取的一系列步骤。证明者向验证者证明并使其相信自己知道或拥有某一消息，但证明过程不能向验证者泄漏任何关于被证明消息的信息。大量事实证明，零知识证明在密码学中非常有用。如果能够将零知识证明用于验证，将可以有效解决许多问题。</p>
+<h2 id="61-定义">6.1 定义</h2>
+<p>零知识证明满足三个属性：</p>
+<ol>
+<li>如果语句为真，诚实的验证者（即，正确遵循协议的验证者）将由诚实的证明者确信这一事实。</li>
+<li>如果语句为假，不排除有概率欺骗者可以说服诚实的验证者它是真的。</li>
+<li>如果语句为真，证明者的目的就是向验证者证明并使验证者相信自己知道或拥有某一消息，而在证明过程中不可向验证者泄漏任何有关被证明消息的内容。</li>
+</ol>
+<p>零知识证明并不是数学意义上的证明，因为它存在小概率的误差，欺骗者有可能通过虚假陈述骗过证明者。换句话来说，零知识证明是概率证明而不是确定性证明。但是也存在有技术能将误差降低到可以忽略的值。</p>
+<p>零知识的形式定义必须使用一些计算模型，最常见的是图灵机的计算模型。</p>
+<h2 id="62-证明举例">6.2 证明举例</h2>
+<h3 id="621-案例一">6.2.1 案例一</h3>
+<p>A 要向 B 证明自己拥有某个房间的钥匙，假设该房间只能用钥匙打开锁，而其他任何方法都打不开。这时有 2 个方法：</p>
+<ol>
+<li>A 把钥匙出示给 B，B 用这把钥匙打开该房间的锁，从而证明 A 拥有该房间的正确的钥匙。</li>
+<li>B 确定该房间内有某一物体，A 用自己拥有的钥匙打开该房间的门，然后把物体拿出来出示给 B，从而证明自己确实拥有该房间的钥匙。</li>
+</ol>
+<p>后面的方法 2 属于零知识证明。好处在于在整个证明的过程中，B 始终不能看到钥匙的样子，从而避免了钥匙的泄露。</p>
+<h3 id="622-案例二">6.2.2 案例二</h3>
+<p>A 拥有 B 的公钥，A 没有见过 B，而 B 见过 A 的照片，偶然一天 2 人见面了，B 认出了 A，但 A 不能确定面前的人是否是 B，这时 B 要向 A 证明自己是 B，也有 2 个方法。</p>
+<ol>
+<li>B 把自己的私钥给 A，A 用这个私钥对某个数据加密，然后用 B 的公钥解密，如果正确，则证明对方确实是B。</li>
+<li>A 给出一个随机值，B 用自己的私钥对其加密，然后把加密后的数据交给 A，A 用 B 的公钥解密，如果能够得到原来的随机值，则证明对方是 B。</li>
+</ol>
+<p>后面方法 2 属于零知识证明。</p>
 ]]></content>
     </entry>
     <entry>
@@ -2875,962 +3099,6 @@ $(&quot;select &gt; option:selected&quot;)
 <p>非获取匹配，反向肯定预查，与正向肯定预查类似，只是方向相反。例如，“<code>(?&lt;=95|98|NT|2000)Windows</code>”能匹配“2000Windows”中的“Windows”，但不能匹配“3.1Windows”中的“Windows”。</p>
 <h1 id="pattern-5">💊 (?&lt;!pattern)</h1>
 <p>非获取匹配，反向否定预查，与正向否定预查类似，只是方向相反。例如“<code>(?&lt;!95|98|NT|2000)Windows</code>”能匹配“3.1Windows”中的“Windows”，但不能匹配“2000Windows”中的“Windows”。这个地方不正确，有问题</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[设计师网站]]></title>
-        <id>https://tdmaker.github.io/faded/post/su-cai-wang-zhan/</id>
-        <link href="https://tdmaker.github.io/faded/post/su-cai-wang-zhan/">
-        </link>
-        <updated>2020-04-03T16:50:25.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="设计师导航">设计师导航</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>全球100+知名设计网站</td>
-<td><a href="http://www.bigbigwork.com/nav/6.html">http://www.bigbigwork.com/nav/6.html</a></td>
-</tr>
-<tr>
-<td>CND设计网址导航 - 优秀设计网站排名大全</td>
-<td><a href="http://wz.cndesign.com/">http://wz.cndesign.com/</a></td>
-</tr>
-<tr>
-<td>拍信</td>
-<td><a href="https://www.paixin.com/">https://www.paixin.com/</a></td>
-</tr>
-<tr>
-<td>我图网</td>
-<td><a href="https://www.ooopic.com/">https://www.ooopic.com/</a></td>
-</tr>
-<tr>
-<td>包图网</td>
-<td><a href="https://ibaotu.com/">https://ibaotu.com/</a></td>
-</tr>
-<tr>
-<td>素材天下</td>
-<td><a href="http://www.sucaitianxia.net/">http://www.sucaitianxia.net/</a></td>
-</tr>
-<tr>
-<td>素材中国</td>
-<td><a href="http://www.sccnn.com/">http://www.sccnn.com/</a></td>
-</tr>
-<tr>
-<td>站长素材</td>
-<td><a href="http://sc.chinaz.com/">http://sc.chinaz.com/</a></td>
-</tr>
-<tr>
-<td>红动中国</td>
-<td><a href="https://www.redocn.com/">https://www.redocn.com/</a></td>
-</tr>
-<tr>
-<td>千库网</td>
-<td><a href="https://588ku.com/">https://588ku.com/</a></td>
-</tr>
-<tr>
-<td>觅元素</td>
-<td><a href="http://www.51yuansu.com/">http://www.51yuansu.com/</a></td>
-</tr>
-<tr>
-<td>unDraw</td>
-<td><a href="https://undraw.co/">https://undraw.co/</a></td>
-</tr>
-<tr>
-<td>DrawKit</td>
-<td><a href="https://www.drawkit.io/">https://www.drawkit.io/</a></td>
-</tr>
-<tr>
-<td>pngtree</td>
-<td><a href="https://pngtree.com/">https://pngtree.com/</a></td>
-</tr>
-<tr>
-<td>VCG</td>
-<td><a href="https://www.vcg.com/">https://www.vcg.com/</a></td>
-</tr>
-<tr>
-<td>Textures for 3D, graphic design and Photoshop!</td>
-<td><a href="https://www.textures.com/">https://www.textures.com/</a></td>
-</tr>
-<tr>
-<td>無料DTP素材 【素材ページ 】食材・料理の著作権フリー写真</td>
-<td><a href="http://www.sozai-page.com/index.html">http://www.sozai-page.com/index.html</a></td>
-</tr>
-<tr>
-<td>免费模板网</td>
-<td><a href="http://www.wangjie.org/">http://www.wangjie.org/</a></td>
-</tr>
-<tr>
-<td>Landing page templates for startups</td>
-<td><a href="https://cruip.com/">https://cruip.com/</a></td>
-</tr>
-<tr>
-<td>Avataaars Generator</td>
-<td><a href="https://getavataaars.com/?avatarStyle=Circle">https://getavataaars.com/?avatarStyle=Circle</a></td>
-</tr>
-<tr>
-<td>中国色</td>
-<td><a href="http://zhongguose.com/">http://zhongguose.com/</a></td>
-</tr>
-<tr>
-<td>完美对称无缝平铺背景图底纹素材 - 图鱼</td>
-<td><a href="https://www.hituyu.com/">https://www.hituyu.com/</a></td>
-</tr>
-<tr>
-<td>花瓣网_陪你做生活的设计师（创意灵感天堂，搜索、发现设计灵感、设计素材）</td>
-<td><a href="https://huaban.com/">https://huaban.com/</a></td>
-</tr>
-<tr>
-<td>站酷 (ZCOOL) - 设计师互动平台 - 打开站酷，发现更好的设计！</td>
-<td><a href="https://www.zcool.com.cn/">https://www.zcool.com.cn/</a></td>
-</tr>
-<tr>
-<td>UI中国用户体验设计平台</td>
-<td><a href="https://www.ui.cn/">https://www.ui.cn/</a></td>
-</tr>
-<tr>
-<td>68Design - 找兼职设计师就上68Design - 【设计师接单平台】</td>
-<td><a href="https://www.68design.net/">https://www.68design.net/</a></td>
-</tr>
-<tr>
-<td>Flat Design Inspiration - Flat UI</td>
-<td><a href="https://flatui.com/">https://flatui.com/</a></td>
-</tr>
-<tr>
-<td>UI Movement - The best UI design inspiration, every day</td>
-<td><a href="https://uimovement.com/">https://uimovement.com/</a></td>
-</tr>
-<tr>
-<td>Collect UI - Daily inspiration collected from daily ui archive and beyond. Based on Dribbble shots, hand picked, updating daily.</td>
-<td><a href="http://www.collectui.com/">http://www.collectui.com/</a></td>
-</tr>
-<tr>
-<td>siteInspire - Web Design Inspiration</td>
-<td><a href="https://www.siteinspire.com/">https://www.siteinspire.com/</a></td>
-</tr>
-<tr>
-<td>Dribbble - Discover the World’s Top Designers &amp; Creative Professionals</td>
-<td><a href="https://dribbble.com/">https://dribbble.com/</a></td>
-</tr>
-<tr>
-<td>Blocs - Fast, easy to use and powerful visual web design tool, that lets you create responsive websites without writing code.</td>
-<td><a href="https://blocsapp.com/">https://blocsapp.com/</a></td>
-</tr>
-<tr>
-<td>UI Design Resources, UI Kits, Wireframes, Icons and More - UI8</td>
-<td><a href="https://ui8.net/">https://ui8.net/</a></td>
-</tr>
-<tr>
-<td>UI-Patterns.com</td>
-<td><a href="https://ui-patterns.com/">https://ui-patterns.com/</a></td>
-</tr>
-<tr>
-<td>学UI网-UI设计师导航网，最专业的UI设计网站</td>
-<td><a href="http://hao.xueui.cn/">http://hao.xueui.cn/</a></td>
-</tr>
-<tr>
-<td>优设导航 - 学设计从这里开始！</td>
-<td><a href="http://hao.uisdc.com/">http://hao.uisdc.com/</a></td>
-</tr>
-<tr>
-<td>饭团导航 精选设计师实用工具导航 hao.psefan.com</td>
-<td><a href="http://hao.psefan.com/">http://hao.psefan.com/</a></td>
-</tr>
-<tr>
-<td>设计导航 - 精选最好的设计网站大全</td>
-<td><a href="https://hao.shejidaren.com/">https://hao.shejidaren.com/</a></td>
-</tr>
-<tr>
-<td>优波设计 - 设计师必备网址导航 ubuuk.com</td>
-<td><a href="https://www.ubuuk.com/">https://www.ubuuk.com/</a></td>
-</tr>
-<tr>
-<td>设计订阅 - 腾讯设计导航</td>
-<td><a href="https://idesign.qq.com/#!index/feed">https://idesign.qq.com/#!index/feed</a></td>
-</tr>
-<tr>
-<td>http://www.bigbigwork.com/nav/6.html</td>
-<td><a href="http://www.foolo.cn/">http://www.foolo.cn/</a></td>
-</tr>
-<tr>
-<td>工业设计网站导航 | 设计癖</td>
-<td><a href="http://hao.shejipi.com/">http://hao.shejipi.com/</a></td>
-</tr>
-<tr>
-<td>46设计导航_设计网站大全_46design.com</td>
-<td><a href="http://www.46design.com/2019/">http://www.46design.com/2019/</a></td>
-</tr>
-<tr>
-<td>UI设计师导航网 - 优阁</td>
-<td><a href="http://so.uigreat.com/">http://so.uigreat.com/</a></td>
-</tr>
-<tr>
-<td>Canva在线平面设计软件_免费设计模板素材和海量正版图片 - Canva中文官网</td>
-<td><a href="https://www.canva.cn/">https://www.canva.cn/</a></td>
-</tr>
-<tr>
-<td>创客贴_平面设计作图神器_免费设计模板_在线稿定设计印刷</td>
-<td><a href="https://www.chuangkit.com/">https://www.chuangkit.com/</a></td>
-</tr>
-<tr>
-<td>轻量级在线平面设计工具 - 图帮主</td>
-<td><a href="https://www.tubangzhu.com/">https://www.tubangzhu.com/</a></td>
-</tr>
-<tr>
-<td>图怪兽作图神器-在线图片编辑器-PS图片制作-搞定平面设计不求人</td>
-<td><a href="https://818ps.com/">https://818ps.com/</a></td>
-</tr>
-<tr>
-<td>Fotor在线设计工具_免费设计素材和模板_在线平面设计网站</td>
-<td><a href="https://www.fotor.com.cn/">https://www.fotor.com.cn/</a></td>
-</tr>
-<tr>
-<td>Presentation Software</td>
-<td>Online Presentation Tools</td>
-</tr>
-<tr>
-<td>设计癖 | 关注设计癖 提升幸福感</td>
-<td><a href="http://www.shejipi.com/">http://www.shejipi.com/</a></td>
-</tr>
-<tr>
-<td>xiaopiu-产品原型设计工具与团队实时协作平台</td>
-<td><a href="https://www.xiaopiu.com/">https://www.xiaopiu.com/</a></td>
-</tr>
-<tr>
-<td>燃设计-共享全球好设计_软装素材分享_软装设计灵感图库</td>
-<td><a href="http://www.ransheji.com/">http://www.ransheji.com/</a></td>
-</tr>
-<tr>
-<td>Themes - macOS - Human Interface Guidelines - Apple Developer</td>
-<td><a href="https://developer.apple.com/design/human-interface-guidelines/macos/overview/themes/">https://developer.apple.com/design/human-interface-guidelines/macos/overview/themes/</a></td>
-</tr>
-<tr>
-<td>Overview - Atlassian Design</td>
-<td><a href="https://atlassian.design/guidelines/product/overview">https://atlassian.design/guidelines/product/overview</a></td>
-</tr>
-<tr>
-<td>介绍 - Ant Design</td>
-<td><a href="https://ant.design/docs/spec/introduce-cn">https://ant.design/docs/spec/introduce-cn</a></td>
-</tr>
-<tr>
-<td>WeUI</td>
-<td><a href="https://weui.io/">https://weui.io/</a></td>
-</tr>
-<tr>
-<td>Documentation - Materialize</td>
-<td><a href="https://materializecss.com/">https://materializecss.com/</a></td>
-</tr>
-<tr>
-<td>Styleguide</td>
-<td><a href="https://www.yelp.com/styleguide/mobile">https://www.yelp.com/styleguide/mobile</a></td>
-</tr>
-<tr>
-<td>优优灵感-设计师灵感展现与启发-优优教程网</td>
-<td><a href="https://uiiiuiii.com/inspiration">https://uiiiuiii.com/inspiration</a></td>
-</tr>
-<tr>
-<td>Crello — Free Graphic Design Software</td>
-<td>Create Images Online Tool</td>
-</tr>
-<tr>
-<td>优设导航 - 学设计从这里开始！</td>
-<td><a href="https://hao.uisdc.com/">https://hao.uisdc.com/</a></td>
-</tr>
-<tr>
-<td>Creative Mass</td>
-<td><a href="https://creativemass.cn/#/">https://creativemass.cn/#/</a></td>
-</tr>
-<tr>
-<td>设计师之家</td>
-<td><a href="https://www.51sjsj.com/">https://www.51sjsj.com/</a></td>
-</tr>
-<tr>
-<td>Design Seeds</td>
-<td>for all who ♥ color</td>
-</tr>
-<tr>
-<td>The Nordnet Brand - Nordnet Brand</td>
-<td><a href="https://brand.nordnet.se/">https://brand.nordnet.se/</a></td>
-</tr>
-<tr>
-<td>STUDIO</td>
-<td>Design to live website in one click.</td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-</tbody>
-</table>
-<h1 id="图片素材">图片素材</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unsplash</td>
-<td><a href="https://unsplash.com/">https://unsplash.com/</a></td>
-</tr>
-<tr>
-<td>Pexels</td>
-<td><a href="https://www.pexels.com/zh-cn/">https://www.pexels.com/zh-cn/</a></td>
-</tr>
-<tr>
-<td>Gratisography</td>
-<td><a href="https://gratisography.com/">https://gratisography.com/</a></td>
-</tr>
-<tr>
-<td>Beautiful free stock photos</td>
-<td><a href="https://stocksnap.io/">https://stocksnap.io/</a></td>
-</tr>
-<tr>
-<td>Foodiesfeed</td>
-<td><a href="https://www.foodiesfeed.com/">https://www.foodiesfeed.com/</a></td>
-</tr>
-<tr>
-<td>Freephotos</td>
-<td><a href="https://freephotos.cc/zh">https://freephotos.cc/zh</a></td>
-</tr>
-<tr>
-<td>Uniquely free photos.</td>
-<td><a href="https://www.reshot.com/">https://www.reshot.com/</a></td>
-</tr>
-<tr>
-<td>Free images for creatives, by creatives</td>
-<td><a href="https://morguefile.com/quest">https://morguefile.com/quest</a></td>
-</tr>
-<tr>
-<td>Illustration Gallery</td>
-<td><a href="https://www.manypixels.co/gallery/">https://www.manypixels.co/gallery/</a></td>
-</tr>
-<tr>
-<td>FREE ILLUSTRATIONS</td>
-<td><a href="https://lukaszadam.com/illustrations">https://lukaszadam.com/illustrations</a></td>
-</tr>
-<tr>
-<td>沙沙野</td>
-<td><a href="https://www.ssyer.com/">https://www.ssyer.com/</a></td>
-</tr>
-<tr>
-<td>图虫</td>
-<td><a href="https://tuchong.com/">https://tuchong.com/</a></td>
-</tr>
-<tr>
-<td>摄图网</td>
-<td><a href="https://699pic.com/">https://699pic.com/</a></td>
-</tr>
-<tr>
-<td>7MX——Home Business Advertising Ideas</td>
-<td><a href="https://7mx.com/">https://7mx.com/</a></td>
-</tr>
-<tr>
-<td>图品汇</td>
-<td><a href="https://www.88tph.com/">https://www.88tph.com/</a></td>
-</tr>
-<tr>
-<td>Free Photos for bloggers and creatives!</td>
-<td><a href="http://photopin.com/">http://photopin.com/</a></td>
-</tr>
-<tr>
-<td>花瓣美素</td>
-<td><a href="http://www.meisupic.com/">http://www.meisupic.com/</a></td>
-</tr>
-<tr>
-<td>PAKUTASO</td>
-<td><a href="https://www.pakutaso.com/">https://www.pakutaso.com/</a></td>
-</tr>
-<tr>
-<td>懒人图库</td>
-<td><a href="http://www.lanrentuku.com/">http://www.lanrentuku.com/</a></td>
-</tr>
-<tr>
-<td>SEARCH FOR CONTENT TO REUSE</td>
-<td><a href="https://search.creativecommons.org/">https://search.creativecommons.org/</a></td>
-</tr>
-<tr>
-<td>Free Stock Photos by Canva</td>
-<td><a href="https://www.canva.com/photos/free/">https://www.canva.com/photos/free/</a></td>
-</tr>
-<tr>
-<td>Creative Briefs. Request for photos</td>
-<td><a href="https://morguefile.com/quest">https://morguefile.com/quest</a></td>
-</tr>
-<tr>
-<td>Illustration Gallery</td>
-<td><a href="https://www.manypixels.co/gallery/">https://www.manypixels.co/gallery/</a></td>
-</tr>
-<tr>
-<td>ImageFinder</td>
-<td><a href="https://imagefinder.co/">https://imagefinder.co/</a></td>
-</tr>
-<tr>
-<td>泼辣有图</td>
-<td><a href="http://www.polayoutu.com/collections">http://www.polayoutu.com/collections</a></td>
-</tr>
-<tr>
-<td>visualhunt</td>
-<td><a href="https://visualhunt.com/">https://visualhunt.com/</a></td>
-</tr>
-<tr>
-<td>foter</td>
-<td><a href="https://foter.com/">https://foter.com/</a></td>
-</tr>
-<tr>
-<td>Free high resolution photography - Life of Pix - Home</td>
-<td><a href="https://www.lifeofpix.com/">https://www.lifeofpix.com/</a></td>
-</tr>
-<tr>
-<td>New Old Stock</td>
-<td><a href="https://nos.twnsnd.co/">https://nos.twnsnd.co/</a></td>
-</tr>
-<tr>
-<td>千图网</td>
-<td><a href="https://www.58pic.com/">https://www.58pic.com/</a></td>
-</tr>
-<tr>
-<td>Hand-picked free photos for your inspiration - Magdeleine</td>
-<td><a href="https://magdeleine.co/">https://magdeleine.co/</a></td>
-</tr>
-<tr>
-<td>昵图网</td>
-<td><a href="http://www.nipic.com/">http://www.nipic.com/</a></td>
-</tr>
-<tr>
-<td>photock</td>
-<td><a href="https://www.photock.jp/">https://www.photock.jp/</a></td>
-</tr>
-<tr>
-<td>免费正版高清图片素材库</td>
-<td><a href="https://pixabay.com/zh/">https://pixabay.com/zh/</a></td>
-</tr>
-<tr>
-<td>piqsels</td>
-<td><a href="https://www.piqsels.com/zh">https://www.piqsels.com/zh</a></td>
-</tr>
-<tr>
-<td>DesignersPics</td>
-<td><a href="http://www.designerspics.com/">http://www.designerspics.com/</a></td>
-</tr>
-<tr>
-<td>freeimages</td>
-<td><a href="https://cn.freeimages.com/">https://cn.freeimages.com/</a></td>
-</tr>
-<tr>
-<td>StreetWill</td>
-<td><a href="http://www.streetwill.co/">http://www.streetwill.co/</a></td>
-</tr>
-<tr>
-<td>Discover and share the world's best photos</td>
-<td><a href="">https://web.500px.com/</a></td>
-</tr>
-<tr>
-<td>FREE TRAVEL PHOTOS</td>
-<td><a href="https://www.bucketlistly.blog/photos">https://www.bucketlistly.blog/photos</a></td>
-</tr>
-<tr>
-<td>Free Stock Photos For Commercial Use.</td>
-<td><a href="https://www.splitshire.com/splitshire-free-stock-photos/">https://www.splitshire.com/splitshire-free-stock-photos/</a></td>
-</tr>
-<tr>
-<td>BURST</td>
-<td><a href="https://burst.shopify.com/">https://burst.shopify.com/</a></td>
-</tr>
-<tr>
-<td>FOCA</td>
-<td><a href="https://focastock.com/">https://focastock.com/</a></td>
-</tr>
-<tr>
-<td>jay mantri</td>
-<td><a href="https://jaymantri.com/#_=_">https://jaymantri.com/#<em>=</em></a></td>
-</tr>
-<tr>
-<td>LET'S FIND THE PERFECT PHOTO FOR YOU</td>
-<td><a href="https://kaboompics.com/">https://kaboompics.com/</a></td>
-</tr>
-<tr>
-<td>A curated collection of free web design resources, all for commercial use.</td>
-<td><a href="http://imcreator.com/free">http://imcreator.com/free</a></td>
-</tr>
-<tr>
-<td>Zoommy</td>
-<td><a href="https://zoommyapp.com/">https://zoommyapp.com/</a></td>
-</tr>
-<tr>
-<td>STOKPIC - Free Stock Photos For Commercial Use</td>
-<td><a href="https://stokpic.com/">https://stokpic.com/</a></td>
-</tr>
-<tr>
-<td>Cupcake</td>
-<td><a href="http://cupcake.nilssonlee.se/">http://cupcake.nilssonlee.se/</a></td>
-</tr>
-<tr>
-<td>Folkert Gorter Superfamous Images</td>
-<td><a href="https://images.superfamous.com/">https://images.superfamous.com/</a></td>
-</tr>
-<tr>
-<td>PICGRAPHY</td>
-<td><a href="https://picography.co/">https://picography.co/</a></td>
-</tr>
-<tr>
-<td>Free stock illustrations, Beautiful Free Art - Mixkit</td>
-<td><a href="https://mixkit.co/free-stock-art/">https://mixkit.co/free-stock-art/</a></td>
-</tr>
-<tr>
-<td>Free Stock Photos</td>
-<td><a href="https://photo-ac.com/">https://photo-ac.com/</a></td>
-</tr>
-<tr>
-<td>scrolller</td>
-<td><a href="https://scrolller.com/art">https://scrolller.com/art</a></td>
-</tr>
-<tr>
-<td>JOHN KRAUS PHOTOS</td>
-<td><a href="https://www.johnkrausphotos.com/Portfolio/">https://www.johnkrausphotos.com/Portfolio/</a></td>
-</tr>
-<tr>
-<td>Picrew</td>
-<td><a href="https://picrew.me/">https://picrew.me/</a></td>
-</tr>
-<tr>
-<td>GENERATED FACES</td>
-<td><a href="https://generated.photos/faces">https://generated.photos/faces</a></td>
-</tr>
-<tr>
-<td>用大作，不用翻墙和VPN秒看pixabay上的设计</td>
-<td><a href="http://www.bigbigwork.com/pixabay.html">http://www.bigbigwork.com/pixabay.html</a></td>
-</tr>
-</tbody>
-</table>
-<h2 id="gif-and-png-and-icon-and-psd-and-logo-and-vector-and-illustrations">GIF and PNG and icon and PSD and LOGO and Vector and illustrations</h2>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>With Stock Animated GIFs Crafted for Commercial Use</td>
-<td><a href="https://cliply.co/">https://cliply.co/</a></td>
-</tr>
-<tr>
-<td>SOOGIF，找动图做动图.gif</td>
-<td><a href="https://www.soogif.com/">https://www.soogif.com/</a></td>
-</tr>
-<tr>
-<td>Search all the GIFs and Stickers</td>
-<td><a href="https://giphy.com/">https://giphy.com/</a></td>
-</tr>
-<tr>
-<td>free PNGs</td>
-<td><a href="https://www.freepngs.com/search-pngs">https://www.freepngs.com/search-pngs</a></td>
-</tr>
-<tr>
-<td>CLEAN PNG</td>
-<td><a href="https://www.cleanpng.com/">https://www.cleanpng.com/</a></td>
-</tr>
-<tr>
-<td>easyicon</td>
-<td><a href="https://www.easyicon.net/">https://www.easyicon.net/</a></td>
-</tr>
-<tr>
-<td>Icons for everything</td>
-<td><a href="https://thenounproject.com/">https://thenounproject.com/</a></td>
-</tr>
-<tr>
-<td>Instant Logo Search</td>
-<td><a href="http://instantlogosearch.com/">http://instantlogosearch.com/</a></td>
-</tr>
-<tr>
-<td>Logo Maker - Create Your Own Logo, It's Free! - FreeLogoDesign</td>
-<td><a href="https://www.freelogodesign.org/">https://www.freelogodesign.org/</a></td>
-</tr>
-<tr>
-<td>365psd</td>
-<td><a href="https://cn.365psd.com/free-psd">https://cn.365psd.com/free-psd</a></td>
-</tr>
-<tr>
-<td>Download Free Vectors, Clipart Graphics, Vector Art &amp; Design Templates</td>
-<td><a href="https://www.vecteezy.com/">https://www.vecteezy.com/</a></td>
-</tr>
-<tr>
-<td>freepik</td>
-<td><a href="https://www.freepik.com/">https://www.freepik.com/</a></td>
-</tr>
-<tr>
-<td>humaaans</td>
-<td><a href="https://www.humaaans.com/">https://www.humaaans.com/</a></td>
-</tr>
-<tr>
-<td>Free Vector Illustrations to Class up Your Project</td>
-<td><a href="https://icons8.com/ouch">https://icons8.com/ouch</a></td>
-</tr>
-<tr>
-<td>IRA Design - Build your own amazing illustrations @ Creative Tim</td>
-<td><a href="https://iradesign.io/">https://iradesign.io/</a></td>
-</tr>
-<tr>
-<td>absurd illustrations that make sense</td>
-<td><a href="https://absurd.design/">https://absurd.design/</a></td>
-</tr>
-<tr>
-<td>Illustration Gallery by ManyPixels</td>
-<td>Open-Source Editable Illustrations</td>
-</tr>
-<tr>
-<td>Free Vectors, Stock Photos &amp; PSD Downloads</td>
-<td>Freepik</td>
-</tr>
-</tbody>
-</table>
-<h1 id="视频素材">视频素材</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Thousands of Free High-Resolution CC0 Photos and Videos</td>
-<td><a href="https://isorepublic.com/">https://isorepublic.com/</a></td>
-</tr>
-<tr>
-<td>NASA Image and Video Library</td>
-<td><a href="https://images.nasa.gov/">https://images.nasa.gov/</a></td>
-</tr>
-<tr>
-<td>COVERR - Beautiful Free Stock Video Footage</td>
-<td><a href="https://coverr.co/">https://coverr.co/</a></td>
-</tr>
-<tr>
-<td>Golden Wolf</td>
-<td><a href="https://goldenwolf.tv/">https://goldenwolf.tv/</a></td>
-</tr>
-<tr>
-<td>场库</td>
-<td><a href="https://www.vmovier.com/">https://www.vmovier.com/</a></td>
-</tr>
-<tr>
-<td>Free stock videos · Pexels Videos</td>
-<td><a href="https://www.pexels.com/videos/">https://www.pexels.com/videos/</a></td>
-</tr>
-<tr>
-<td>天空之城</td>
-<td><a href="https://www.skypixel.com/">https://www.skypixel.com/</a></td>
-</tr>
-<tr>
-<td>Distill: Free HD Stock Video &amp; HD Video Clips</td>
-<td><a href="https://wedistill.io/">https://wedistill.io/</a></td>
-</tr>
-<tr>
-<td>Free Video Footage - Best Free Backgrounds Stock Video Footage</td>
-<td><a href="https://www.free-video-footage.com/">https://www.free-video-footage.com/</a></td>
-</tr>
-<tr>
-<td>Free Motion Backgrounds</td>
-<td>MP4, MOV video backgrounds for FREE!</td>
-</tr>
-<tr>
-<td>Free Stock Video Footage HD 4K Download Motion Graphics</td>
-<td><a href="https://www.videvo.net/">https://www.videvo.net/</a></td>
-</tr>
-<tr>
-<td>Free Stock Footage Videos, 4k After Effects Templates and More!</td>
-<td><a href="https://www.videezy.com/">https://www.videezy.com/</a></td>
-</tr>
-<tr>
-<td>Free 4K Stock Video | Stock Footage for Free – {Dareful} Completely Free 4K Stock Video</td>
-<td><a href="https://www.dareful.com/">https://www.dareful.com/</a></td>
-</tr>
-<tr>
-<td>Free Stock Video Footage HD Royalty-Free Videos Download</td>
-<td><a href="https://mazwai.com/#/">https://mazwai.com/#/</a></td>
-</tr>
-<tr>
-<td>iTunes Movie Trailers</td>
-<td><a href="https://trailers.apple.com/">https://trailers.apple.com/</a></td>
-</tr>
-<tr>
-<td>Mixkit - Awesome free assets for your next video project</td>
-<td><a href="https://mixkit.co/">https://mixkit.co/</a></td>
-</tr>
-<tr>
-<td>XStockvideo</td>
-<td><a href="http://www.xstockvideo.com/">http://www.xstockvideo.com/</a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-</tbody>
-</table>
-<h1 id="fonts-and-icons">Fonts and icons</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IconMoon</td>
-<td><a href="https://icomoon.io/">https://icomoon.io/</a></td>
-</tr>
-<tr>
-<td>iconmonstr</td>
-<td><a href="https://iconmonstr.com/">https://iconmonstr.com/</a></td>
-</tr>
-<tr>
-<td>Zwicon – Icon set</td>
-<td><a href="https://www.zwicon.com/cheatsheet.html">https://www.zwicon.com/cheatsheet.html</a></td>
-</tr>
-<tr>
-<td>Find Similar Icons</td>
-<td><a href="http://compute.vision/nouns/index.html">http://compute.vision/nouns/index.html</a></td>
-</tr>
-<tr>
-<td>iconSweets — DesignBombs</td>
-<td><a href="https://designbombs.com/iconsweets/">https://designbombs.com/iconsweets/</a></td>
-</tr>
-<tr>
-<td>iconfont</td>
-<td><a href="https://www.iconfont.cn/">https://www.iconfont.cn/</a></td>
-</tr>
-<tr>
-<td>100font.com - 免版权字体下载、免费商用字体下载网站</td>
-<td><a href="https://www.100font.com/">https://www.100font.com/</a></td>
-</tr>
-<tr>
-<td>造字工房</td>
-<td><a href="https://www.makefont.com/">https://www.makefont.com/</a></td>
-</tr>
-<tr>
-<td>方正字库</td>
-<td><a href="http://www.foundertype.com/">http://www.foundertype.com/</a></td>
-</tr>
-<tr>
-<td>汉仪字库-用心绽放文字之美</td>
-<td><a href="http://www.hanyi.com.cn/">http://www.hanyi.com.cn/</a></td>
-</tr>
-<tr>
-<td>Font-To-Width</td>
-<td><a href="http://font-to-width.com/">http://font-to-width.com/</a></td>
-</tr>
-<tr>
-<td></td>
-<td><a href=""></a></td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[特色搜索]]></title>
-        <id>https://tdmaker.github.io/faded/post/te-se-sou-suo/</id>
-        <link href="https://tdmaker.github.io/faded/post/te-se-sou-suo/">
-        </link>
-        <updated>2020-04-03T15:53:24.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="网盘搜索">网盘搜索</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>盘搜搜</td>
-<td><a href="https://www.pansoso.com/">https://www.pansoso.com/</a></td>
-</tr>
-<tr>
-<td>如风搜</td>
-<td><a href="http://www.rufengso.net/">http://www.rufengso.net/</a></td>
-</tr>
-<tr>
-<td>6miu百度云搜索</td>
-<td><a href="http://baiduyun.6miu.com/">http://baiduyun.6miu.com/</a></td>
-</tr>
-<tr>
-<td>57分享百度云</td>
-<td><a href="https://www.57fx.com/user-drnew-daren/">https://www.57fx.com/user-drnew-daren/</a></td>
-</tr>
-<tr>
-<td>小不点搜索</td>
-<td><a href="https://www.xiaoso.net/">https://www.xiaoso.net/</a></td>
-</tr>
-</tbody>
-</table>
-<h1 id="特色搜索">特色搜索</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>龙轩搜索</td>
-<td><a href="http://ilxdh.com/">http://ilxdh.com/</a></td>
-</tr>
-<tr>
-<td>虫部落搜索</td>
-<td><a href="https://www.chongbuluo.com/">https://www.chongbuluo.com/</a></td>
-</tr>
-<tr>
-<td>neets搜索站</td>
-<td><a href="https://neets.cc/">https://neets.cc/</a></td>
-</tr>
-<tr>
-<td>西林街搜索</td>
-<td><a href="https://xilinjie.cc/">https://xilinjie.cc/</a></td>
-</tr>
-<tr>
-<td>茶杯狐</td>
-<td><a href="https://www.cupfox.com/">https://www.cupfox.com/</a></td>
-</tr>
-<tr>
-<td>疯狂影视搜索</td>
-<td><a href="http://ifkdy.com/">http://ifkdy.com/</a></td>
-</tr>
-<tr>
-<td>AnywhereAnything</td>
-<td><a href="http://lackar.com/aa/">http://lackar.com/aa/</a></td>
-</tr>
-<tr>
-<td>源代码搜索</td>
-<td><a href="https://publicwww.com/">https://publicwww.com/</a></td>
-</tr>
-<tr>
-<td>变量名搜索</td>
-<td><a href="https://unbug.github.io/codelf/">https://unbug.github.io/codelf/</a></td>
-</tr>
-<tr>
-<td>比菲尔德学术搜索</td>
-<td><a href="https://www.base-search.net/">https://www.base-search.net/</a></td>
-</tr>
-<tr>
-<td>吉他尤克里里谱搜索</td>
-<td><a href="https://sopu.52cmajor.com/">https://sopu.52cmajor.com/</a></td>
-</tr>
-<tr>
-<td>Classcentral在线课程搜索</td>
-<td><a href="https://www.classcentral.com/">https://www.classcentral.com/</a></td>
-</tr>
-<tr>
-<td>Coursade在线课程搜索</td>
-<td><a href="http://www.coursade.com/">http://www.coursade.com/</a></td>
-</tr>
-<tr>
-<td>Chinese Etymology 字源</td>
-<td><a href="https://hanziyuan.net/">https://hanziyuan.net/</a></td>
-</tr>
-<tr>
-<td>汉典</td>
-<td><a href="https://www.zdic.net/">https://www.zdic.net/</a></td>
-</tr>
-<tr>
-<td>新华字典</td>
-<td><a href="https://zidian.911cha.com/">https://zidian.911cha.com/</a></td>
-</tr>
-</tbody>
-</table>
-<h1 id="导航站">导航站</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>创造狮导航</td>
-<td><a href="http://chuangzaoshi.com/">http://chuangzaoshi.com/</a></td>
-</tr>
-<tr>
-<td>导航湾</td>
-<td><a href="https://www.daohangwan.com/">https://www.daohangwan.com/</a></td>
-</tr>
-<tr>
-<td>好用好玩导航</td>
-<td><a href="http://www.haoyonghaowan.com/">http://www.haoyonghaowan.com/</a></td>
-</tr>
-<tr>
-<td>比格张</td>
-<td><a href="https://bigezhang.com/">https://bigezhang.com/</a></td>
-</tr>
-<tr>
-<td>Web前端导航</td>
-<td><a href="http://nav.web-hub.cn/">http://nav.web-hub.cn/</a></td>
-</tr>
-<tr>
-<td>阿猫阿狗导航</td>
-<td><a href="https://dh.woshipm.com/">https://dh.woshipm.com/</a></td>
-</tr>
-<tr>
-<td>BTMoo导航</td>
-<td><a href="https://www.btmoo.net/">https://www.btmoo.net/</a></td>
-</tr>
-</tbody>
-</table>
 ]]></content>
     </entry>
 </feed>

@@ -84,7 +84,7 @@
                         <input id="switch_default" type="checkbox" class="switch_default">
                         <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <form id="gridea-search-form" data-update="1586316546463" action="/search/index.html">
+            <form id="gridea-search-form" data-update="1586334456798" action="/search/index.html">
                 <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
             </form>
         </div>
@@ -103,7 +103,7 @@
                         <!--zh-->
                         <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
                     </div>
-                    <form id="gridea-search-form" data-update="1586316546463" action="/search/index.html">
+                    <form id="gridea-search-form" data-update="1586334456798" action="/search/index.html">
                         <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
                     </form>
                     <!--en-->
@@ -176,10 +176,16 @@
                                         </a>
                                         <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-08</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">6.3
+                                    href="#">17.1
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">1829</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">4979</a></span>
                                         
+                                            <span class="post-category">&#x5206;&#x7C7B;:
+                                
+                                <a href="https://tdmaker.github.io/faded/tag/blockchain/">区块链</a>
+                                
+                            </span>
+                                            
                                                 阅读量:
                                                 <span data-hk-page="current"> - </span>
                                                 
@@ -188,7 +194,8 @@
                         </header>
                         
                         <div class="post-content">
-                            <h1 id="1-涉及到的技术">1 涉及到的技术</h1>
+                            <p>狭义来讲，区块链是一种按照时间顺序将数据区块以顺序相连的方式组合成的一种链式数据结构， 并以密码学方式保证的不可篡改和不可伪造的分布式账本。广义来讲，区块链技术是利用块链式数据结构来验证与存储数据、利用分布式节点共识算法来生成和更新数据、利用密码学的方式保证数据传输和访问的安全、利用由自动化脚本代码组成的智能合约来编程和操作数据的一种全新的分布式基础架构与计算范式。</p>
+<h1 id="1-涉及到的技术">1 涉及到的技术</h1>
 <ul>
 <li>密码学</li>
 <li>分布式一致性协议</li>
@@ -196,13 +203,26 @@
 <li>智能合约编程语言等。</li>
 </ul>
 <h1 id="2-区块链的分类">2 区块链的分类</h1>
-<p>按照参与方式：公开链、私有链、联盟链。</p>
-<h2 id="21-公开链">2.1 公开链</h2>
-<p>公有链的任何节点都是向任何人开放的，每个人都可以参与到这个区块链中的计算，而且任何人都可以下载获得完整区块链数据，即全部账本。</p>
-<h2 id="22-私有链">2.2 私有链</h2>
-<p>在某些区块链的应用场景下，开发者并不希望任何人都可以参与这个系统，因此建立一种不对外公开、只有被许可的节点才可以参与并且查看所有数据的私有区块链，私有链一般适用于特定机构的内部数据管理与审计。</p>
-<h2 id="23-联盟链">2.3 联盟链</h2>
-<p>联盟链是指参与每个节点的权限都完全对等，各节点在不需要完全互信的情况下就可以实现数据的可信交换，联盟链的各个节点通常有与之对应的实体机构组织，通过授权后才能加入或退出网络。联盟链是一种公司与公司、组织与组织之间达成联盟的模式。</p>
+<p>区块链严格定义上被划分为 3 种类型：公有链，私有链、和联盟链，但是在实际应用中单一的某种链常常无法满足用户需求，就出现了多种类型的结合，比如私有链 + 联盟链、联盟链 + 公有链等不同组合形式，最后产生了侧链和互联链。掌握了这 5 种区块链类型的各自特点，是理解和设计区块链网络系统架构的基础和核心，其重要性不言而喻。</p>
+<h2 id="21-公有链public-blockchains">2.1 公有链（Public blockchains）</h2>
+<p>公有链是对所有人公开，用户不需要注册和授权就能够匿名访问网络和区块，任何人都可以自由加入和退出网络，并参与记账和交易。</p>
+<p>公有链是真正完全意义上的去中心化区块链，它通过密码学（非对称加密）算法保证了交易的安全性和不可篡改性，在陌生的网络（非安全）环境中，建立了互信和共识机制。在公有链中共识机制一般是工作量证明（POW）和权益证明（POS）。</p>
+<p>公有链因为人人可参与，无需授权的特点又被称为非许可链，即不需要验证身份即可参与一切网络活动。目前比特币、以太坊、超级账本、大多数山寨币以及智能合约都是建立在公有链上，其中公有链的始祖是比特币区块链。</p>
+<p>公有链适用于数字货币、电子商务、互联网金融、知识产权等应用场景。</p>
+<h2 id="22-联盟链consortium-blockchains">2.2 联盟链（Consortium blockchains）</h2>
+<p>联盟链仅限于联盟成员，因其只针对成员开放全部或部分功能，所以联盟链上的读写权限、以及记账规则都按联盟规则来“私人定制”。联盟链上的共识过程由预先选好的节点控制，一般来说，他适用于机构间的交易、结算、或清算等 B2B 场景。比如人民银行开发一个基于联盟链的结算、清算系统，工建中农等银行作为联盟成员加入这个系统，获得相应的授权，就可以实时进行不同银行之间的实时结算、清算，与现有的中心化系统相比，这样不仅大大提升了结算、清算效率，几乎不需要人工参与，还能大大降低结算、清算成本。联盟链几乎不采用工作量证明共识机制而是采用权益证明或PBTF等共识算法。</p>
+<p>联盟链由参与成员机构共同维护，并提供了对参与成员的管理、认证、授权、监控、审计等全套安全管理功能。2015 年成立的 R3 联盟，就是银行业的一个联盟链，目前已加入的成员多达 40 多个，包括世界著名的银行摩根大通、汇丰、高盛等。</p>
+<p>联盟链适用于行业协会、高级别机构组织、大型连锁企业对下属单位和分管机构的交易和监管。</p>
+<h2 id="23-私有链private-blockchain">2.3 私有链（Private blockchain）</h2>
+<p>私有链对单独的个人或实体开放，仅在私有组织，比如公司内部使用，私有链上的读写权限，参与记账的权限都由私有组织来制定。比如企业内部的办公审批、财务审计；政府行业的预算和执行。私有链的主要价值在于提供安全、可塑源，不可篡改，自动执行，这是传统系统很难同时做到的。</p>
+<p>因为私有链加入结点少，所以交易速度快。私有链的交易速度可以比任何其他的区块链都快，甚至接近了并不是一个区块链的常规数据库的速度。而且因为就算少量的节点，也都具有很高的信任度，所以并不需要每个节点来验证一个交易(无需挖矿)。</p>
+<p>由于私有链和联盟链都需要授权加入和访问，私有链和联盟链也被称作许可链。</p>
+<p>私有链适用于企业、组织内部。</p>
+<h2 id="24-侧链side-chains">2.4 侧链（Side Chains）</h2>
+<p>严格来说侧链不是区块链的一种类型，它只是在现实应用中，开发者对区块链的一种延伸（扩展），而特别取了个绰号。目前，市场上公开的虚拟货币系统，绝大多数都是基于比特币系统进行规则修改或扩展而来，因为比特币的设计规则已十分固定，难以做出较大修改和扩展，于是这些代币系统的开发者门干脆以比特币平台为基础，重构出一条区块链，然后使用新的规则，发布新的虚拟货币，这条重构出来的区块链就被称为侧链。普遍认为能和比特币区块链进行交互，并能与比特币挂钩的区块链就是侧链。</p>
+<p>侧链目前主要适用于代币发行。</p>
+<h2 id="25-互联链intechains">2.5 互联链（InteChains）</h2>
+<p>互联链就是各种不同的区块链之间的互联互通所形成的一个更大的生态区块链。比如电商平台公有链 + 物流公有链 + 物流联盟链 + 银行联盟链 +.....，它们之间的相互协作、通讯、共识、就是一个典型的互联链。</p>
 <h1 id="3-区块链的工作量证明机制">3 区块链的工作量证明机制</h1>
 <h2 id="31-powproof-of-power-工作量证明机制">3.1 POW：proof of power, 工作量证明机制</h2>
 <p>PoW（工作量证明），也就是像比特币的挖矿机制，矿工通过把网络尚未记录的现有交易打包到一个区块，然后不断遍历尝试来寻找一个随机数，使得新区块加上随机数的哈希值满足一定的难度条件，例如前面 10 位是零。找到满足条件的随机数，就相当于确定了区块链最新的一个区块，也相当于获得了区块链的本轮记账权。矿工把满足挖矿难度条件的区块在网络中广播出去，全网其他节点在验证该区块满足挖矿难度条件，同时区块里的交易数据符合协议规范后，将各自把该区块链接到自己版本的区块链上，从而在全网形成对当前网络状态的共识。</p>
@@ -228,10 +248,52 @@
 <li>优点：实现秒级的快速共识机制，保证一致性。</li>
 <li>缺点：去中心化程度不如公有链上的共识机制；更适合多方参与的多中心商业模式。</li>
 </ul>
-<h2 id="41-拜占庭将军问题-byzantine-generals-problem-bgp">4.1 拜占庭将军问题 /Byzantine Generals Problem/ BGP</h2>
-<p>由莱斯利·兰波特在其同名论文中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算机通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。</p>
-<h2 id="42-改进型实用拜占庭容错-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错 /Practical Byzantine Fault Tolerance/ PBFT</h2>
-<p>PBET 共识机制是少数服从多数，根据信息在分布式网络中节点间互相交换后各节点列出所有得到的信息，一个节点代表一票，选择大多数的结果作为解决办法。PBET 将容错量控制在全部节点数的 $$\bar{x}$$，即如只要有超过2/3 的正常节点，整个系统便可正常运作。</p>
+<h2 id="41-拜占庭将军问题-byzantine-generals-problem-bgp">4.1 拜占庭将军问题/ Byzantine Generals Problem/ BGP</h2>
+<p><a href="http://lamport.azurewebsites.net/pubs/byz.pdf">拜占庭将军问题</a>由莱斯利·兰波特在其同名论文中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算机通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。</p>
+<h2 id="42-改进型实用拜占庭容错-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错/ Practical Byzantine Fault Tolerance/ PBFT</h2>
+<p>PBET 共识机制是少数服从多数，根据信息在分布式网络中节点间互相交换后各节点列出所有得到的信息，一个节点代表一票，选择大多数的结果作为解决办法。PBET 将容错量控制在全部节点数的 1/3，即如只要有超过 2/3 的正常节点，整个系统便可正常运作。</p>
+<h2 id="43-授权拜占庭容错算法-delegated-byzantine-fault-tolerance-dbft">4.3 授权拜占庭容错算法/ Delegated Byzantine Fault Tolerance /dBFT</h2>
+<p>dBFT，是基于持有权益比例来选出专门的记账人（记账节点），然后记账人之间通过拜占庭容错算法（即少数服从多数的投票机制）来达成共识，决定动态参与节点。dBFT 可以容忍任何类型的错误，且专门的多个记账人使得每一个区块都有最终性、不会分叉。</p>
+<h2 id="44-联邦拜占庭协议-federated-byzantine-agreement-fba">4.4 联邦拜占庭协议/ Federated Byzantine Agreement / FBA</h2>
+<p>联邦拜占庭协议的主要特性是去中心化和任意行为容错，通过分布式的方法，达到法定人数或者节点足够的群体能达成共识，每一个节点不需要依赖相同的参与者就能决定信任的对象来完成共识。</p>
+<h1 id="5-图灵完备">5 图灵完备</h1>
+<p>一切可计算的问题都能计算，这样的虚拟机或者编程语言就叫图灵完备的。</p>
+<h2 id="51-图灵完备的系统和图灵完备的语言">5.1 图灵完备的系统和图灵完备的语言</h2>
+<p>一个能计算出每个<strong>图灵可计算函数</strong>（Turing-computable function）的计算系统被称为图灵完备的。一个语言是图灵完备的，意味着该语言的计算能力与一个<strong>通用图灵机</strong> （Universal Turing Machine）相当，这也是现代计算机语言所能拥有的最高能力。</p>
+<h2 id="52-图灵完备深入解释">5.2 图灵完备深入解释</h2>
+<p>在可计算理论中，当一组数据操作的规则（一组指令集，编程语言，或者元胞自动机）满足任意数据按照一定的顺序可以计算出结果，被称为<strong>图灵完备</strong>（turing complete）。一个有图灵完备指令集的设备被定义为通用计算机。如果是图灵完备的，它（计算机设备）有能力执行条件跳转（“if” 和 “goto”语句）以及改变内存数据。 如果某个东西展现出了图灵完备，它就有能力表现出可以模拟原始计算机，而即使最简单的计算机也能模拟出最复杂的计算机。所有的通用编程语言和现代计算机的指令集都是图灵完备的（C++ template 就是图灵完备的），都能解决内存有限的问题。图灵完备的机器都被定义有无限内存，但是机器指令集却通常定义为只工作在特定的，有限数量的 RAM 上。</p>
+<h2 id="53-图灵完备优缺点">5.3 图灵完备优缺点</h2>
+<p>图灵完备意味着你的语言可以做到能够用图灵机能做到的所有事情，可以解决所有的可计算问题。 图灵不完备也不是没有意义，有些场景我们需要限制语言本身。 如限制循环和递归，可以保证该语言能写的程序一定是终止的。图灵不完备会更安全些，图灵完备会更智能些。</p>
+<h2 id="54比特币的图灵非完备性">5.4比特币的图灵非完备性</h2>
+<p>比特币脚本语言包含许多操作，但都故意限定为一种重要的方式——没有循环或者复杂流控制功能以外的其他条件的流控制。这样就保证了脚本语言的图灵非完备性，这意味着脚本的复杂性有限，交易可执行的次数也可预见。脚本并不是一种通用语言，施加的这些限制确保该语言不被用于创造无限循环或其它类型的逻辑炸弹，这样的炸弹可以植入在一笔交易中，通过引起拒绝服务的方式攻击比特币网络。受限制的语言能防止交易激活机制被人当作薄弱环节而加以利用。</p>
+<h2 id="55-以太坊是一个图灵完备的区块链">5.5 以太坊是一个图灵完备的区块链</h2>
+<p>以太坊的核心就是能够运行“无所不能”的智能合约，拥有图灵完备的编程语言，比如 Solidity，可以解决所有可计算问题。</p>
+<h1 id="6-零知识证明">6 零知识证明</h1>
+<p>“零知识证明”－zero-knowledge proof，是由S.Goldwasser、S.Micali及C.Rackoff在20世纪80年代初提出的。它指的是证明者能够在不向验证者提供任何有用的信息的情况下，使验证者相信某个论断是正确的。零知识证明实质上是一种涉及两方或更多方的协议，即两方或更多方完成一项任务所需采取的一系列步骤。证明者向验证者证明并使其相信自己知道或拥有某一消息，但证明过程不能向验证者泄漏任何关于被证明消息的信息。大量事实证明，零知识证明在密码学中非常有用。如果能够将零知识证明用于验证，将可以有效解决许多问题。</p>
+<h2 id="61-定义">6.1 定义</h2>
+<p>零知识证明满足三个属性：</p>
+<ol>
+<li>如果语句为真，诚实的验证者（即，正确遵循协议的验证者）将由诚实的证明者确信这一事实。</li>
+<li>如果语句为假，不排除有概率欺骗者可以说服诚实的验证者它是真的。</li>
+<li>如果语句为真，证明者的目的就是向验证者证明并使验证者相信自己知道或拥有某一消息，而在证明过程中不可向验证者泄漏任何有关被证明消息的内容。</li>
+</ol>
+<p>零知识证明并不是数学意义上的证明，因为它存在小概率的误差，欺骗者有可能通过虚假陈述骗过证明者。换句话来说，零知识证明是概率证明而不是确定性证明。但是也存在有技术能将误差降低到可以忽略的值。</p>
+<p>零知识的形式定义必须使用一些计算模型，最常见的是图灵机的计算模型。</p>
+<h2 id="62-证明举例">6.2 证明举例</h2>
+<h3 id="621-案例一">6.2.1 案例一</h3>
+<p>A 要向 B 证明自己拥有某个房间的钥匙，假设该房间只能用钥匙打开锁，而其他任何方法都打不开。这时有 2 个方法：</p>
+<ol>
+<li>A 把钥匙出示给 B，B 用这把钥匙打开该房间的锁，从而证明 A 拥有该房间的正确的钥匙。</li>
+<li>B 确定该房间内有某一物体，A 用自己拥有的钥匙打开该房间的门，然后把物体拿出来出示给 B，从而证明自己确实拥有该房间的钥匙。</li>
+</ol>
+<p>后面的方法 2 属于零知识证明。好处在于在整个证明的过程中，B 始终不能看到钥匙的样子，从而避免了钥匙的泄露。</p>
+<h3 id="622-案例二">6.2.2 案例二</h3>
+<p>A 拥有 B 的公钥，A 没有见过 B，而 B 见过 A 的照片，偶然一天 2 人见面了，B 认出了 A，但 A 不能确定面前的人是否是 B，这时 B 要向 A 证明自己是 B，也有 2 个方法。</p>
+<ol>
+<li>B 把自己的私钥给 A，A 用这个私钥对某个数据加密，然后用 B 的公钥解密，如果正确，则证明对方确实是B。</li>
+<li>A 给出一个随机值，B 用自己的私钥对其加密，然后把加密后的数据交给 A，A 用 B 的公钥解密，如果能够得到原来的随机值，则证明对方是 B。</li>
+</ol>
+<p>后面方法 2 属于零知识证明。</p>
 
                         </div>
                         
@@ -240,9 +302,11 @@
 <li><a href="#1-%E6%B6%89%E5%8F%8A%E5%88%B0%E7%9A%84%E6%8A%80%E6%9C%AF">1 涉及到的技术</a></li>
 <li><a href="#2-%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%88%86%E7%B1%BB">2 区块链的分类</a>
 <ul>
-<li><a href="#21-%E5%85%AC%E5%BC%80%E9%93%BE">2.1 公开链</a></li>
-<li><a href="#22-%E7%A7%81%E6%9C%89%E9%93%BE">2.2 私有链</a></li>
-<li><a href="#23-%E8%81%94%E7%9B%9F%E9%93%BE">2.3 联盟链</a></li>
+<li><a href="#21-%E5%85%AC%E6%9C%89%E9%93%BEpublic-blockchains">2.1 公有链（Public blockchains）</a></li>
+<li><a href="#22-%E8%81%94%E7%9B%9F%E9%93%BEconsortium-blockchains">2.2 联盟链（Consortium blockchains）</a></li>
+<li><a href="#23-%E7%A7%81%E6%9C%89%E9%93%BEprivate-blockchain">2.3 私有链（Private blockchain）</a></li>
+<li><a href="#24-%E4%BE%A7%E9%93%BEside-chains">2.4 侧链（Side Chains）</a></li>
+<li><a href="#25-%E4%BA%92%E8%81%94%E9%93%BEintechains">2.5 互联链（InteChains）</a></li>
 </ul>
 </li>
 <li><a href="#3-%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%B7%A5%E4%BD%9C%E9%87%8F%E8%AF%81%E6%98%8E%E6%9C%BA%E5%88%B6">3 区块链的工作量证明机制</a>
@@ -254,8 +318,30 @@
 </li>
 <li><a href="#4-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95">4 分布式一致性算法</a>
 <ul>
-<li><a href="#41-%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%B0%86%E5%86%9B%E9%97%AE%E9%A2%98-byzantine-generals-problem-bgp">4.1 拜占庭将军问题 /Byzantine Generals Problem/ BGP</a></li>
-<li><a href="#42-%E6%94%B9%E8%BF%9B%E5%9E%8B%E5%AE%9E%E7%94%A8%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错 /Practical Byzantine Fault Tolerance/ PBFT</a></li>
+<li><a href="#41-%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%B0%86%E5%86%9B%E9%97%AE%E9%A2%98-byzantine-generals-problem-bgp">4.1 拜占庭将军问题/ Byzantine Generals Problem/ BGP</a></li>
+<li><a href="#42-%E6%94%B9%E8%BF%9B%E5%9E%8B%E5%AE%9E%E7%94%A8%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错/ Practical Byzantine Fault Tolerance/ PBFT</a></li>
+<li><a href="#43-%E6%8E%88%E6%9D%83%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99%E7%AE%97%E6%B3%95-delegated-byzantine-fault-tolerance-dbft">4.3 授权拜占庭容错算法/ Delegated Byzantine Fault Tolerance /dBFT</a></li>
+<li><a href="#44-%E8%81%94%E9%82%A6%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%8D%8F%E8%AE%AE-federated-byzantine-agreement-fba">4.4 联邦拜占庭协议/ Federated Byzantine Agreement / FBA</a></li>
+</ul>
+</li>
+<li><a href="#5-%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87">5 图灵完备</a>
+<ul>
+<li><a href="#51-%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%E7%9A%84%E8%AF%AD%E8%A8%80">5.1 图灵完备的系统和图灵完备的语言</a></li>
+<li><a href="#52-%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%E6%B7%B1%E5%85%A5%E8%A7%A3%E9%87%8A">5.2 图灵完备深入解释</a></li>
+<li><a href="#53-%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%E4%BC%98%E7%BC%BA%E7%82%B9">5.3 图灵完备优缺点</a></li>
+<li><a href="#54%E6%AF%94%E7%89%B9%E5%B8%81%E7%9A%84%E5%9B%BE%E7%81%B5%E9%9D%9E%E5%AE%8C%E5%A4%87%E6%80%A7">5.4比特币的图灵非完备性</a></li>
+<li><a href="#55-%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%98%AF%E4%B8%80%E4%B8%AA%E5%9B%BE%E7%81%B5%E5%AE%8C%E5%A4%87%E7%9A%84%E5%8C%BA%E5%9D%97%E9%93%BE">5.5 以太坊是一个图灵完备的区块链</a></li>
+</ul>
+</li>
+<li><a href="#6-%E9%9B%B6%E7%9F%A5%E8%AF%86%E8%AF%81%E6%98%8E">6 零知识证明</a>
+<ul>
+<li><a href="#61-%E5%AE%9A%E4%B9%89">6.1 定义</a></li>
+<li><a href="#62-%E8%AF%81%E6%98%8E%E4%B8%BE%E4%BE%8B">6.2 证明举例</a>
+<ul>
+<li><a href="#621-%E6%A1%88%E4%BE%8B%E4%B8%80">6.2.1 案例一</a></li>
+<li><a href="#622-%E6%A1%88%E4%BE%8B%E4%BA%8C">6.2.2 案例二</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -289,8 +375,8 @@
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
                                                                     <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/blockchain-introduction/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/blockchain-introduction/&sharesource=qzone&title=区块链——入门&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586316546463&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/blockchain-introduction/&sharesource=weibo&title=区块链——入门 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586316546463 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/blockchain-introduction/&sharesource=qzone&title=区块链——入门&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586334456798&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/blockchain-introduction/&sharesource=weibo&title=区块链——入门 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586334456798 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -308,6 +394,12 @@
                                                                                     <span>&#x6807;&#x7B7E;:</span>
                                                                                     <span class="tag ">
                         
+                        
+                        <a href="https://tdmaker.github.io/faded/tag/blockchain/">#
+                    区块链
+                        </a>
+                        
+                            
                                 </span>
                                                                                 </div>
                                                                                 <div>
@@ -322,6 +414,10 @@
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
+                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/blockchain-core-algorithms/">
+                                                                                            区块链——六大核心算法
+                                                                                        </a>
+                                                                                        
                                                                                             
                                                                                                 <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/regular-expression-full-tutorial/">
                                                                                                     正则表达式——完整版教程
@@ -424,7 +520,7 @@
                     CheckVersion();
                     
                     var newDate = new Date();
-                    newDate.setTime(1586316546463);
+                    newDate.setTime(1586334456798);
                     console.log(" Blog Update Time: " + newDate.toLocaleDateString());
                     console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
                 </script>

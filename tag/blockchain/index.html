@@ -162,247 +162,53 @@
 </script>
             <div class="main">
                 <div class="container">
-                    <article class="post-wrap">
-                        <header class="post-header">
-                            <h1 class="post-title">
-                                jQuery——拓展
-                            </h1>
-                            
-                                    <!--zh-->
-                                    <div class="post-meta zh">
-                                        &#x4F5C;&#x8005;:
-                                        <a itemprop="author" rel="author" href="/">
-                                            Typhoeus
-                                        </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-05</a></span>
-                                        <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">1.9
-                                    &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">353</a></span>
-                                        
-                                                阅读量:
-                                                <span data-hk-page="current"> - </span>
-                                                
-                                    </div>
-                                    
-                        </header>
+                    <div class="post-wrap archive">
                         
-                        <div class="post-content">
-                            <h1 id="extend函数">😲 extend函数</h1>
-<p><code>$.extend(target,[object1],[onjectN])</code><br>
-<code>$.extend([deep],target,object1,[objectN])</code></p>
-<pre><code class="language-javascript">var obj1 = {
-	height: 100,
-	width: 100,
-	length: 100,
-	div: {
-		x: 100,
-		y: 100
-	}
-};
-var obj2 = {
-	height: 200,
-	width: 200,
-	div: {
-		x: 200
-	}
-};
-$.extend(obj1, obj2);
-console.log(obj1.height);
-console.log(obj1.div.y);
-//result:200,undefined
-</code></pre>
-<p>当使用true参数时，</p>
-<pre><code class="language-javascript">var obj1 = {
-	height: 100,
-	width: 100,
-	length: 100,
-	div: {
-		x: 100,
-		y: 100
-	}
-};
-var obj2 = {
-	height: 200,
-	width: 200,
-	div: {
-		x: 200
-	}
-};
-$.extend(true, obj1, obj2);
-console.log(obj1.height);
-console.log(obj1.div.y);
-//result:200,100
-</code></pre>
-<p>拓展jQuery的公共函数</p>
-<pre><code class="language-javascript">$.extend({
-	minValue: function(a, b) {
-		return a &gt; b ? a: b
-	}
-});
-var a = prompt(&quot;input a&quot;);
-var b = prompt(&quot;input b&quot;);
-console.log($.minValue(a, b));
-</code></pre>
-<p><code>$.fn.extend()</code> 方法可以创建 jQuery 对象方法</p>
-<pre><code class="language-javascript">$.fn.extend({
-	test: function() {
-		alert(&quot;click &quot; + $(this).html() + &quot; this is test function&quot;);
-	}
-});
-$(&quot;#fnExtend&quot;).click(function() {
-	$(this).test();
-});
-</code></pre>
-<h1 id="自定义jquery函数">😲 自定义jQuery函数</h1>
-<h2 id="添加新的全局函数">🤗 添加新的全局函数</h2>
-<pre><code class="language-javascript">$.clickDiv = function(node) {
-	console.log(node.text() + &quot; click&quot;);
-};
-$(&quot;div&quot;).click(function() {
-	$.clickDiv($(this));
-});
-</code></pre>
-<h2 id="通过-extend-函数添加全局函数">🤗 通过 <code>extend</code> 函数添加全局函数</h2>
-<pre><code class="language-javascript">$.extend({
-	foo: function() {
-		alert(&quot;this is a new function 'foo()'&quot;);
-	}
-});
-$.foo();
-</code></pre>
-<h2 id="使用命名空间">🤗 使用命名空间</h2>
-<pre><code class="language-javascript">$.myPluin = {
-	ale: function() {
-		alert(&quot;function from myPluin&quot;);
-	}
-};
-$.nextPluin = {
-	ale: function() {
-		alert(&quot;function from nextPluin&quot;);
-	}
-}
-$.myPluin.ale();
-$.nextPluin.ale();
-</code></pre>
-<h1 id="自定义选择器">😲 自定义选择器</h1>
-<pre><code class="language-javascript">$.myPluin = {
-	ale: function() {
-		alert(&quot;function from myPluin&quot;);
-	}
-};
-$.nextPluin = {
-	ale: function() {
-		alert(&quot;function from nextPluin&quot;);
-	}
-};
-index = -1; //定义全局变量 index
-jQuery.expr[&quot;:&quot;].le = function(elem, i, match) {
-	// return i&gt;match[3]-0||i==match[3]
-	console.log(index);
-    index++;
-	return index &gt; match[3] - 0; // 返回索引大于 3 的元素
-};
-$(&quot;p:le(2)&quot;).css(&quot;color&quot;, &quot;red&quot;);
-// 返回元素索引值大于等于 2 的元素
-$.myPluin.ale();
-$.nextPluin.ale();
-</code></pre>
-
-                        </div>
-                        
-                            <div class="post-toc">
-                                <ul class="markdownIt-TOC">
-<li><a href="#extend%E5%87%BD%E6%95%B0">😲 extend函数</a></li>
-<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89jquery%E5%87%BD%E6%95%B0">😲 自定义jQuery函数</a>
-<ul>
-<li><a href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E5%85%A8%E5%B1%80%E5%87%BD%E6%95%B0">🤗 添加新的全局函数</a></li>
-<li><a href="#%E9%80%9A%E8%BF%87-extend-%E5%87%BD%E6%95%B0%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80%E5%87%BD%E6%95%B0">🤗 通过 <code>extend</code> 函数添加全局函数</a></li>
-<li><a href="#%E4%BD%BF%E7%94%A8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4">🤗 使用命名空间</a></li>
-</ul>
-</li>
-<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%89%E6%8B%A9%E5%99%A8">😲 自定义选择器</a></li>
-</ul>
-
-                            </div>
                             
+                                <h3>
+                                    2020
+                                </h3>
                                 
                                     
-                                            <!--zh-->
-                                            <section class="post-copyright zh">
-                                                <p class="copyright-item ">
-                                                    <span>&#x4F5C;&#x8005;:</span>
-                                                    <span>Typhoeus</span>
-                                                </p>
 
-                                                <p class="copyright-item">
-                                                    <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/jquery-extension/">https://tdmaker.github.io/faded/post/jquery-extension/</a></span>
-                                                </p>
+                                        <article class="archive-item">
+                                            <a class="archive-item-link" href="https://tdmaker.github.io/faded/post/blockchain-commercial-survey/">
+                                                区块链——商用调查
+                                            </a>
+                                            <span class="archive-item-date">2020-04-08 </span>
+                                        </article>
+                                        
+                                            
+                                    
 
-                                                <p class="copyright-item">
-                                                    <span>&#x534F;&#x8BAE;:</span>
-                                                    <span>MIT License</span>
-                                                </p>
-                                            </section>
+                                        <article class="archive-item">
+                                            <a class="archive-item-link" href="https://tdmaker.github.io/faded/post/blockchain-core-algorithms/">
+                                                区块链——六大核心算法
+                                            </a>
+                                            <span class="archive-item-date">2020-04-08 </span>
+                                        </article>
+                                        
+                                            
+                                    
+
+                                        <article class="archive-item">
+                                            <a class="archive-item-link" href="https://tdmaker.github.io/faded/post/blockchain-introduction/">
+                                                区块链——入门
+                                            </a>
+                                            <span class="archive-item-date">2020-04-08 </span>
+                                        </article>
+                                        
                                             
                                                 
-                                                    
-                                                                    <!--Share-->
-                                                                    <span style="margin-right:15px">
-                        <i class="post-share"></i>
-                        <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/jquery-extension/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/jquery-extension/&sharesource=qzone&title=jQuery——拓展&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586334456798&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/jquery-extension/&sharesource=weibo&title=jQuery——拓展 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586334456798 "><i class="fa fa-weibo "></i></a>
-
-                                                                    </span>
-                                                                    
-                                                                        <div class="reward ">
-                                                                            <div class="reward-button ">&yen;
-                                                                                <span class="reward-code "> 
-                        <span class="alipay-code "> <img class="alipay-img " alt = "support " src="https://blog.itjoker.cn/alipay.jpg"><b>支付宝</b> </span>
-                                                                                <span class="wechat-code "> <img alt ="support " class="wechat-img " src="https://blog.itjoker.cn/wechat.jpg"><b>微信</b> </span> </span>
-                                                                            </div>
-                                                                        </div>
-                                                                        
-                                                                            <!--zh-->
-                                                                            <section class="post-tags zh ">
-                                                                                <div>
-                                                                                    <span>&#x6807;&#x7B7E;:</span>
-                                                                                    <span class="tag ">
+                    </div>
+                    <div class="pagination-container">
                         
-                                </span>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <a href="javascript:window.history.back();">
-                        &#x8FD4;&#x56DE;</a>
-                                                                                    <span>&dot;</span>
-                                                                                    <a href="#">&#x4E3B;&#x9875;</a>
-                                                                                </div>
-                                                                            </section>
-
-                                                                            
-                                                                                <!---->
-                                                                                <section class="post-nav">
-                                                                                    
-                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/regular-expression-assert/">
-                                                                                            正则表达式——断言
-                                                                                        </a>
-                                                                                        
-                                                                                            
-                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/jquery-selectors/">
-                                                                                                    jQuery——选择器
-                                                                                                </a>
-                                                                                                
-                                                                                </section>
-                    </article>
-                </div>
-                
+                            
+                                    
                                             
+                    </div>
+                </div>
             </div>
-    </div>
-    </div>
     </div>
     
     <div id="player"></div>
@@ -542,8 +348,5 @@ $.nextPluin.ale();
                     
         </div>
 </body>
-<script>
-    scroll();
-</script>
 
 </html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+<title>
+    Typhoeus
+</title>
+<!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.js"></script><![endif]-->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<meta name="author" content="Randy">
+<meta name="description" content="People win">
+<meta name="keywords" content="Hit, Love, Melody">
+<script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
+<link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css" />
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/script.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/icon.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/js/Card/prism.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@1.0.12/CDN/css/Card/prism.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js"></script>
+
+    <!--点击特效-->
+    <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@latest/CDN/js/love.min.js"></script>
+    
+        <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic@latest/assets/media/script/APlayer.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+        
+            <!--CDN样式-->
+            <script src="https://cdn.jsdelivr.net/gh/ITJoker233/ITJoker233.github.io@latest/CDN/js/hit-kounter-lc-0.3.0.js"></script>
+            <script src="https://cdn1.lncld.net/static/js/av-min-1.5.0.js"></script>
+            
+                <script>
+                    (function() {
+                        var bp = document.createElement('script');
+                        var curProtocol = window.location.protocol.split(':')[0];
+                        if (curProtocol === 'https') {
+                            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+                        } else {
+                            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                        }
+                        var s = document.getElementsByTagName("script")[0];
+                        s.parentNode.insertBefore(bp, s);
+                    })();
+                </script>
+                
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo">
+                <a href="https://tdmaker.github.io/faded/">
+                    Typhoeus
+                </a>
+            </div>
+
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">
+                        首页
+                    </a>
+                    
+                    <a class="menu-item" href="/archives">
+                        归档
+                    </a>
+                    
+                    <a class="menu-item" href="/tags">
+                        标签
+                    </a>
+                    
+                    <a class="menu-item" href="/post/about">
+                        关于
+                    </a>
+                    
+                        <input id="switch_default" type="checkbox" class="switch_default">
+                        <label for="switch_default" class="toggleBtn"></label>
+            </div>
+            <form id="gridea-search-form" data-update="1586334456798" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+            </form>
+        </div>
+    </nav>
+
+    
+        <nav class="navbar-mobile" id="nav-mobile">
+            <div class="container">
+                <div class="navbar-header">
+                    <div>
+                        <a href="https://tdmaker.github.io/faded/">
+                            Typhoeus
+                        </a>
+                        <!--en-->
+                        <a id="mobile-toggle-theme-en" class="a en">&nbsp;Dark</a>
+                        <!--zh-->
+                        <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
+                    </div>
+                    <form id="gridea-search-form" data-update="1586334456798" action="/search/index.html">
+                        <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
+                    </form>
+                    <!--en-->
+                    <div class="menu-toggle" id="menu-toggle-en" onclick="mobileBtn()">&#9776; Menu</div>
+                    <!--zh-->
+                    <div class="menu-toggle" id="menu-toggle-zh" onclick="mobileBtn()">&#9776; &#x83DC;&#x5355;</div>
+
+                </div>
+                <div class="menu" id="mobile-menu">
+                    
+                        <a class="menu-item" href="/">
+                            首页
+                        </a>
+                        
+                        <a class="menu-item" href="/archives">
+                            归档
+                        </a>
+                        
+                        <a class="menu-item" href="/tags">
+                            标签
+                        </a>
+                        
+                        <a class="menu-item" href="/post/about">
+                            关于
+                        </a>
+                        
+                </div>
+            </div>
+        </nav>
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementById("menu-toggle-en");
+        var toggleMenu_zh = document.getElementById("menu-toggle-zh");
+
+        var mobileMenu = document.getElementById("mobile-menu");
+        if (toggleMenu.display != "none") {
+            if (toggleMenu.classList.contains("active")) {
+                toggleMenu.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        } else if (toggleMenu_zh.display != "none") {
+            if (toggleMenu_zh.classList.contains("active")) {
+                toggleMenu_zh.classList.remove("active")
+                mobileMenu.classList.remove("active")
+            } else {
+                toggleMenu_zh.classList.add("active")
+                mobileMenu.classList.add("active")
+            }
+        }
+
+    }
+</script>
+            <div class="main">
+                <div class="container">
+                    <article class="post-wrap">
+                        <header class="post-header">
+                            <h1 class="post-title">
+                                区块链——商用调查
+                            </h1>
+                            
+                                    <!--zh-->
+                                    <div class="post-meta zh">
+                                        &#x4F5C;&#x8005;:
+                                        <a itemprop="author" rel="author" href="/">
+                                            Typhoeus
+                                        </a>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-08</a></span>
+                                        <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
+                                    href="#">14.2
+                                    &#x5206;&#x949F;</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">4168</a></span>
+                                        
+                                            <span class="post-category">&#x5206;&#x7C7B;:
+                                
+                                <a href="https://tdmaker.github.io/faded/tag/blockchain/">区块链</a>
+                                
+                            </span>
+                                            
+                                                阅读量:
+                                                <span data-hk-page="current"> - </span>
+                                                
+                                    </div>
+                                    
+                        </header>
+                        
+                            <img class="post-feature-image" src="https://tdmaker.github.io/faded//post-images/blockchain-commercial-survey.png" alt="">
+                          
+                        <div class="post-content">
+                            <h1 id="1-信息共享信息对齐-提高效率">1 信息共享——信息对齐、提高效率</h1>
+<p>这应该是区块链最简单的应用场景，就是信息互通有无。</p>
+<h2 id="11-传统的信息共享的痛点">1.1 传统的信息共享的痛点</h2>
+<ol>
+<li>要么是统一由一个中心进行信息发布和分发，要么是彼此之间定时批量对账（典型的每天一次），对于有时效性要求的信息共享，难以达到实时共享。</li>
+<li>信息共享的双方缺少一种相互信任的通信方式，难以确定收到的信息是否是对方发送的。</li>
+</ol>
+<h2 id="12-区块链-信息共享">1.2 区块链 + 信息共享</h2>
+<p>首先，区块链本身就是需要保持各个节点的数据一致性的，可以说是自带信息共享功能；其次，实时的问题通过区块链的 P2P 技术可以实现；最后，利用区块链的不可篡改和共识机制，可构建其一条安全可靠的信息共享通道。<br>
+也行你会有这样的疑问：解决上面的问题，不用区块链技术，我自己建个加密通道也可以搞定啊！但我想说，既然区块链技术能够解决这些问题，并且增加节点非常方便，在你没有已经建好一套安全可靠的信息共享系统之前，为什么不用区块链技术呢？</p>
+<h1 id="2-版权保护不可篡改-永久保存">2 版权保护——不可篡改、永久保存</h1>
+<h2 id="21-传统鉴证证明的痛点">2.1 传统鉴证证明的痛点</h2>
+<ol>
+<li>流程复杂：以版权保护为例，现有鉴证证明方式，登记时间长，且费用高。</li>
+<li>公信力不足：以法务存证为例，个人或中心化的机构存在篡改数据的可能，公信力难以得到保证。</li>
+</ol>
+<h2 id="22-区块链-鉴证证明">2.2 区块链 + 鉴证证明</h2>
+<ol>
+<li>流程简化：区块链应用到鉴证证明后，无论是登记还是查询都非常方便，无需再奔走于各个部门之间，</li>
+<li>安全可靠：区块链的去中心化存储，保证没有一家机构可以任意篡改数据，</li>
+</ol>
+<h2 id="23-应用案例">2.3 应用案例</h2>
+<p>区块链在鉴权证明领域的应用有版权保护、法务存证等，下面以版权保护为例，简单说下如何区块链如何实现版权登记和查询。</p>
+<ol>
+<li>电子身份证：将“申请人+发布时间+发布内容”等版权信息加密后上传，版权信息用于唯一区块链 ID，相当拥有了一张电子身份证。</li>
+<li>时间戳保护：版权信息存储时，是加上时间戳信息的，如右雷同，可用于证明先后。</li>
+<li>可靠性保证：区块链的去中心化存储、私钥签名、不可篡改的特性提升了鉴权信息的可靠性。</li>
+</ol>
+<p>2016 年 8 月，由 Onchain、微软（中国）、法大大等多个机构在北京成立了电子存证区块链联盟“法链”。</p>
+<p>2017 年 12 月，微众银行、仲裁委（广州仲裁委）、杭州亦笔科技有限公司共同推出的仲裁联盟链，用于司法场景下的存证；2018 年 3 月，广州首个“仲裁链”判决书出炉。</p>
+<h1 id="3-物流链溯源防伪">3 物流链——溯源防伪</h1>
+<p><img src="https://tdmaker.github.io/faded//post-images/1586332032829.png" alt="" loading="lazy"><br>
+商品从生产商到消费者手中，需要经历多个环节（流程可能如上图所示），跨境购物则更加复杂；中间环节经常出问题，消费者很容易购买的假货。而假货问题正是困扰着各大商家和平台，至今无解。</p>
+<h2 id="31-传统是防伪溯源手段">3.1 传统是防伪溯源手段</h2>
+<p>以一直受假冒伪劣产品困扰的茅台酒的防伪技术为例，2000 年起，其酒盖里有一个唯一的 RFID 标签，可通过手机等设备以 NFC 方式读出，然后通过茅台的 APP 进行校验，以此防止伪造产品。<br>
+咋一看，这种防伪效果非常可靠。但 2016 年还是引爆了茅台酒防伪造假，虽然通过 NFC 方式验证 OK，但经茅台专业人士鉴定为假酒。后来，在“国酒茅台防伪溯源系统”数据库审计中发现 80 万条假的防伪标签记录，系防伪技术公司人员参与伪造；随后，茅台改用安全芯片防伪标签。</p>
+<p>但这里暴露出来的痛点并没有解决，即防伪信息掌握在某个中心机构中，有权限的人可以任意修改。(备注：茅台的这种防伪方式，也衍生了旧瓶回收，旧瓶装假酒的产业，防伪道路任重而道远)。</p>
+<p>2017 年 05 月贵阳数博会上，小马哥就建议茅台防伪使用区块链；那么区块链和物流链的结合有什么优势呢？</p>
+<h2 id="32-区块链物流链">3.2 区块链+物流链</h2>
+<ol>
+<li>区块链没有中心化节点，各节点是平等的，掌握单个节点无法实现修改数据；需要掌控足够多的节点，才可能伪造数据，大大提高伪造数据的成本。</li>
+<li>区块链天生的开放、透明，使得任何人都可以公开查询，伪造数据被发现的概率大增。</li>
+<li>区块链的数据不可篡改性，也保证了已销售出去的产品信息已永久记录，无法通过简单复制防伪信息蒙混过关，实现二次销售。</li>
+<li>物流链的所有节点上区块链后，商品从生产商到消费者手里都有迹可循，形成完整链条；商品缺失的环节越多，将暴露出其是伪劣产品概率更大。</li>
+</ol>
+<p>##3.3 应用案例<br>
+目前，入局物流链的玩家较多，包括腾讯、阿里、京东、沃尔玛等。</p>
+<p>据说，阿里的菜鸟在海淘进口应用区块链上，走在了前面，已经初步实现海外商品溯源，国际物流及进口申报溯源、境内物流溯源；下一步就是生产企业溯源了。下图是网上流传的关于阿里的菜鸟在海淘场景运用区块链的示意图。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332241430.jpg" alt="" loading="lazy"></p>
+<h1 id="4-供应链金融解决中小微企业融资难">4 供应链金融——解决中小微企业融资难</h1>
+<h2 id="41-传统的供应链单点融资">4.1 传统的供应链单点融资</h2>
+<p>在一般供应链贸易中，从原材料的采购、加工、组装到销售的各企业间都涉及到资金的支出和收入，而企业的资金支出和收入是有时间差的，这就形成了资金缺口，多数需要进行融资生产。我们先来看个简单的供应链，如下图：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332350132.png" alt="" loading="lazy"><br>
+我们再来看看图中各个角色的融资情况：</p>
+<ol>
+<li>核心企业或大企业：规模大、信用好，议价能力强，通过先拿货后付款，延长账期将资金压力传导给后续供应商；此外，其融资能力也是最强的。</li>
+<li>一级供应商：通过核心企业的债权转让，可以获得银行的融资。</li>
+<li>其他供应商（多数是中小微企业）：规模小、发展不稳定、信用低，风险高，难以获得银行的贷款；也无法想核心企业一样有很长的账期；一般越小的企业其账期越短，微小企业还需要现金拿货。这样一出一入对比就像是：中小微企业无息借钱给大企业做生意。</li>
+</ol>
+<h2 id="42-区块链-供应链金融">4.2 区块链 + 供应链金融</h2>
+<p>面对，上述供应链里的中小微企业融资难问题，主要原因是银行和中小企业之间缺乏一个有效的信任机制。</p>
+<p>假如供应链所有节点上链后，通过区块链的私钥签名技术，保证了核心企业等的数据可靠性；而合同、票据等上链，是对资产的数字化，便于流通，实现了价值传递。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332493469.png" alt="" loading="lazy"><br>
+如上图所示，在区块链解决了数据可靠性和价值流通后，银行等金融机构面对中小企业的融资，不再是对这个企业进行单独评估；而是站在整个供应链的顶端，通过信任核心企业的付款意愿，对链条上的票据、合同等交易信息进行全方位分析和评估。即借助核心企业的信用实力以及可靠的交易链条，为中小微企业融资背书，实现从单环节融资到全链条融资的跨越，从而缓解中小微企业融资难问题。</p>
+<h1 id="5-跨境支付提高效率-降低费用">5 跨境支付——提高效率、降低费用</h1>
+<h2 id="51-传统跨境支付">5.1 传统跨境支付</h2>
+<p><img src="https://tdmaker.github.io/faded//post-images/1586332579435.png" alt="" loading="lazy"><br>
+跨境支付涉及多种币种，存在汇率问题，传统跨境支付非常依赖于第三方机构，大致的简化模型如上图所示，存在着两个问题；</p>
+<ol>
+<li>流程繁琐，结算周期长：传统跨境支付基本都是非实时的，银行日终进行交易的批量处理，通常一笔交易需要 24 小时以上才能完成；某些银行的跨境支付看起来是实时的，但实际上，是收款银行基于汇款银行的信用做了一定额度的垫付，在日终再进行资金清算和对账，业务处理速度慢。</li>
+<li>手续费高：传统跨境支付模式存在大量人工对账操作，加之依赖第三方机构，导致手续费居高不下，麦肯锡《2016 全球支付》报告数据显示，通过代理行模式完成一笔跨境支付的平均成本在 25 美元到 35 美元之间。</li>
+</ol>
+<h2 id="52-区块链-跨境支付">5.2 区块链 + 跨境支付</h2>
+<p>这些问题的存在，很大原因还是信息不对称，没有建立有效的信任机制。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586332873742.png" alt="" loading="lazy"><br>
+如上图所示，区块链的引入，解决了跨境支付信息不对称的问题，并建立起一定程度的信任机制；带来了两个好处。</p>
+<ol>
+<li>效率提高，费用降低：接入区块链技术后，通过公私钥技术，保证数据的可靠性，再通过加密技术和去中心，达到数据不可篡改的目的，最后，通过 P2P 技术，实现点对点的结算；去除了传统中心转发，提高了效率，降低了成本(也展望了普及跨境小额支付的可能性)。</li>
+<li>可追溯，符合监管需求：传统的点对点结算不能不规模应用，除了信任问题，还有就是存在监管漏洞（点对点私下交易，存在洗黑钱的风险），而区块链的交易透明，信息公开，交易记录永久保存实现了可追溯，符合监管的需求。</li>
+</ol>
+<h1 id="6-资产数字化便于资产流通">6 资产数字化——便于资产流通</h1>
+<h2 id="61-实体资产存在的问题">6.1 实体资产存在的问题</h2>
+<ol>
+<li>实体资产往往难以分割，不便于流通</li>
+<li>实体资产的流通难以监控，存在洗黑钱等风险</li>
+</ol>
+<h2 id="62-区块链实现资产数字化">6.2 区块链实现资产数字化</h2>
+<ol>
+<li>资产数字化后，易于分割、流通方便，交易成本低</li>
+<li>用区块链技术实现资产数字化后，所有资产交易记录公开、透明、永久存储、可追溯，完全符合监管需求</li>
+</ol>
+<h2 id="63-应用案例">6.3 应用案例</h2>
+<p>还是以腾讯的微黄金应用为例，继续借用腾讯区块链官网（trustsql.qq.com）上的图片，可以看到，在资产数字化之后，流通更为方便了，不再依赖于发行机构；且购买 0.001g 黄金成为了可能，降低了参与门槛。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586333034775.png" alt="" loading="lazy"></p>
+<h1 id="7-代币去中介-去信任">7 代币——去中介、去信任</h1>
+<p>本来不像把代币加进来的，但说到区块链，始终绕不开代币；因区块链脱胎于比特币，天生具有代币的属性，目前区块链最成功的应用也正是比特币。</p>
+<h2 id="71-传统货币存在的问题">7.1 传统货币存在的问题</h2>
+<ol>
+<li>传统的货币发行权掌握在国家手中，存在着货币滥发的风险
+<ul>
+<li>货币滥发案例 1：元朝自 1271 年建立后，依然四处征战，消耗大量的钱财和粮食，为了财政问题，长期滥发货币，造成严重通货膨胀，多数百姓生活在水生火热中，导致流民四起，国家大乱，1368 年，不可一世的元朝成了只有 97 年短命鬼，走向了灭亡。</li>
+<li>货币滥发案例 2：1980 年津巴布韦独立，后因土改失败，经济崩溃，政府入不敷出，开始印钞；2001 年时 100 津巴布韦币可兑换约 1 美元；2009 年 1 月，津央行发行 100 万亿面值新津元（如下图）加速货币崩溃，最终津元被废弃，改用“美元化”货币政策。2017 年津巴布韦发生政变，总统穆加贝被赶下台。</li>
+</ul>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://tdmaker.github.io/faded//post-images/1586333225353.png" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>传统的记账权掌握在一个中心化的中介机构手中，存在中介系统瘫痪、中介违约、中介欺瞒、甚至是中介耍赖等风险。<br>
+2013 年 3 月，塞浦路斯为获得救助，对银行储户进行一次性征税约 58 亿欧元, 向不低于 10 万欧元的存款一次性征税 9.9%，向低于 10 万欧元的一次性征税 6.75%。<br>
+2017 年 4 月，民生银行 30 亿假理财事件暴露，系一支行行长伪造保本保息理财产品所致，超过 150 名投资者被套。</li>
+</ol>
+<h2 id="72-区块链如何解决这些问题">7.2 区块链如何解决这些问题</h2>
+<p><img src="https://tdmaker.github.io/faded//post-images/1586334038696.png" alt="" loading="lazy"><br>
+比特币解决了货币在发行和记账环节的信任问题，我们来看下比特币是如何一一破解上面的两个问题。</p>
+<h3 id="721-滥发问题">7.2.1 滥发问题</h3>
+<p>比特币的获取只能通过挖矿获得，且比特币总量为 2100 万个，在发行环节解决了货币滥发的问题；</p>
+<h3 id="722-账本修改问题">7.2.2 账本修改问题</h3>
+<p>比特币的交易记录通过链式存储和去中心化的全球节点构成网络来解决账本修改问题。</p>
+<h3 id="723-链式存储">7.2.3 链式存储</h3>
+<p>可以简单理解为：存储记录的块是一块连着一块的，形成一个链条；除第一个块的所有区块都的记录包含了前一区块的校验信息，改变任一区块的信息，都将导致后续区块校验出错。因为这种关联性，中间也无法插入其他块，所以修改已有记录是困难的。</p>
+<h3 id="724-去中心化节点">7.2.4 去中心化节点</h3>
+<p>可以简单理解为：全球的中心节点都是平等的，都拥有一模一样的账本，所以，任一节点出问题都不影响账本记录。而要修改账本，必须修改超过全球一半的节点才能完成；而这在目前看来几乎不可能。</p>
+<p>既然账本无法修改，那要是记账的时候作弊呢？</p>
+<p>首先，比特币的每条交易记录是有私钥签名的，别人伪造不了这个记录。你能修改的仅仅自己发起的交易记录。</p>
+<p>其次，是关于记账权问题：比特币的记账权，通过工作量证明获得，可以简单理解为：通过算法确定同一时刻，全球只有一个节点获得了记账权，基本规律是谁拥有的计算资源越多，谁获得记账权的概率越大，只有超过全网一半的算力，才可能实现双花。</p>
+<h3 id="725-备注">7.2.5 备注</h3>
+<p>比特币的模式是不可复制的，比特币已经吸引了全球绝大多数的算力，从而降低 51% 攻击发生等问题；其他的复制品基本无法获得相应的算力保证。</p>
+<p>目前，比特币还存在着 51% 和效率低等问题有待解决，另外，关于交易本身的信任问题是个社会问题，比特币是没有解决的，也解决不了的。</p>
+<h2 id="73-应用案例">7.3 应用案例</h2>
+<p>最具代表性的当然是比特币，也不用多说了。</p>
+<p>备注：代币这块真的不看好，比特币目前吸引了全球绝大部分的算力，有独一无二的算力资源作为支撑还稍好一点，其他的代币和传统的货币相比，其背后缺乏国家和武力为其做信用背书，且夺取了国家发币带来的各种好处（如宏观调控），仔细想想就知道有多不靠谱。</p>
+<h1 id="8-小结">8 小结</h1>
+<p>区块链应用的场景肯定还有很多，但很多都还不大明朗，暂时就先梳理以上7种场景，顺便归纳一下。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586334430353.png" alt="" loading="lazy"></p>
+
+                        </div>
+                        
+                            <div class="post-toc">
+                                <ul class="markdownIt-TOC">
+<li><a href="#1-%E4%BF%A1%E6%81%AF%E5%85%B1%E4%BA%AB%E4%BF%A1%E6%81%AF%E5%AF%B9%E9%BD%90-%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87">1 信息共享——信息对齐、提高效率</a>
+<ul>
+<li><a href="#11-%E4%BC%A0%E7%BB%9F%E7%9A%84%E4%BF%A1%E6%81%AF%E5%85%B1%E4%BA%AB%E7%9A%84%E7%97%9B%E7%82%B9">1.1 传统的信息共享的痛点</a></li>
+<li><a href="#12-%E5%8C%BA%E5%9D%97%E9%93%BE-%E4%BF%A1%E6%81%AF%E5%85%B1%E4%BA%AB">1.2 区块链 + 信息共享</a></li>
+</ul>
+</li>
+<li><a href="#2-%E7%89%88%E6%9D%83%E4%BF%9D%E6%8A%A4%E4%B8%8D%E5%8F%AF%E7%AF%A1%E6%94%B9-%E6%B0%B8%E4%B9%85%E4%BF%9D%E5%AD%98">2 版权保护——不可篡改、永久保存</a>
+<ul>
+<li><a href="#21-%E4%BC%A0%E7%BB%9F%E9%89%B4%E8%AF%81%E8%AF%81%E6%98%8E%E7%9A%84%E7%97%9B%E7%82%B9">2.1 传统鉴证证明的痛点</a></li>
+<li><a href="#22-%E5%8C%BA%E5%9D%97%E9%93%BE-%E9%89%B4%E8%AF%81%E8%AF%81%E6%98%8E">2.2 区块链 + 鉴证证明</a></li>
+<li><a href="#23-%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B">2.3 应用案例</a></li>
+</ul>
+</li>
+<li><a href="#3-%E7%89%A9%E6%B5%81%E9%93%BE%E6%BA%AF%E6%BA%90%E9%98%B2%E4%BC%AA">3 物流链——溯源防伪</a>
+<ul>
+<li><a href="#31-%E4%BC%A0%E7%BB%9F%E6%98%AF%E9%98%B2%E4%BC%AA%E6%BA%AF%E6%BA%90%E6%89%8B%E6%AE%B5">3.1 传统是防伪溯源手段</a></li>
+<li><a href="#32-%E5%8C%BA%E5%9D%97%E9%93%BE%E7%89%A9%E6%B5%81%E9%93%BE">3.2 区块链+物流链</a></li>
+</ul>
+</li>
+<li><a href="#4-%E4%BE%9B%E5%BA%94%E9%93%BE%E9%87%91%E8%9E%8D%E8%A7%A3%E5%86%B3%E4%B8%AD%E5%B0%8F%E5%BE%AE%E4%BC%81%E4%B8%9A%E8%9E%8D%E8%B5%84%E9%9A%BE">4 供应链金融——解决中小微企业融资难</a>
+<ul>
+<li><a href="#41-%E4%BC%A0%E7%BB%9F%E7%9A%84%E4%BE%9B%E5%BA%94%E9%93%BE%E5%8D%95%E7%82%B9%E8%9E%8D%E8%B5%84">4.1 传统的供应链单点融资</a></li>
+<li><a href="#42-%E5%8C%BA%E5%9D%97%E9%93%BE-%E4%BE%9B%E5%BA%94%E9%93%BE%E9%87%91%E8%9E%8D">4.2 区块链 + 供应链金融</a></li>
+</ul>
+</li>
+<li><a href="#5-%E8%B7%A8%E5%A2%83%E6%94%AF%E4%BB%98%E6%8F%90%E9%AB%98%E6%95%88%E7%8E%87-%E9%99%8D%E4%BD%8E%E8%B4%B9%E7%94%A8">5 跨境支付——提高效率、降低费用</a>
+<ul>
+<li><a href="#51-%E4%BC%A0%E7%BB%9F%E8%B7%A8%E5%A2%83%E6%94%AF%E4%BB%98">5.1 传统跨境支付</a></li>
+<li><a href="#52-%E5%8C%BA%E5%9D%97%E9%93%BE-%E8%B7%A8%E5%A2%83%E6%94%AF%E4%BB%98">5.2 区块链 + 跨境支付</a></li>
+</ul>
+</li>
+<li><a href="#6-%E8%B5%84%E4%BA%A7%E6%95%B0%E5%AD%97%E5%8C%96%E4%BE%BF%E4%BA%8E%E8%B5%84%E4%BA%A7%E6%B5%81%E9%80%9A">6 资产数字化——便于资产流通</a>
+<ul>
+<li><a href="#61-%E5%AE%9E%E4%BD%93%E8%B5%84%E4%BA%A7%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">6.1 实体资产存在的问题</a></li>
+<li><a href="#62-%E5%8C%BA%E5%9D%97%E9%93%BE%E5%AE%9E%E7%8E%B0%E8%B5%84%E4%BA%A7%E6%95%B0%E5%AD%97%E5%8C%96">6.2 区块链实现资产数字化</a></li>
+<li><a href="#63-%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B">6.3 应用案例</a></li>
+</ul>
+</li>
+<li><a href="#7-%E4%BB%A3%E5%B8%81%E5%8E%BB%E4%B8%AD%E4%BB%8B-%E5%8E%BB%E4%BF%A1%E4%BB%BB">7 代币——去中介、去信任</a>
+<ul>
+<li><a href="#71-%E4%BC%A0%E7%BB%9F%E8%B4%A7%E5%B8%81%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">7.1 传统货币存在的问题</a></li>
+<li><a href="#72-%E5%8C%BA%E5%9D%97%E9%93%BE%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98">7.2 区块链如何解决这些问题</a>
+<ul>
+<li><a href="#721-%E6%BB%A5%E5%8F%91%E9%97%AE%E9%A2%98">7.2.1 滥发问题</a></li>
+<li><a href="#722-%E8%B4%A6%E6%9C%AC%E4%BF%AE%E6%94%B9%E9%97%AE%E9%A2%98">7.2.2 账本修改问题</a></li>
+<li><a href="#723-%E9%93%BE%E5%BC%8F%E5%AD%98%E5%82%A8">7.2.3 链式存储</a></li>
+<li><a href="#724-%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E8%8A%82%E7%82%B9">7.2.4 去中心化节点</a></li>
+<li><a href="#725-%E5%A4%87%E6%B3%A8">7.2.5 备注</a></li>
+</ul>
+</li>
+<li><a href="#73-%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B">7.3 应用案例</a></li>
+</ul>
+</li>
+<li><a href="#8-%E5%B0%8F%E7%BB%93">8 小结</a></li>
+</ul>
+
+                            </div>
+                            
+                                
+                                    
+                                            <!--zh-->
+                                            <section class="post-copyright zh">
+                                                <p class="copyright-item ">
+                                                    <span>&#x4F5C;&#x8005;:</span>
+                                                    <span>Typhoeus</span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/blockchain-commercial-survey/">https://tdmaker.github.io/faded/post/blockchain-commercial-survey/</a></span>
+                                                </p>
+
+                                                <p class="copyright-item">
+                                                    <span>&#x534F;&#x8BAE;:</span>
+                                                    <span>MIT License</span>
+                                                </p>
+                                            </section>
+                                            
+                                                
+                                                    
+                                                                    <!--Share-->
+                                                                    <span style="margin-right:15px">
+                        <i class="post-share"></i>
+                        <span>&#x5206;&#x4EAB;:</span>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/blockchain-commercial-survey/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/blockchain-commercial-survey/&sharesource=qzone&title=区块链——商用调查&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586334456798&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/blockchain-commercial-survey/&sharesource=weibo&title=区块链——商用调查 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586334456798 "><i class="fa fa-weibo "></i></a>
+
+                                                                    </span>
+                                                                    
+                                                                        <div class="reward ">
+                                                                            <div class="reward-button ">&yen;
+                                                                                <span class="reward-code "> 
+                        <span class="alipay-code "> <img class="alipay-img " alt = "support " src="https://blog.itjoker.cn/alipay.jpg"><b>支付宝</b> </span>
+                                                                                <span class="wechat-code "> <img alt ="support " class="wechat-img " src="https://blog.itjoker.cn/wechat.jpg"><b>微信</b> </span> </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                            <!--zh-->
+                                                                            <section class="post-tags zh ">
+                                                                                <div>
+                                                                                    <span>&#x6807;&#x7B7E;:</span>
+                                                                                    <span class="tag ">
+                        
+                        
+                        <a href="https://tdmaker.github.io/faded/tag/blockchain/">#
+                    区块链
+                        </a>
+                        
+                            
+                                </span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <a href="javascript:window.history.back();">
+                        &#x8FD4;&#x56DE;</a>
+                                                                                    <span>&dot;</span>
+                                                                                    <a href="#">&#x4E3B;&#x9875;</a>
+                                                                                </div>
+                                                                            </section>
+
+                                                                            
+                                                                                <!---->
+                                                                                <section class="post-nav">
+                                                                                    
+                                                                                            
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/blockchain-core-algorithms/">
+                                                                                                    区块链——六大核心算法
+                                                                                                </a>
+                                                                                                
+                                                                                </section>
+                    </article>
+                </div>
+                
+                                            
+            </div>
+    </div>
+    </div>
+    </div>
+    
+    <div id="player"></div>
+    
+        <footer id="footer" class="footer">
+            <div class="copyright">
+                
+                    <div class="Like">
+                        <div class="tip" data-tooltip="Do you like it?">
+                            <a href="https://github.com/ITJoker233/Gridea-theme-Chic" target="_blank" title=""><svg class="icon"
+                        aria-hidden="true">
+                        <use xlink:href="#like"></use>
+                    </svg><b class="like_text" id="star"></b></a>
+                        </div>
+                    </div>
+                    
+                        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1437183871&auto=1&height=66"></iframe>
+                            
+                                <b id="hitokoto"></b><br>
+                                
+                                        <svg viewBox="0 0 1024 1024" style="margin-left: 5px;margin-right: 5px;" version="1.0" width="8" height="8" class="my-face">
+            <path
+                d="M863.597631 513.574282l-271.33965-140.213484L729.783667 81.926656c3.583731-7.87141 7.167462-15.742819 7.167462-25.214109C736.887134 25.226908 708.345275 0.012799 672.635953 0.012799a63.611229 63.611229 0 0 0-39.293053 12.607055c-1.791866 1.59988-3.519736 3.19976-5.311602 3.19976L147.87531 418.925381a55.547834 55.547834 0 0 0-19.646527 47.356448c1.791866 17.278704 14.27093 33.021523 32.125591 42.492813l271.33965 141.749369L292.504463 945.221908c-12.479064 25.214109-1.791866 53.563983 23.166262 69.306802 10.751194 6.335525 23.230258 9.47129 35.709322 9.47129 16.062795 0 32.125591-4.735645 44.604655-15.742819l480.091993-403.297753a55.547834 55.547834 0 0 0 19.646526-47.228458 61.243407 61.243407 0 0 0-32.12559-44.156688z"
+                fill="#93b5cf"></path>
+        </svg>
+                                        Typhoeus &copy;Copyright
+                                            <script>
+                                                var date = new Date();
+                                                document.write("" + date.getFullYear());
+                                            </script>
+                                            | Powered by
+                                            <a href="https://coding.net" target="_blank">
+                                                Coding.net
+                                            </a>
+            </div>
+            <div id="update" style="display:none;">
+                on
+            </div>
+            
+                <div id="version" style="display:none;">
+                    1.7.3
+                </div>
+                
+                    <script>
+                        var pat = '';
+                        
+                        document.write('<div id="home_path" style="display:none;">' + document.location.protocol + '//' + window.document.location.hostname + pat + '</div>')
+                    </script>
+        </footer>
+        
+            <script src='https://cdn.jsdelivr.net/npm/live2d-widget@3.x/lib/L2Dwidget.min.js'></script>
+            
+                <script>
+                    
+
+                    function LoadPlayer() {
+                        var music_array = [];
+                        
+                        music_array.push({
+                            name: 'Melody',
+                            url: 'http://ws.stream.qqmusic.qq.com/C400001EBBMo0DoYJC.m4a?guid=6340618398&amp;vkey=EC157F02D243DEDB138C1C1C7ECF52CD0BA22CFB9838C38894388ED449C8425D60C8A5BB1DA799E29234D9E05A5F9D8313AF08143F7E592D&amp;uin=1298&amp;fromtag=66',
+                            artist: '黄一鸣/李熙凝/李依宸/NINEONE #/秦牛正威/未书羽',
+                            cover: 'https://y.gtimg.cn/music/photo_new/T002R800x800M000000xZI4X1WAcq3.jpg?max_age=2592000',
+                        });
+                        
+                        console.log(" MusicList: " + music_array);
+                        
+                        const ap = new APlayer({
+                            container: document.getElementById('player'),
+                            fixed: true,
+                            audio: music_array
+                        });
+                        
+                    }
+                    LoadPlayer();
+                    
+                    
+                    loadlive2d();
+                    
+                    
+                    hitokoto();
+                    
+                    getStar();
+                    hljs.initHighlighting();
+                    console.clear();
+                    
+                    CheckVersion();
+                    
+                    var newDate = new Date();
+                    newDate.setTime(1586334456798);
+                    console.log(" Blog Update Time: " + newDate.toLocaleDateString());
+                    console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
+                </script>
+                
+                    <div id="tp-weather-widget" style="background: #666;display: flex;"></div>
+                    <script>
+                        (function(T, h, i, n, k, P, a, g, e) {
+                            g = function() {
+                                P = h.createElement(i);
+                                a = h.getElementsByTagName(i)[0];
+                                P.src = k;
+                                P.charset = "utf-8";
+                                P.async = 1;
+                                a.parentNode.insertBefore(P, a)
+                            };
+                            T["ThinkPageWeatherWidgetObject"] = n;
+                            T[n] || (T[n] = function() {
+                                (T[n].q = T[n].q || []).push(arguments)
+                            });
+                            T[n].l = +new Date();
+                            if (T.attachEvent) {
+                                T.attachEvent("onload", g)
+                            } else {
+                                T.addEventListener("load", g, false)
+                            }
+                        }(window, document, "script", "tpwidget", "//widget.seniverse.com/widget/chameleon.js"))
+                    </script>
+                    <script>
+                        var wearther_margin = "10px 10px";
+                        
+                        wearther_margin = "70px 5px";
+                        
+                        tpwidget("init", {
+                            "flavor": "bubble",
+                            "location": "WX4FBXXFKE4F",
+                            "geolocation": "enabled",
+                            "position": "bottom-left",
+                            "margin": wearther_margin,
+                            "language": "zh-chs",
+                            "unit": "c",
+                            "theme": "chameleon",
+                            "uid": "UFC977E1C7",
+                            "hash": "213ad798bc472dc365da3a9d4a9ff115"
+                        });
+                        tpwidget("show");
+                    </script>
+                    
+        </div>
+</body>
+<script>
+    scroll();
+</script>
+
+</html>
