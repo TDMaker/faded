@@ -2,11 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tdmaker.github.io/faded/</id>
     <title>Typhoeus</title>
-    <updated>2020-04-08T08:42:04.079Z</updated>
+    <updated>2020-04-08T08:43:30.544Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tdmaker.github.io/faded/"/>
     <link rel="self" href="https://tdmaker.github.io/faded/atom.xml"/>
-    <subtitle>温故而知新</subtitle>
+    <subtitle>青春不会远去</subtitle>
     <logo>https://tdmaker.github.io/faded/images/avatar.png</logo>
     <icon>https://tdmaker.github.io/faded/favicon.ico</icon>
     <rights>All rights reserved 2020, Typhoeus</rights>
