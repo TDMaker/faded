@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                jQuery——拓展
+                                区块链——入门
                             </h1>
                             
                                     <!--zh-->
@@ -174,11 +174,11 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-05</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-08</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">1.9
+                                    href="#">6.3
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">353</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">1829</a></span>
                                         
                                                 阅读量:
                                                 <span data-hk-page="current"> - </span>
@@ -188,140 +188,76 @@
                         </header>
                         
                         <div class="post-content">
-                            <h1 id="extend函数">😲 extend函数</h1>
-<p><code>$.extend(target,[object1],[onjectN])</code><br>
-<code>$.extend([deep],target,object1,[objectN])</code></p>
-<pre><code class="language-javascript">var obj1 = {
-	height: 100,
-	width: 100,
-	length: 100,
-	div: {
-		x: 100,
-		y: 100
-	}
-};
-var obj2 = {
-	height: 200,
-	width: 200,
-	div: {
-		x: 200
-	}
-};
-$.extend(obj1, obj2);
-console.log(obj1.height);
-console.log(obj1.div.y);
-//result:200,undefined
-</code></pre>
-<p>当使用true参数时，</p>
-<pre><code class="language-javascript">var obj1 = {
-	height: 100,
-	width: 100,
-	length: 100,
-	div: {
-		x: 100,
-		y: 100
-	}
-};
-var obj2 = {
-	height: 200,
-	width: 200,
-	div: {
-		x: 200
-	}
-};
-$.extend(true, obj1, obj2);
-console.log(obj1.height);
-console.log(obj1.div.y);
-//result:200,100
-</code></pre>
-<p>拓展jQuery的公共函数</p>
-<pre><code class="language-javascript">$.extend({
-	minValue: function(a, b) {
-		return a &gt; b ? a: b
-	}
-});
-var a = prompt(&quot;input a&quot;);
-var b = prompt(&quot;input b&quot;);
-console.log($.minValue(a, b));
-</code></pre>
-<p><code>$.fn.extend()</code> 方法可以创建 jQuery 对象方法</p>
-<pre><code class="language-javascript">$.fn.extend({
-	test: function() {
-		alert(&quot;click &quot; + $(this).html() + &quot; this is test function&quot;);
-	}
-});
-$(&quot;#fnExtend&quot;).click(function() {
-	$(this).test();
-});
-</code></pre>
-<h1 id="自定义jquery函数">😲 自定义jQuery函数</h1>
-<h2 id="添加新的全局函数">🤗 添加新的全局函数</h2>
-<pre><code class="language-javascript">$.clickDiv = function(node) {
-	console.log(node.text() + &quot; click&quot;);
-};
-$(&quot;div&quot;).click(function() {
-	$.clickDiv($(this));
-});
-</code></pre>
-<h2 id="通过-extend-函数添加全局函数">🤗 通过 <code>extend</code> 函数添加全局函数</h2>
-<pre><code class="language-javascript">$.extend({
-	foo: function() {
-		alert(&quot;this is a new function 'foo()'&quot;);
-	}
-});
-$.foo();
-</code></pre>
-<h2 id="使用命名空间">🤗 使用命名空间</h2>
-<pre><code class="language-javascript">$.myPluin = {
-	ale: function() {
-		alert(&quot;function from myPluin&quot;);
-	}
-};
-$.nextPluin = {
-	ale: function() {
-		alert(&quot;function from nextPluin&quot;);
-	}
-}
-$.myPluin.ale();
-$.nextPluin.ale();
-</code></pre>
-<h1 id="自定义选择器">😲 自定义选择器</h1>
-<pre><code class="language-javascript">$.myPluin = {
-	ale: function() {
-		alert(&quot;function from myPluin&quot;);
-	}
-};
-$.nextPluin = {
-	ale: function() {
-		alert(&quot;function from nextPluin&quot;);
-	}
-};
-index = -1; //定义全局变量 index
-jQuery.expr[&quot;:&quot;].le = function(elem, i, match) {
-	// return i&gt;match[3]-0||i==match[3]
-	console.log(index);
-    index++;
-	return index &gt; match[3] - 0; // 返回索引大于 3 的元素
-};
-$(&quot;p:le(2)&quot;).css(&quot;color&quot;, &quot;red&quot;);
-// 返回元素索引值大于等于 2 的元素
-$.myPluin.ale();
-$.nextPluin.ale();
-</code></pre>
+                            <h1 id="1-涉及到的技术">1 涉及到的技术</h1>
+<ul>
+<li>密码学</li>
+<li>分布式一致性协议</li>
+<li>点对点网络通信技术</li>
+<li>智能合约编程语言等。</li>
+</ul>
+<h1 id="2-区块链的分类">2 区块链的分类</h1>
+<p>按照参与方式：公开链、私有链、联盟链。</p>
+<h2 id="21-公开链">2.1 公开链</h2>
+<p>公有链的任何节点都是向任何人开放的，每个人都可以参与到这个区块链中的计算，而且任何人都可以下载获得完整区块链数据，即全部账本。</p>
+<h2 id="22-私有链">2.2 私有链</h2>
+<p>在某些区块链的应用场景下，开发者并不希望任何人都可以参与这个系统，因此建立一种不对外公开、只有被许可的节点才可以参与并且查看所有数据的私有区块链，私有链一般适用于特定机构的内部数据管理与审计。</p>
+<h2 id="23-联盟链">2.3 联盟链</h2>
+<p>联盟链是指参与每个节点的权限都完全对等，各节点在不需要完全互信的情况下就可以实现数据的可信交换，联盟链的各个节点通常有与之对应的实体机构组织，通过授权后才能加入或退出网络。联盟链是一种公司与公司、组织与组织之间达成联盟的模式。</p>
+<h1 id="3-区块链的工作量证明机制">3 区块链的工作量证明机制</h1>
+<h2 id="31-powproof-of-power-工作量证明机制">3.1 POW：proof of power, 工作量证明机制</h2>
+<p>PoW（工作量证明），也就是像比特币的挖矿机制，矿工通过把网络尚未记录的现有交易打包到一个区块，然后不断遍历尝试来寻找一个随机数，使得新区块加上随机数的哈希值满足一定的难度条件，例如前面 10 位是零。找到满足条件的随机数，就相当于确定了区块链最新的一个区块，也相当于获得了区块链的本轮记账权。矿工把满足挖矿难度条件的区块在网络中广播出去，全网其他节点在验证该区块满足挖矿难度条件，同时区块里的交易数据符合协议规范后，将各自把该区块链接到自己版本的区块链上，从而在全网形成对当前网络状态的共识。</p>
+<ul>
+<li>优点：完全去中心化，节点自由进出，避免了建立和维护中心化信用机构的成本。只要网络破坏者的算力不超过网络总算力的 50%，网络的交易状态就能达成一致。</li>
+<li>缺点：目前比特币挖矿造成大量的资源浪费；另外挖矿的激励机制也造成矿池算力的高度集中，背离了当初去中心化设计的初衷。更大的问题是 PoW 机制的共识达成的周期较长，每秒只能最多做 7 笔交易，不适合商业应用。</li>
+</ul>
+<h2 id="32-posproof-of-stake-股权证明">3.2 POS：proof of stake, 股权证明</h2>
+<p>PoS 权益证明，要求节点提供拥有一定数量的代币证明来获取竞争区块链记账权的一种分布式共识机制。如果单纯依靠代币余额来决定记账者必然使得富有者胜出，导致记账权的中心化，降低共识的公正性，因此不同的 PoS 机制在权益证明的基础上，采用不同方式来增加记账权的随机性来避免中心化。例如点点币（PeerCoin）PoS 机制中，拥有最多链龄长的比特币获得记账权的几率就越大。NXT 和 Blackcoin 则采用一个公式来预测下一个记账的节点。拥有多的代币被选为记账节点的概率就会大。未来以太坊也会从目前的 PoW 机制转换到 PoS 机制，从目前看到的资料看，以太坊的 PoS 机制将采用节点下赌注来赌下一个区块，赌中者有额外以太币奖，赌不中者会被扣以太币的方式来达成下一区块的共识。</p>
+<ul>
+<li>优点：在一定程度上缩短了共识达成的时间，降低了 PoW 机制的资源浪费。</li>
+<li>缺点：破坏者对网络攻击的成本低，网络的安全性有待验证。另外拥有代币数量大的节点获得记账权的几率更大，会使得网络的共识受少数富裕账户支配，从而失去公正性。</li>
+</ul>
+<h2 id="33-dposdelegated-proof-of-stake-共识机制委托权以证明">3.3 DPOS：delegated proof of stake, 共识机制，委托权以证明</h2>
+<p>DPoS（股份授权证明）机制，类似于董事会投票。比特股（bitshares）采用的 PoS 机制是持股者投票选出一定数量的见证人，每个见证人按序有两秒的权限时间生成区块，若见证人在给定的时间片不能生成区块，区块生成权限交给下一个时间片对应的见证人。持股人可以随时通过投票更换这些见证人。DPoS 的这种设计使得区块的生成更为快速，也更加节能。</p>
+<ul>
+<li>优点：大幅缩小参与验证和记账节点的数量，可以达到秒级的共识验证。</li>
+<li>缺点：选举固定数量的见证人作为记账候选人有可能不适合于完全去中心化的场景。另外在网络节点数少的场景，选举的见证人的代表性也不强。</li>
+</ul>
+<h1 id="4-分布式一致性算法">4 分布式一致性算法</h1>
+<p>分布式一致性算法是基于传统的分布式一致性技术。其中有分为解决拜占庭将军问题的拜占庭容错算法，如 PBFT。另外解决非拜占庭问题的分布式一致性算法（Pasox、Raft）。该类算法目前是联盟链和私有链场景中常用的共识机制。</p>
+<ul>
+<li>优点：实现秒级的快速共识机制，保证一致性。</li>
+<li>缺点：去中心化程度不如公有链上的共识机制；更适合多方参与的多中心商业模式。</li>
+</ul>
+<h2 id="41-拜占庭将军问题-byzantine-generals-problem-bgp">4.1 拜占庭将军问题 /Byzantine Generals Problem/ BGP</h2>
+<p>由莱斯利·兰波特在其同名论文中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算机通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。</p>
+<h2 id="42-改进型实用拜占庭容错-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错 /Practical Byzantine Fault Tolerance/ PBFT</h2>
+<p>PBET 共识机制是少数服从多数，根据信息在分布式网络中节点间互相交换后各节点列出所有得到的信息，一个节点代表一票，选择大多数的结果作为解决办法。PBET 将容错量控制在全部节点数的 $$\bar{x}$$，即如只要有超过2/3 的正常节点，整个系统便可正常运作。</p>
 
                         </div>
                         
                             <div class="post-toc">
                                 <ul class="markdownIt-TOC">
-<li><a href="#extend%E5%87%BD%E6%95%B0">😲 extend函数</a></li>
-<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89jquery%E5%87%BD%E6%95%B0">😲 自定义jQuery函数</a>
+<li><a href="#1-%E6%B6%89%E5%8F%8A%E5%88%B0%E7%9A%84%E6%8A%80%E6%9C%AF">1 涉及到的技术</a></li>
+<li><a href="#2-%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%88%86%E7%B1%BB">2 区块链的分类</a>
 <ul>
-<li><a href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E5%85%A8%E5%B1%80%E5%87%BD%E6%95%B0">🤗 添加新的全局函数</a></li>
-<li><a href="#%E9%80%9A%E8%BF%87-extend-%E5%87%BD%E6%95%B0%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80%E5%87%BD%E6%95%B0">🤗 通过 <code>extend</code> 函数添加全局函数</a></li>
-<li><a href="#%E4%BD%BF%E7%94%A8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4">🤗 使用命名空间</a></li>
+<li><a href="#21-%E5%85%AC%E5%BC%80%E9%93%BE">2.1 公开链</a></li>
+<li><a href="#22-%E7%A7%81%E6%9C%89%E9%93%BE">2.2 私有链</a></li>
+<li><a href="#23-%E8%81%94%E7%9B%9F%E9%93%BE">2.3 联盟链</a></li>
 </ul>
 </li>
-<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%89%E6%8B%A9%E5%99%A8">😲 自定义选择器</a></li>
+<li><a href="#3-%E5%8C%BA%E5%9D%97%E9%93%BE%E7%9A%84%E5%B7%A5%E4%BD%9C%E9%87%8F%E8%AF%81%E6%98%8E%E6%9C%BA%E5%88%B6">3 区块链的工作量证明机制</a>
+<ul>
+<li><a href="#31-powproof-of-power-%E5%B7%A5%E4%BD%9C%E9%87%8F%E8%AF%81%E6%98%8E%E6%9C%BA%E5%88%B6">3.1 POW：proof of power, 工作量证明机制</a></li>
+<li><a href="#32-posproof-of-stake-%E8%82%A1%E6%9D%83%E8%AF%81%E6%98%8E">3.2 POS：proof of stake, 股权证明</a></li>
+<li><a href="#33-dposdelegated-proof-of-stake-%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6%E5%A7%94%E6%89%98%E6%9D%83%E4%BB%A5%E8%AF%81%E6%98%8E">3.3 DPOS：delegated proof of stake, 共识机制，委托权以证明</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95">4 分布式一致性算法</a>
+<ul>
+<li><a href="#41-%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%B0%86%E5%86%9B%E9%97%AE%E9%A2%98-byzantine-generals-problem-bgp">4.1 拜占庭将军问题 /Byzantine Generals Problem/ BGP</a></li>
+<li><a href="#42-%E6%94%B9%E8%BF%9B%E5%9E%8B%E5%AE%9E%E7%94%A8%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%B9%E9%94%99-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错 /Practical Byzantine Fault Tolerance/ PBFT</a></li>
+</ul>
+</li>
 </ul>
 
                             </div>
@@ -337,7 +273,7 @@ $.nextPluin.ale();
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/jquery-extension/">https://tdmaker.github.io/faded/post/jquery-extension/</a></span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/blockchain-introduction/">https://tdmaker.github.io/faded/post/blockchain-introduction/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -352,9 +288,9 @@ $.nextPluin.ale();
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/jquery-extension/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/jquery-extension/&sharesource=qzone&title=jQuery——拓展&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586315464350&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/jquery-extension/&sharesource=weibo&title=jQuery——拓展 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586315464350 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/blockchain-introduction/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/blockchain-introduction/&sharesource=qzone&title=区块链——入门&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586315464350&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/blockchain-introduction/&sharesource=weibo&title=区块链——入门 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586315464350 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -386,13 +322,9 @@ $.nextPluin.ale();
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/regular-expression-assert/">
-                                                                                            正则表达式——断言
-                                                                                        </a>
-                                                                                        
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/jquery-selectors/">
-                                                                                                    jQuery——选择器
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/regular-expression-full-tutorial/">
+                                                                                                    正则表达式——完整版教程
                                                                                                 </a>
                                                                                                 
                                                                                 </section>

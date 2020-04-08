@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tdmaker.github.io/faded/</id>
     <title>Typhoeus</title>
-    <updated>2020-04-07T15:05:10.517Z</updated>
+    <updated>2020-04-08T03:11:10.801Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tdmaker.github.io/faded/"/>
     <link rel="self" href="https://tdmaker.github.io/faded/atom.xml"/>
@@ -10,6 +10,58 @@
     <logo>https://tdmaker.github.io/faded/images/avatar.png</logo>
     <icon>https://tdmaker.github.io/faded/favicon.ico</icon>
     <rights>All rights reserved 2020, Typhoeus</rights>
+    <entry>
+        <title type="html"><![CDATA[区块链——入门]]></title>
+        <id>https://tdmaker.github.io/faded/post/blockchain-introduction/</id>
+        <link href="https://tdmaker.github.io/faded/post/blockchain-introduction/">
+        </link>
+        <updated>2020-04-08T02:56:09.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-涉及到的技术">1 涉及到的技术</h1>
+<ul>
+<li>密码学</li>
+<li>分布式一致性协议</li>
+<li>点对点网络通信技术</li>
+<li>智能合约编程语言等。</li>
+</ul>
+<h1 id="2-区块链的分类">2 区块链的分类</h1>
+<p>按照参与方式：公开链、私有链、联盟链。</p>
+<h2 id="21-公开链">2.1 公开链</h2>
+<p>公有链的任何节点都是向任何人开放的，每个人都可以参与到这个区块链中的计算，而且任何人都可以下载获得完整区块链数据，即全部账本。</p>
+<h2 id="22-私有链">2.2 私有链</h2>
+<p>在某些区块链的应用场景下，开发者并不希望任何人都可以参与这个系统，因此建立一种不对外公开、只有被许可的节点才可以参与并且查看所有数据的私有区块链，私有链一般适用于特定机构的内部数据管理与审计。</p>
+<h2 id="23-联盟链">2.3 联盟链</h2>
+<p>联盟链是指参与每个节点的权限都完全对等，各节点在不需要完全互信的情况下就可以实现数据的可信交换，联盟链的各个节点通常有与之对应的实体机构组织，通过授权后才能加入或退出网络。联盟链是一种公司与公司、组织与组织之间达成联盟的模式。</p>
+<h1 id="3-区块链的工作量证明机制">3 区块链的工作量证明机制</h1>
+<h2 id="31-powproof-of-power-工作量证明机制">3.1 POW：proof of power, 工作量证明机制</h2>
+<p>PoW（工作量证明），也就是像比特币的挖矿机制，矿工通过把网络尚未记录的现有交易打包到一个区块，然后不断遍历尝试来寻找一个随机数，使得新区块加上随机数的哈希值满足一定的难度条件，例如前面 10 位是零。找到满足条件的随机数，就相当于确定了区块链最新的一个区块，也相当于获得了区块链的本轮记账权。矿工把满足挖矿难度条件的区块在网络中广播出去，全网其他节点在验证该区块满足挖矿难度条件，同时区块里的交易数据符合协议规范后，将各自把该区块链接到自己版本的区块链上，从而在全网形成对当前网络状态的共识。</p>
+<ul>
+<li>优点：完全去中心化，节点自由进出，避免了建立和维护中心化信用机构的成本。只要网络破坏者的算力不超过网络总算力的 50%，网络的交易状态就能达成一致。</li>
+<li>缺点：目前比特币挖矿造成大量的资源浪费；另外挖矿的激励机制也造成矿池算力的高度集中，背离了当初去中心化设计的初衷。更大的问题是 PoW 机制的共识达成的周期较长，每秒只能最多做 7 笔交易，不适合商业应用。</li>
+</ul>
+<h2 id="32-posproof-of-stake-股权证明">3.2 POS：proof of stake, 股权证明</h2>
+<p>PoS 权益证明，要求节点提供拥有一定数量的代币证明来获取竞争区块链记账权的一种分布式共识机制。如果单纯依靠代币余额来决定记账者必然使得富有者胜出，导致记账权的中心化，降低共识的公正性，因此不同的 PoS 机制在权益证明的基础上，采用不同方式来增加记账权的随机性来避免中心化。例如点点币（PeerCoin）PoS 机制中，拥有最多链龄长的比特币获得记账权的几率就越大。NXT 和 Blackcoin 则采用一个公式来预测下一个记账的节点。拥有多的代币被选为记账节点的概率就会大。未来以太坊也会从目前的 PoW 机制转换到 PoS 机制，从目前看到的资料看，以太坊的 PoS 机制将采用节点下赌注来赌下一个区块，赌中者有额外以太币奖，赌不中者会被扣以太币的方式来达成下一区块的共识。</p>
+<ul>
+<li>优点：在一定程度上缩短了共识达成的时间，降低了 PoW 机制的资源浪费。</li>
+<li>缺点：破坏者对网络攻击的成本低，网络的安全性有待验证。另外拥有代币数量大的节点获得记账权的几率更大，会使得网络的共识受少数富裕账户支配，从而失去公正性。</li>
+</ul>
+<h2 id="33-dposdelegated-proof-of-stake-共识机制委托权以证明">3.3 DPOS：delegated proof of stake, 共识机制，委托权以证明</h2>
+<p>DPoS（股份授权证明）机制，类似于董事会投票。比特股（bitshares）采用的 PoS 机制是持股者投票选出一定数量的见证人，每个见证人按序有两秒的权限时间生成区块，若见证人在给定的时间片不能生成区块，区块生成权限交给下一个时间片对应的见证人。持股人可以随时通过投票更换这些见证人。DPoS 的这种设计使得区块的生成更为快速，也更加节能。</p>
+<ul>
+<li>优点：大幅缩小参与验证和记账节点的数量，可以达到秒级的共识验证。</li>
+<li>缺点：选举固定数量的见证人作为记账候选人有可能不适合于完全去中心化的场景。另外在网络节点数少的场景，选举的见证人的代表性也不强。</li>
+</ul>
+<h1 id="4-分布式一致性算法">4 分布式一致性算法</h1>
+<p>分布式一致性算法是基于传统的分布式一致性技术。其中有分为解决拜占庭将军问题的拜占庭容错算法，如 PBFT。另外解决非拜占庭问题的分布式一致性算法（Pasox、Raft）。该类算法目前是联盟链和私有链场景中常用的共识机制。</p>
+<ul>
+<li>优点：实现秒级的快速共识机制，保证一致性。</li>
+<li>缺点：去中心化程度不如公有链上的共识机制；更适合多方参与的多中心商业模式。</li>
+</ul>
+<h2 id="41-拜占庭将军问题-byzantine-generals-problem-bgp">4.1 拜占庭将军问题 /Byzantine Generals Problem/ BGP</h2>
+<p>由莱斯利·兰波特在其同名论文中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算机通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。</p>
+<h2 id="42-改进型实用拜占庭容错-practical-byzantine-fault-tolerance-pbft">4.2 改进型实用拜占庭容错 /Practical Byzantine Fault Tolerance/ PBFT</h2>
+<p>PBET 共识机制是少数服从多数，根据信息在分布式网络中节点间互相交换后各节点列出所有得到的信息，一个节点代表一票，选择大多数的结果作为解决办法。PBET 将容错量控制在全部节点数的 $$\bar{x}$$，即如只要有超过2/3 的正常节点，整个系统便可正常运作。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[正则表达式——完整版教程]]></title>
         <id>https://tdmaker.github.io/faded/post/regular-expression-full-tutorial/</id>
@@ -3776,140 +3828,6 @@ $(&quot;select &gt; option:selected&quot;)
 <tr>
 <td>BTMoo导航</td>
 <td><a href="https://www.btmoo.net/">https://www.btmoo.net/</a></td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[电子书下载]]></title>
-        <id>https://tdmaker.github.io/faded/post/ebooks-download/</id>
-        <link href="https://tdmaker.github.io/faded/post/ebooks-download/">
-        </link>
-        <updated>2020-04-03T09:30:10.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="电子书下载">电子书下载</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Baen free library</td>
-<td><a href="https://www.baen.com/allbooks/category/index/id/2012">https://www.baen.com/allbooks/category/index/id/2012</a></td>
-</tr>
-<tr>
-<td>智奇搜书</td>
-<td><a href="https://www.zqbook.top/">https://www.zqbook.top/</a></td>
-</tr>
-<tr>
-<td>云海电子图书馆</td>
-<td><a href="http://www.pdfbook.cn/">http://www.pdfbook.cn/</a></td>
-</tr>
-<tr>
-<td>必看网</td>
-<td><a href="https://www.biikan.com/">https://www.biikan.com/</a></td>
-</tr>
-<tr>
-<td>bookboon</td>
-<td><a href="https://bookboon.com/en">https://bookboon.com/en</a></td>
-</tr>
-<tr>
-<td>Free-Ebooks</td>
-<td><a href="https://www.free-ebooks.net/">https://www.free-ebooks.net/</a></td>
-</tr>
-<tr>
-<td>ZLibrary</td>
-<td><a href="https://b-ok.org/">https://b-ok.org/</a></td>
-</tr>
-<tr>
-<td>书格</td>
-<td><a href="https://new.shuge.org/">https://new.shuge.org/</a></td>
-</tr>
-<tr>
-<td>Academia</td>
-<td><a href="https://www.academia.edu/">https://www.academia.edu/</a></td>
-</tr>
-<tr>
-<td>图灵社区</td>
-<td><a href="https://www.ituring.com.cn/">https://www.ituring.com.cn/</a></td>
-</tr>
-<tr>
-<td>书伴</td>
-<td><a href="https://bookfere.com/">https://bookfere.com/</a></td>
-</tr>
-<tr>
-<td>好读</td>
-<td><a href="http://haodoo.net/">http://haodoo.net/</a></td>
-</tr>
-<tr>
-<td>ePUBee</td>
-<td><a href="http://cn.epubee.com/books/">http://cn.epubee.com/books/</a></td>
-</tr>
-<tr>
-<td>三秋书屋</td>
-<td><a href="https://www.d4j.cn/">https://www.d4j.cn/</a></td>
-</tr>
-<tr>
-<td>SoBooks</td>
-<td><a href="https://sobooks.cc/">https://sobooks.cc/</a></td>
-</tr>
-<tr>
-<td>i-Book.in</td>
-<td><a href="https://book.tstrs.me/">https://book.tstrs.me/</a></td>
-</tr>
-<tr>
-<td>WOW! eBook</td>
-<td><a href="https://www.wowebook.org/">https://www.wowebook.org/</a></td>
-</tr>
-<tr>
-<td>计算机书籍控</td>
-<td><a href="http://bestcbooks.com/">http://bestcbooks.com/</a></td>
-</tr>
-<tr>
-<td>鸠摩搜索</td>
-<td><a href="https://www.jiumodiary.com/">https://www.jiumodiary.com/</a></td>
-</tr>
-<tr>
-<td>Library Genesis</td>
-<td><a href="http://gen.lib.rus.ec/">http://gen.lib.rus.ec/</a></td>
-</tr>
-<tr>
-<td>Library Genesis 2M</td>
-<td><a href="http://libgen.io/">http://libgen.io/</a></td>
-</tr>
-<tr>
-<td>免费的计算机编程类中文书籍</td>
-<td><a href="https://github.com/justjavac/free-programming-books-zh_CN">https://github.com/justjavac/free-programming-books-zh_CN</a></td>
-</tr>
-<tr>
-<td>国立国会图书馆</td>
-<td><a href="https://dl.ndl.go.jp/">https://dl.ndl.go.jp/</a></td>
-</tr>
-<tr>
-<td>ZLibrary</td>
-<td><a href="https://b-ok.cc/s/">https://b-ok.cc/s/</a></td>
-</tr>
-</tbody>
-</table>
-<h1 id="电子书转换">电子书转换</h1>
-<table>
-<thead>
-<tr>
-<th>网站</th>
-<th>网址</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>在线电子书转换器</td>
-<td><a href="http://cn.epubee.com/">http://cn.epubee.com/</a></td>
-</tr>
-<tr>
-<td>文本或 eBook 转换为 Mobi 格式</td>
-<td><a href="https://ebook.online-convert.com/convert-to-mobi">https://ebook.online-convert.com/convert-to-mobi</a></td>
 </tr>
 </tbody>
 </table>
