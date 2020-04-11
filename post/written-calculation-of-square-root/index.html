@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                正则表达式——NFA
+                                笔算平方根
                             </h1>
                             
                                     <!--zh-->
@@ -174,15 +174,15 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-06</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-11</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">13.0
+                                    href="#">1.4
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">3450</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">335</a></span>
                                         
                                             <span class="post-category">&#x5206;&#x7C7B;:
                                 
-                                <a href="https://tdmaker.github.io/faded/tag/regular-expression/">正则表达式</a>
+                                <a href="https://tdmaker.github.io/faded/tag/algorithm/">算法</a>
                                 
                             </span>
                                             
@@ -194,313 +194,25 @@
                         </header>
                         
                         <div class="post-content">
-                            <blockquote>
-<p><a href="https://juejin.im/post/5bbab1f5f265da0aa94a2842">正则表达式和NFA</a></p>
-</blockquote>
-<h1 id="nfa">NFA</h1>
-<p>NFA 是指 Nondeterministic Finite Automaton，非确定有限状态自动机。</p>
-<ul>
-<li>
-<p>目前正则表达式引擎主要有两种：NFA 和 DFA；</p>
-</li>
-<li>
-<p>JavaScript 采用的是 NFA 引擎。<br>
-<img src="https://tdmaker.github.io/faded//post-images/finite-automaton.png" alt="有限状态机" loading="lazy"><br>
-状态机中有这样一些要素，对照上图分别说下：</p>
-</li>
-<li>
-<p><strong>开始状态</strong>：圆圈表示状态，被一个“没有起点的箭头”指向的状态，是开始状态，上例中是 S1；</p>
-</li>
-<li>
-<p><strong>最终状态</strong>：也叫接受状态，图中用双圆圈表示，这个例子中也是 S1；</p>
-</li>
-<li>
-<p><strong>输入</strong>：在一个状态下，向状态机输入的符号/信号，不同输入导致状态机产生不同的状态改变；</p>
-</li>
-<li>
-<p><strong>转换</strong>：在一个状态下，根据特定输入，改变到特定状态的过程，就是转换。</p>
-</li>
-</ul>
-<p>所以有限状态机的工作过程，就是从开始状态，根据不同的输入，自动进行状态转换的过程。</p>
-<p>上图中的状态机的功能，是检测二进制数是否含有偶数个 0。从图上可以看出，输入只有 1 和 0 两种。从 S1 状态开始，只有输入 0 才会转换到 S2 状态，同样 S2 状态下只有输入 0 才会转换到 S1。所以，二进制数输入完毕，如果满足最终状态，也就是最后停在 S1 状态，那么输入的二进制数就含有偶数个 0。<br>
-正则表达式，可以认为是对一组字符串集合的描述。例如 <code>(a+|b)c</code> 对应的字符串集合是：</p>
-<pre><code class="language-javascript">ac
-bc
-aac
-aaac
-aaaac
-...
-</code></pre>
-<p>有限状态机也可以用来描述字符串集合，同样是正则表达式所描述的集合，用有限状态机来表示，可以是这样的：<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586143387008.png" alt="正则表达式的有限状态机表示" loading="lazy"><br>
-并且，有限状态机是可以“<strong>执行</strong>”的，给出如上的状态机之后，就可以用来对输入的字符串进行检测。如果最终匹配，也就意味着输入的字符串和正则表达式 <code>(a+|b)c</code> 匹配。<br>
-所以，编程语言中的正则表达式，一般是通过有限状态机来实现。正则表达式匹配字符串的过程，可以分解为：</p>
-<ul>
-<li>正则表达式转换为等价的有限状态机；</li>
-<li>有限状态机输入字符串执行。</li>
-</ul>
-<p>这里再讲一下 NFA 和 DFA 的区别。DFA 是 Deterministic Finite Automaton，确定有限状态机。DFA 可以认为是一种特殊的 NFA，它最大的特点，就是确定性。它的确定性在于，在一个状态下，输入一个符号，一定是转换到确定的状态，没有其他的可能性。<br>
-举个例子，对于正则表达式 <code>ab|ac</code>，对应 NFA 可以是这样的：<br>
-<img src="https://tdmaker.github.io/faded//post-images/regular-expression-nondeterministic-finite-automaton.png" alt=" 非确定性有限自动机" loading="lazy"><br>
-可以看到，在状态 1 这里，如果输入 <code>a</code>，其实有两种可能，如果后面的符号是 <code>b</code>，那么可以匹配成功，后面符号是 <code>c</code> 也能匹配成功。所以状态机在执行过程中，可能要尝试所有的可能性。在尝试一种可能路径匹配失败后，还要回到之前的状态再尝试其他的路径，这就是“<strong>回溯</strong>”。<br>
-但是 DFA 消除了这种不确定性，所以可以想见，其执行性能应该要比 NFA 更好，因为不需要回溯。<br>
-NFA 是可以转换为等价的 DFA 的，也就是说，理论上讲，正则表达式可以用 DFA 来实现，从而获得优于 NFA 的执行性能。但是 NFA 转换 DFA 的过程，会消耗更多资源，甚至最终得到的 DFA 要占用大量存储空间（据有的资料的说法，可能会产生指数级增长）。而且，DFA 相比 NFA，在实现一些正则表达式的特性时会更复杂，成本更高。所以当前的许多编程语言，其正则表达式引擎为 NFA 模式。</p>
-<pre><code class="language-javascript">/nfa|nfa not/.test('nfa not');
-</code></pre>
-<p>用上面的正则表达式来测试字符串 <code>nfa not</code>，NFA 引擎在检测满足 <code>nfa</code> 就返回匹配成功的结果了，而 DFA 则会尝试继续查找，也就是说会得到“<strong>最长的匹配结果</strong>”。</p>
-<h1 id="从正则表达式到-nfa">从正则表达式到 NFA</h1>
-<h2 id="thompson-算法">🏈Thompson 算法</h2>
-<p>Thompson 算法用于转换正则表达式为 NFA，它并非最高效的算法，但是实用，易于理解。<br>
-Thompson 算法中使用最基本的两种转换：<img src="https://tdmaker.github.io/faded//post-images/regular-expression-thompson-transmission.png" alt="Thompson 转换" loading="lazy"><br>
-<strong>普通转换</strong>就是在一个状态下，输入字符 <code>a</code> 后转换至另一个状态；<strong>epsilon转换</strong>则不需要有输入，就从一个状态转换至另一个状态。</p>
-<p>正则表达式中的各种运算，可以通过组合上述两种转换实现：</p>
-<ul>
-<li>组合转换 RS：<img src="https://tdmaker.github.io/faded//post-images/regexp-thompson-combination.png" alt="组合转换 RS" loading="lazy"></li>
-<li>替换转换 R|S：<img src="https://tdmaker.github.io/faded//post-images/regexp-thompson-replace.png" alt="替换转换 R|S" loading="lazy"></li>
-<li>重复转换 R*：<img src="https://tdmaker.github.io/faded//post-images/regexp-thompson-repeat.png" alt="重复转换 R*" loading="lazy"></li>
-</ul>
-<p>上面图中的 R、S 是有开始状态和结束状态的 NFA。<br>
-以正则表达式 ab|c 为例，包括两个运算：</p>
-<ul>
-<li><code>ab</code> 组合</li>
-<li><code>ab</code> 的结果，与 <code>c</code> 替换<br>
-这样我们把正则表达式视为一系列输入和运算，进行分解、组合，就可以得到最终的 NFA。<br>
-首先，我们要把正则表达式转换为方便记录输入、运算的方式。</li>
-</ul>
-<h2 id="正则表达式-后缀表达式">🏈正则表达式 → 后缀表达式</h2>
-<p>后缀表达式是一种方便记录输入、运算的表达式，本身已包含了运算符的优先级，也称为<strong>逆波兰表示法</strong>（Reverse Polish Notation，简写为 RPN）。<br>
-为方便记录运算，我们为正则表达式中的组合运算也创建一个运算符“<code>.</code>”（本文只涉及最简单的正则表达式形式，这里的“<code>.</code>”不是用于匹配任意字符的特殊符号）。<br>
-正则表达式 <code>ab|c</code>对应的后缀表达式为 <code>ab.c|</code>。<br>
-这样，通过逐个扫描后缀表达式，并识别其中的运算符来执行，就可以对后缀表达式进行求解。对于正则表达式来说，则是在将其变为后缀表达式后，通过“求值”的过程来进一步构建并得到最终的 NFA。<br>
-用于创建后缀表达式的是<strong>调度场算法</strong>。<br>
-对于这里的正则表达式处理的场景，算法的大致描述如下：</p>
-<ul>
-<li>创建输出队列 output 和运算符栈 ops；</li>
-<li>依次读取输入字符串中每一个字符 ch；
-<ul>
-<li>如果 ch 是普通字符，追加到 output；</li>
-<li>如果 ch 是运算符，只要 ops 栈顶的运算符优先级不低于 ch，依次出栈并追加到 output，最后将 ch 入栈 ops；</li>
-<li>如果 ch 是“(”，入栈 ops；</li>
-<li>如果 ch 是“)”，只要 ops 栈顶不是“(”，依次出栈并追加到 output；</li>
-</ul>
-</li>
-<li>将 ops 中运算符依次出栈追加到 output；</li>
-<li>返回 output。</li>
-</ul>
-<p>具体处理过程中，由于原始正则表达式中并没有组合运算符，所以需要自行判断合理的插入位置。<br>
-运算符优先级如下（由高到低）：</p>
-<ol>
-<li><code>* ? +</code></li>
-<li><code>.</code></li>
-<li><code>|</code></li>
-<li><code>(</code></li>
-</ol>
-<h2 id="后缀表达式-nfa">🏈后缀表达式 → NFA</h2>
-<p>基于后缀表达式创建 NFA，是一个由简单的 NFA 进行不断组合得到复杂 NFA 的过程。<br>
-用于表示状态 State 的数据结构为：</p>
-<pre><code class="language-javascript">// State
-{
-	id: String,
-	type: String, // 'n' - normal, 'e' - epsilon, 'end'
-	symbol: String, // 普通状态对应的输入字符
-	out: State, // 允许的下一个状态
-	out1: State // 允许的下一个状态
-}
-</code></pre>
-<p>每个状态可以对应最多两个 out 状态，像 <code>a|b|c</code> 的表达式，会被分解为 <code>(a|b)|c</code>，每次运算符“<code>|</code>”都只处理两个（子）表达式。<br>
-在构造最终 NFA 过程中，每次会创建 NFA 的片段 Fragment：</p>
-<pre><code class="language-javascript">// Fragment
-{
-    start: State,
-    out: State
-}
-</code></pre>
-<p>不管 NFA 片段内部是怎样复杂，它都只有一个入口（开始状态），一个出口（最终状态）。<br>
-处理的过程大致为：</p>
-<ul>
-<li>创建用于记录 NFA 片段的栈 stack；</li>
-<li>依次读取输入的后缀表达式的每个字符 ch；
-<ul>
-<li>如果 ch 是运算符，从 stack 出栈所需数目的 NFA 片段，构建新的 NFA 片段后入栈 stack；</li>
-<li>如果 ch 是普通字符，创建新的状态，并构建只包含此状态的 NFA 片段入栈 stack；</li>
-</ul>
-</li>
-<li>返回 stack 栈顶的 NFA 片段，即最终结果。</li>
-</ul>
-<p>以对组合运算的处理为例：</p>
-<pre><code class="language-javascript">const e2 = stack.pop();
-const e1 = stack.pop();
-e1.out.out = e2.start;
-stack.push(new Fragment(e1.start, e2.out));
-</code></pre>
-<p>从 stack 出栈两个 NFA 片段，然后将其首尾相连后构建新的 NFA 片段再入栈。</p>
-<h1 id="nfa-的执行">NFA 的执行</h1>
-<p>NFA 的执行过程就是用当前状态来比对字符串的当前字符，如果匹配就继续比对下一个状态和下一个字符，否则匹配失败。<br>
-不过由于 NFA 的不确定性，所以可能会同时有多个匹配的状态。</p>
-<h1 id="总结">总结</h1>
-<p>综上，正则表达式的执行，可以通过构建等价的 NFA，然后执行 NFA 来匹配输入的字符串。真实的 JavaScript 中的正则表达式拥有更多的特性，其正则表达式引擎也更加复杂。</p>
-<h1 id="简单正则表达式引擎的实现">简单正则表达式引擎的实现</h1>
-<blockquote>
-<p><a href="https://www.jianshu.com/p/879bb15b1198">简单的正则表达式引擎实现</a></p>
-</blockquote>
-<h2 id="基本的数据结构定义">🏈基本的数据结构定义</h2>
-<p>核心思路是读取正则表达式以后生成对应的NFA，NFA中有边和状态两个结构。边的结构记录了它的起点和终点，同时通过枚举类型记录匹配的其他需求。</p>
-<pre><code class="language-cpp">//用于处理‘^’字符
-enum { NEXCLUDED = false, EXCLUDED = true }; 
-//用于处理预处理类型，0-128以内ASCII字符直接匹配
-enum { LCASES=256, UCASES=257, NUM=258, EPSILON=259, ANY=260, WS=261 };
-class Edge
-{
-public:
-    State *start;
-    State *end;
-    int type;
-    int exclude;
-    Edge(State *s, State *e, int t, bool ex = NEXCLUDED) :start(s), end(e), type(t), exclude(ex) {};
-}
-</code></pre>
-<p>状态有预备，成功和失败三种，同时每个状态维护两个向量，向量存储了出边和入边的指针。</p>
-<pre><code class="language-cpp">enum { READY = -1, SUCCESS = 1, FAIL = 0};
-class State
-{
-public:
-    int status;
-    std::list&lt;Edge *&gt; InEdges;
-    std::list&lt;Edge *&gt; OutEdges;
-}
-</code></pre>
-<p>NFA 类会存储一个正则表达式，同时存储 NFA 的起点和终点，并使用了两个链表来维护 NFA 的边和状态，同时用一个链表来存储匹配成功的字符串。两个静态的字符串指针用于记录文件和正则表达式字符串的读取状态，静态常量，使得最终函数只会对文件内容和正则表达式扫描一次，避免在匹配成功的字符串中再匹配子串。</p>
-<pre><code class="language-cpp">char *regex;
-    State *Start;
-    State *End;
-    std::list&lt;Edge *&gt; edgeList;
-    std::list&lt;State *&gt; stateList;
-    std::list&lt;char&gt; matchedChar;
-    static char *regRead;
-    static char *fileRead;
-}
-</code></pre>
-<p>生成NFA的过程中，通过 currentEnd 和 currentStart 两个指针分别指向当前字符读取完成后生成的最后一个状态和当前字符读取之前的开始状态，维护这两个指针的目的是为了记录 NFA 的生成过程，在处理‘<code>*</code>’、‘<code>+</code>’、‘<code>？</code>’等字符的时候起到了重要的作用。同时我们利用list内置的迭代器对链表进行遍历，这个方式在匹配过程中也用到了。</p>
-<pre><code class="language-cpp">State *currentEnd, *currentStart;
-State *alternate;
-list&lt;Edge *&gt;::iterator itor;
-</code></pre>
-<h2 id="nfa的生成">🏈NFA的生成</h2>
-<p>关键的部分在于匹配字符串时采取的思路，尤其是特殊字符的生成 NFA 的方式，这个不同于课本上最开始的 NFA 生成算法，而是基于读取字符串的过程，同时避免了字符串的回退等，读取一个字符就生成一个对应的边并压入链表中，对‘<code>*</code>’、‘<code>+</code>’，‘<code>？</code>’和特殊符号也是如此，使得处理更加简单的同时避免生成过于冗余的状态，兼顾了时间和空间效率。以下举例说明。</p>
-<h2 id="边和状态的生成">🏈边和状态的生成</h2>
-<p>边的生成使用 newEdge 函数,需要记录起点和终点，以及类型，同时在生成边以后要用重载的两个 patch函数将状态和边完全连接起来。</p>
-<pre><code class="language-cpp">void Nfa::newEdge(State * start, State * end, int type, int exclude = NEXCLUDED)
-{
-    Edge *out = new Edge(start, end, type, exclude);
-    end-&gt;patch(out, end);
-    start-&gt;patch(start, out);
-    edgeList.push_back(out);
-}
-</code></pre>
-<p>以普通字符的生成和‘<code>.</code>’字符的产生方式为例，他们都是生成一条边和一个新的状态。</p>
-<pre><code class="language-cpp">case '.':   /* any */
-    currentStart = currentEnd;
-    currentEnd = new State();
-    newEdge(currentStart, currentEnd, ANY, NEXCLUDED);      
-    stateList.push_back(currentEnd);
-default:
-    currentStart = currentEnd;
-    currentEnd = new State();
-    newEdge(currentStart, currentEnd, *regRead, NEXCLUDED);
-    stateList.push_back(currentEnd);
-    break;
-</code></pre>
-<p>如下图所示：<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586155514824.png" alt="create new edge" loading="lazy"><br>
-接下来的符号处理都假定初始状态如下图所示：<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586155565253.png" alt="current stage" loading="lazy"></p>
-<h2 id="的处理">🏈'|'的处理</h2>
-<p>以 currentStart 指向的状态作为子 NFA 的起点，同时将子 NFA 的终点状态和原 NFA 的终点进行合并。</p>
-<pre><code class="language-cpp">case '|':   // alternate 
-    regRead++;
-    currentStart = start;
-    alternate= regex2nfa(regRead, start);
-    currentEnd-&gt;merge(alternate);
-    stateList.remove(alternate);
-    regRead--;
-</code></pre>
-<p>如下图所示：<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586155719185.png" alt="spilt the edges" loading="lazy"></p>
-<h2 id="的处理-2">🏈'?' &amp; '*' &amp; '+'的处理</h2>
-<p>读取到‘<code>?</code>’只需要在上一条边的基础上继续连接原有的边即可：</p>
-<pre><code class="language-cpp">case '?':   // zero or one 
-    newEdge(currentStart, currentEnd, EPSILON, NEXCLUDED);
-    break;
-</code></pre>
-<p>读取到‘<code>\*</code>’后，直接将 currentStart 和 currentEnd 进行合并成环：</p>
-<pre><code class="language-cpp">case '*':   // zero or more 
-    alternate = currentEnd;
-    currentStart-&gt;merge(alternate);
-    stateList.remove(alternate);
-    currentEnd = currentStart;
-    break;
-</code></pre>
-<p>读取到‘<code>+</code>’后，只需添加若干条边从 currentEnd 状态指向 currentStart 状态的下一个状态即可：</p>
-<pre><code class="language-cpp">case '+':   /* one or more */
-    itor = currentStart-&gt;OutEdges.begin();
-    for (;itor != currentStart-&gt;OutEdges.end();itor++)
-        newEdge(currentEnd, (*itor)-&gt;end, (*itor)-&gt;type, (*itor)-&gt;exclude);
-    break;
-</code></pre>
-<p>如下图所示：<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586156107334.png" alt="special characters" loading="lazy"></p>
-<h2 id="简单的分组支持">🏈简单的分组支持</h2>
-<p>对于中括号和括号进行了一定的支持，括号直接递归调用 NFA 的生成函数，中括号和预定义字符都有其对应的函数进行支持。</p>
-<h2 id="nfa匹配">🏈NFA匹配</h2>
-<p>匹配过程采用了递归的方式，step函数调用match函数匹配边和文件字符，匹配成功后即递归调用进入下一个状态。</p>
-<pre><code class="language-cpp">if (End-&gt;status == SUCCESS) 
-        return SUCCESS;
-
-for(;itor != current-&gt;OutEdges.end();itor++)
-{   
-    if ((*itor)-&gt;match(fileRead))
-    {
-        (*itor)-&gt;end-&gt;status = SUCCESS;
-        matchedChar.push_back(*fileRead);
-        ++fileRead;
-        if (step((*itor)-&gt;end))
-            return SUCCESS;
-            --fileRead;
-        matchedChar.pop_back();
-    }
-    if ((*itor)-&gt;type == EPSILON &amp;&amp; step((*itor)-&gt;end))
-        return SUCCESS;
-}
-return FAIL;
-</code></pre>
+                            <p>我以计算 2016 的算术平方根作为例子。全程用竖式计算。<br>
+首先， 以小数点为基准，每两位数作为一组。像这样写：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586585643820.png" alt="" loading="lazy"></p>
+<p>注意，平方根的两倍那个位置要往左边写一点，不然后面不够位置。接下来估算第一节，是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>20</mn></mrow><annotation encoding="application/x-tex">20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>4</mn><mn>2</mn></msup><mo>&lt;</mo><mn>20</mn><mo>&lt;</mo><msup><mn>5</mn><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">4^2 \lt 20 \lt 5^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.853208em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，所以在第一节的上面写上 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span>，对应的在左边写上 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>4</mn><mn>2</mn></msup><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">4^2=16</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">6</span></span></span></span> 写到 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>20</mn></mrow><annotation encoding="application/x-tex">20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span></span></span></span> 的下面，减一下，把下一节拉下来：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586586062853.png" alt="" loading="lazy"></p>
+<p>估计下一位的方法是： <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>416</mn></mrow><annotation encoding="application/x-tex">8?\times?=416</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">1</span><span class="mord">6</span></span></span></span>。因为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>83</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>249</mn></mrow><annotation encoding="application/x-tex">83 \times 3=249</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">4</span><span class="mord">9</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>84</mn><mo>×</mo><mn>4</mn><mo>=</mo><mn>336</mn></mrow><annotation encoding="application/x-tex">84 \times 4=336</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord">3</span><span class="mord">6</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>85</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>425</mn></mrow><annotation encoding="application/x-tex">85 \times 5=425</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">2</span><span class="mord">5</span></span></span></span>， <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>425</mn></mrow><annotation encoding="application/x-tex">425</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">2</span><span class="mord">5</span></span></span></span> 大于 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>416</mn></mrow><annotation encoding="application/x-tex">416</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">1</span><span class="mord">6</span></span></span></span> 了，所以下一位就是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span> 了，更新算式，把下一节拉下来：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586586335482.png" alt="" loading="lazy"></p>
+<p>再估计下一位： <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>88</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>8000</mn></mrow><annotation encoding="application/x-tex">88? \times ?=8000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span></span></span></span>。 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>888</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>7104</mn></mrow><annotation encoding="application/x-tex">888 \times 8=7104</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mord">1</span><span class="mord">0</span><span class="mord">4</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>889</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>8001</mn></mrow><annotation encoding="application/x-tex">889 \times 9=8001</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">0</span><span class="mord">1</span></span></span></span>， 哎呀，差一点点，还是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 吧：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586586557307.png" alt="" loading="lazy"><br>
+下一位：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>896</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>89600</mn></mrow><annotation encoding="application/x-tex">896? \times ?=89600</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mord">0</span><span class="mord">0</span></span></span></span>， 由于刚才就差一点点，这次应该是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn></mrow><annotation encoding="application/x-tex">9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span></span></span></span> 了。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8969</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>80721</mn></mrow><annotation encoding="application/x-tex">8969 \times 9=80721</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">7</span><span class="mord">2</span><span class="mord">1</span></span></span></span>，没问题：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586586738767.png" alt="" loading="lazy"></p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8978</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>887900</mn></mrow><annotation encoding="application/x-tex">8978? \times ?=887900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">7</span><span class="mord">9</span><span class="mord">0</span><span class="mord">0</span></span></span></span>，凭感觉应该还是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn></mrow><annotation encoding="application/x-tex">9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>89789</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>808101</mn></mrow><annotation encoding="application/x-tex">89789 \times 9=808101</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">8</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">8</span><span class="mord">1</span><span class="mord">0</span><span class="mord">1</span></span></span></span>，OK：<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586586923209.png" alt="" loading="lazy"><br>
+<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>89798</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>7979900</mn></mrow><annotation encoding="application/x-tex">89798? \times ?=7979900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">9</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mord">9</span><span class="mord">7</span><span class="mord">9</span><span class="mord">9</span><span class="mord">0</span><span class="mord">0</span></span></span></span>，这回是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 了。 不过我还是不写下去了, 因为示范了那么多步，大家应该知道步骤了吧？</p>
 
                         </div>
                         
                             <div class="post-toc">
-                                <ul class="markdownIt-TOC">
-<li><a href="#nfa">NFA</a></li>
-<li><a href="#%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0-nfa">从正则表达式到 NFA</a>
-<ul>
-<li><a href="#thompson-%E7%AE%97%E6%B3%95">🏈Thompson 算法</a></li>
-<li><a href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F-%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F">🏈正则表达式 → 后缀表达式</a></li>
-<li><a href="#%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F-nfa">🏈后缀表达式 → NFA</a></li>
-</ul>
-</li>
-<li><a href="#nfa-%E7%9A%84%E6%89%A7%E8%A1%8C">NFA 的执行</a></li>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
-<li><a href="#%E7%AE%80%E5%8D%95%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BC%95%E6%93%8E%E7%9A%84%E5%AE%9E%E7%8E%B0">简单正则表达式引擎的实现</a>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9A%E4%B9%89">🏈基本的数据结构定义</a></li>
-<li><a href="#nfa%E7%9A%84%E7%94%9F%E6%88%90">🏈NFA的生成</a></li>
-<li><a href="#%E8%BE%B9%E5%92%8C%E7%8A%B6%E6%80%81%E7%9A%84%E7%94%9F%E6%88%90">🏈边和状态的生成</a></li>
-<li><a href="#%E7%9A%84%E5%A4%84%E7%90%86">🏈'|'的处理</a></li>
-<li><a href="#%E7%9A%84%E5%A4%84%E7%90%86-2">🏈'?' &amp; '*' &amp; '+'的处理</a></li>
-<li><a href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%88%86%E7%BB%84%E6%94%AF%E6%8C%81">🏈简单的分组支持</a></li>
-<li><a href="#nfa%E5%8C%B9%E9%85%8D">🏈NFA匹配</a></li>
-</ul>
-</li>
-</ul>
-
+                                
                             </div>
                             
                                 
@@ -514,7 +226,7 @@ return FAIL;
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/regular-expression-nfa/">https://tdmaker.github.io/faded/post/regular-expression-nfa/</a></span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/written-calculation-of-square-root/">https://tdmaker.github.io/faded/post/written-calculation-of-square-root/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -529,9 +241,9 @@ return FAIL;
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/regular-expression-nfa/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/regular-expression-nfa/&sharesource=qzone&title=正则表达式——NFA&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586586967194&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/regular-expression-nfa/&sharesource=weibo&title=正则表达式——NFA + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586586967194 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/written-calculation-of-square-root/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/written-calculation-of-square-root/&sharesource=qzone&title=笔算平方根&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586586967194&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/written-calculation-of-square-root/&sharesource=weibo&title=笔算平方根 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586586967194 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -550,8 +262,8 @@ return FAIL;
                                                                                     <span class="tag ">
                         
                         
-                        <a href="https://tdmaker.github.io/faded/tag/regular-expression/">#
-                    正则表达式
+                        <a href="https://tdmaker.github.io/faded/tag/algorithm/">#
+                    算法
                         </a>
                         
                             
@@ -569,13 +281,9 @@ return FAIL;
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/regular-expression-assert-mandarin/">
-                                                                                            正则表达式——断言人话版
-                                                                                        </a>
-                                                                                        
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/regular-expression-assert/">
-                                                                                                    正则表达式——断言
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/algorithm-complexity-analysis/">
+                                                                                                    算法复杂度分析
                                                                                                 </a>
                                                                                                 
                                                                                 </section>
