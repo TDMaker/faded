@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                正则表达式——断言
+                                区块链——行业名词
                             </h1>
                             
                                     <!--zh-->
@@ -174,15 +174,15 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-06</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-08</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">6.3
+                                    href="#">14.0
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">1640</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">3885</a></span>
                                         
                                             <span class="post-category">&#x5206;&#x7C7B;:
                                 
-                                <a href="https://tdmaker.github.io/faded/tag/regular-expression/">正则表达式</a>
+                                <a href="https://tdmaker.github.io/faded/tag/blockchain/">区块链</a>
                                 
                             </span>
                                             
@@ -194,91 +194,537 @@
                         </header>
                         
                         <div class="post-content">
-                            <blockquote>
-<p><a href="https://www.jianshu.com/p/08c2fa742c1b">正则表达式断言</a></p>
-</blockquote>
-<p>正则表达式大多数结构匹配的文本会出现在最终的匹配结果中，但也有些结构并不真正匹配文本，而只是负责判断某个位置左/右侧是否符合要求，这种结构被称为断言（assertion）。常见的断言有三类： 单词边界、行起始/结束位置、环视。本文主要简单阐述对三类断言的理解。</p>
-<h1 id="单词边界">单词边界</h1>
-<p>单词边界顾名思义，是指单词字符 <code>(\w)</code> 能匹配的字符串的左右位置。在 JavaScript、php、Python 2、Ruby 中，单词字符 <code>(\w)</code> 等同于 <code>[0-9a-zA-Z]</code>，所以在这些语言中，给定一段文本可以用 <code>\b\w+\b</code> 把所有单词提取出来。<br>
-例如：</p>
-<pre><code class="language-javascript">('Love is composed of a single soul inhabiting two bodies.').match(/\b\w+\b/g)
-
-return [&quot;Love&quot;, &quot;is&quot;, &quot;composed&quot;, &quot;of&quot;, &quot;a&quot;, &quot;single&quot;, &quot;soul&quot;, &quot;inhabiting&quot;, &quot;two&quot;, &quot;bodies&quot;]
-</code></pre>
-<p>这里值得注意的是，有些单词例如 E-mail 和组合词 I'm 这样的，<code>\b\w+\b</code> 是无法匹配的。如要匹配，可根据需求修改为 <code>\b['-\w]\b</code>。</p>
-<ul>
-<li><strong>单词边界</strong>记为 <code>\b</code>，它能匹配的位置：一边是单词字符 <code>\w</code>，一边是非单词字符 <code>\W</code>。</li>
-<li>与单词边界对应的是<strong>非单词边界</strong> <code>\B</code>，两者关系类似 <code>\w</code> 与 <code>\W</code>、<code>\d</code> 与 <code>\D</code>。</li>
-</ul>
-<p>这里注意，<strong>非单词边界</strong>（<code>\B</code>）和<strong>单词字符</strong>（<code>\w</code>）是不一样的，因为前者是<strong>断言</strong>，而后者是<strong>普通匹配</strong>。<br>
-例如：</p>
-<pre><code class="language-javascript">// 式一
-String(1234567890).replace(/(?=(\B)(\d{3})+$)/g, ',')
-=&gt; 1,234,567,890
-// 式二
-String(1234567890).replace(/(?=(\w)(\d{3})+$)/g, ',')
-=&gt; ,123,456,7890
-// 附加常用例子，20180911格式化为2018-09-11
-'20180911'.replace(/(?=\B(\d{2})+$)/g, '-').replace(/-/, '')
-=&gt;2018-09-11
-</code></pre>
-<p>造成差异的原因就是:<br>
-式一中的 <code>\B</code> 匹配边界（是断言）。第一次匹配时，在 1234567890 中数字 1 的前方时，会环视后方进行肯定断言<code>(?=)</code>：后方必须是满足两个 pattern 才通过。第一个 pattern <code>(\B)</code>在数字 1 的前方匹配成功；故继续在此位置匹配第二个 pattern <code>(\d{3})+$</code>，发现 123456789 之后并不是结束符（结束符和开始符也是断言，下文讲述），故匹配失败。开始第二次匹配，从数字 1 和数字 2 的中间开始...最后会匹配成功三个位置：1 和 2 之间、4 和 5 之间、7 和 8 之间，再被,替换，故得到结果。</p>
-<p>同理，式二在第一次匹配时，在数字 1 的前方环视后方进行肯定断言：后方必须是满足两个 pattern 才通过。第一个 pattern <code>(\w)</code> 在数字 1 的前方匹配成功，并将匹配位置移动到 1 和 2 之间；然后继续匹配第二个pattern <code>(\d{3})+$</code>...第一次匹配成功，故数字 1 前方的断言是成功的，标记该位置...最后得到三个位置：1 前方、3 和 4 之间、6 和 7 之间，再被,替换，故得到结果。</p>
-<p>所以 <code>\B</code> 只是去判断该位置左右是否只有一边有单词字符，另一边不是单词字符，且在匹配成功时，不会导致匹配位置发生改变。说起来算是一种判断吧~</p>
-<p>这种只是匹配某个位置而不是文本的元字符，在正则中也被称为<strong>锚点</strong>。下文继续介绍常见锚点之二：行起始/结束位置。</p>
-<h1 id="行起始结束位置">行起始/结束位置</h1>
-<p><code>^</code> 与 <code>$</code> 分别表示（行）起始位置和（行）结束位置，比如正则表达式 <code>/^lu.*r$/</code> 只能匹配的 lu 开始并以 r 结束的字符串，例如：luwuer、lu fd --r，不能匹配 nb luwuer、lu fd --rb等。</p>
-<p>其实行起始/结束位置断言，常用在正则表达式开启<strong>多行模式</strong>（Multiline Mode）的情况下。<br>
-例如：</p>
-<pre><code class="language-javascript">('first line\nsecond line\nlast line').match(/^\w+/gm)
-return [&quot;first&quot;, &quot;second&quot;, &quot;last&quot;]
-</code></pre>
-<p>既然是多行匹配，这里说说如何划分<strong>行</strong>。</p>
-<p>在编辑文本时，敲回车键就向文本输入了<strong>行终止符</strong>（line terminal），表示结束当前行。这里只需注意，敲入回车时向文本中输入的行终止符在主流平台上是有差别的：</p>
-<ul>
-<li>Windows 的行终止符是 <code>\r\n</code>。</li>
-<li>UNIX/Linux/Mac OS 的行终止符是 <code>\n</code>。</li>
-</ul>
-<p>不过正则的行起始/结束位置断言都是可以识别的哈~</p>
-<h1 id="环视">环视</h1>
-<p>环视是指在某个位置向左/向右看，保证其左/右位置必须出现某类字符（包括单词字符 <code>\w</code> 和非单词字符<code>\W</code>），且环视也同上两个断言，只是做一个判断（匹配一个位置，本身不匹配任何字符，但又比上两个断言灵活）。也有人称环视为<strong>零宽断言</strong>。</p>
-<p>环视分为四种：</p>
-<ul>
-<li><strong>肯定顺序</strong>环视（正向肯定断言）positive-lookahead: <code>?=pattern</code>；</li>
-<li><strong>否定顺序</strong>环视（正向否定断言）negative-lookahead: <code>?!pattern</code>；</li>
-<li><strong>肯定逆序</strong>环视（反向肯定断言）positive-lookahead: <code>?&lt;=pattern</code>，js不支持；</li>
-<li><strong>否定逆序</strong>环视（反向否定断言）negative-lookahead: <code>?&lt;=pattern</code>，js不支持。</li>
-</ul>
-<p>比如我们要匹配一串文字中包含在书名号《》中的书名，如不考虑环视可能需要如下实现：</p>
-<pre><code class="language-javascript">('三体是刘慈欣创作的系列长篇科幻小说，由《三体》、《三体Ⅱ·黑暗森林》、《三体Ⅲ·死神永生》组成。').match(/《.*?》/g).join(',').replace(/[《》]/g, '').split(',')
-return [&quot;三体&quot;, &quot;三体Ⅱ·黑暗森林&quot;, &quot;三体Ⅲ·死神永生&quot;]
-</code></pre>
-<p><em>正则默认是贪婪模式（在整个表达式匹配成功的前提下，尽可能多的匹配），开启非贪婪模式（在整个表达式匹配成功的前提下，尽可能少的匹配）的方法：在贪婪量词 <code>{m,n}</code>、<code>{m,}</code>、<code>?</code>、<code>*</code>、<code>+</code> 后加上一个 <code>?</code> 号，例如 <code>+?</code>。</em><br>
-而在使用环视时会更简单：</p>
-<pre><code class="language-javascript">('三体是刘慈欣创作的系列长篇科幻小说，由《三体》、《三体Ⅱ·黑暗森林》、《三体Ⅲ·死神永生》组成。').replace(/《/g,'\n').match(/^.*?(?=》)/gm)
-return [&quot;三体&quot;, &quot;三体Ⅱ·黑暗森林&quot;, &quot;三体Ⅲ·死神永生&quot;]
-</code></pre>
-<p>似乎也没简单多少...当然最主要的原因是js不支持逆序环视啦啦啦</p>
-<p>再举例，匹配6位数字构成的字符串：</p>
-<pre><code class="language-javascript">// 无环视
-'http://luwuer.com/629212/1234567890'.match(/[^\d]\d{6}[^\d]/g).join('').match(/\d{6}/g)
-return [&quot;629212&quot;]
-// 环视
-'http://luwuer.com/629212/1234567890'.match(/(?!\d).\d{6}(?!\d)/g).join('').match(/\d{6}/g)
-return [&quot;629212&quot;]
-</code></pre>
-<p>其实环视在js中更多的是与replace函数组合，就像在单词边界一节中最后的例子。</p>
+                            <table>
+<thead>
+<tr>
+<th>名称</th>
+<th>中文</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-Way Peg</td>
+<td>双向锚定</td>
+<td>一种跨链技术</td>
+</tr>
+<tr>
+<td>ABI</td>
+<td>智能合约的接口说明</td>
+<td>Application Binary Interface，ABI 是以太坊的一种合约间调用的消息格式，类似于 WebService 的 SOAP 协议一样，也就是定义操作函数签名，参数编码，返回结果编码等的协议。</td>
+</tr>
+<tr>
+<td>altcoin</td>
+<td>山寨币</td>
+<td></td>
+</tr>
+<tr>
+<td>AML</td>
+<td>反洗钱</td>
+<td>Anti-Money Laundering</td>
+</tr>
+<tr>
+<td>ASIC</td>
+<td>专用集成电路</td>
+<td>Application Specific Integrated Circuit，通常，与 GPU 相比，ASIC 专门用于挖矿，可能会节省大量能源。</td>
+</tr>
+<tr>
+<td>autonomous</td>
+<td>自治</td>
+<td></td>
+</tr>
+<tr>
+<td>BAAS</td>
+<td>区块链服务</td>
+<td>Blockchain As A Service，区块链即服务。</td>
+</tr>
+<tr>
+<td>BIP</td>
+<td>比特币改进建议</td>
+<td>Bitcoin Improvement Proposals</td>
+</tr>
+<tr>
+<td>Block</td>
+<td>区块</td>
+<td>用于记录区块链系统中数据的存储。</td>
+</tr>
+<tr>
+<td>Block Explorer</td>
+<td>区块资源管理器</td>
+<td>区块资源管理器是一种用来来查看区块上的所有交易（过去和当前）在线工具。 它们提供有用的信息，如网络哈希率和交易增长率。</td>
+</tr>
+<tr>
+<td>Block Height</td>
+<td>区块高度</td>
+<td>连接在区块链上的块数。</td>
+</tr>
+<tr>
+<td>Block Reward</td>
+<td>出块奖励</td>
+<td>它是在采矿期间成功计算区块中的哈希的矿工的一种激励形式。 在区块链上的交易验证的过程中产生新的币，并且矿工被奖励其中的一部分。</td>
+</tr>
+<tr>
+<td>Blockchain</td>
+<td>区块链</td>
+<td>分布式存储、加密算法、共识机制、P2P传输等计算机技术结合的新型应用模式。</td>
+</tr>
+<tr>
+<td>Blockchain Wallet</td>
+<td>区块链钱包</td>
+<td>一个包含私钥的文件。 它通常包含一个软件客户端，允许访问查看和创建钱包所设计的特定块链的交易。</td>
+</tr>
+<tr>
+<td>Bulletproofs</td>
+<td>Bulletproofs</td>
+<td>由斯坦福大学提出的，把膨胀系数减少到普通交易的三倍（原来是 60 倍），可以大幅降低隐私交易的数据量大小的算法</td>
+</tr>
+<tr>
+<td>CAP</td>
+<td>CAP</td>
+<td>分布式异步网络模型中，不能同时保证**一致性**，**可用性**和**分区容错性**，只能三选二</td>
+</tr>
+<tr>
+<td>Central Ledger</td>
+<td>中央帐簿</td>
+<td>由中央机构维持的分类帐。</td>
+</tr>
+<tr>
+<td>Chain</td>
+<td>链</td>
+<td>区块头中通过引用哈希值链接。</td>
+</tr>
+<tr>
+<td>Confirmation</td>
+<td>确认</td>
+<td>去中心化的一次交易，将其添加到 blockchain 的成功确认。</td>
+</tr>
+<tr>
+<td>Consensus</td>
+<td>共识机制</td>
+<td>区块链中事务达成的分布式共识算法。</td>
+</tr>
+<tr>
+<td>Consensus</td>
+<td>共识</td>
+<td>当所有网络参与者同意交易的有效性时，达成共识，确保分布式账本是彼此的精确副本。</td>
+</tr>
+<tr>
+<td>Consortium Block Chains</td>
+<td>联盟链</td>
+<td>共识过程由预选节点控制，一般为各企业机构互联形成。</td>
+</tr>
+<tr>
+<td>Corda</td>
+<td>Corda</td>
+<td>R3联盟推出的金融联盟“类区块链”技术架构，Corda 中同样是用交易组成账本，但并没有区块，交易仅在参与方和公证人间传播</td>
+</tr>
+<tr>
+<td>Cryptocurrency</td>
+<td>加密货币</td>
+<td>也称为令牌，加密货币是数字资产的呈现方式。</td>
+</tr>
+<tr>
+<td>Cryptographic Hash Function</td>
+<td>加密哈希函数</td>
+<td>密码哈希产生从可变大小交易输入固定大小和唯一哈希值。 SHA-256计算算法是加密散列的一个例子。</td>
+</tr>
+<tr>
+<td>DAO</td>
+<td>去中心化自治组织</td>
+<td>Decentralized Autonomous Organizations，去中心化自治组织可以被认为是在没有任何人为干预的情况下运行的公司，并将一切形式的控制交给一套不可破坏的业务规则。</td>
+</tr>
+<tr>
+<td>Dapp</td>
+<td>去中心化应用</td>
+<td>是一种开源的应用程序，自动运行，将其数据存储在区块链上，以密码令牌的形式激励，并以显示有价值证明的协议进行操作。</td>
+</tr>
+<tr>
+<td>DD</td>
+<td>尽职调查</td>
+<td>Due Diligence</td>
+</tr>
+<tr>
+<td>Decentralized</td>
+<td>分布式</td>
+<td>不依赖中心服务器，分布的计算机资源进行计算处理的模式。</td>
+</tr>
+<tr>
+<td>Difficulty</td>
+<td>挖矿难度</td>
+<td>这是指成功挖掘交易信息的数据块的容易程度。</td>
+</tr>
+<tr>
+<td>Distributed Ledger</td>
+<td>分布式账本</td>
+<td>分布式账本，数据通过分布式节点网络进行存储。 分布式账本不是必须具有自己的货币，它可能会被许可和私有。</td>
+</tr>
+<tr>
+<td>Distributed Network</td>
+<td>分布式网络</td>
+<td>处理能力和数据分布在节点上而不是拥有集中式数据中心的一种网络。</td>
+</tr>
+<tr>
+<td>Double Spending</td>
+<td>双重支付</td>
+<td>当花费一笔钱多于一次支付限额时，就会发生双重支付。</td>
+</tr>
+<tr>
+<td>DPoS</td>
+<td>委托权益证明</td>
+<td>Delegated Proof Of Stake，一种共识算法</td>
+</tr>
+<tr>
+<td>EIP</td>
+<td>以太坊改进建议</td>
+<td>Ethereum Improvement Proposals</td>
+</tr>
+<tr>
+<td>EOA</td>
+<td>外部账户</td>
+<td>Externally Owned Accounts</td>
+</tr>
+<tr>
+<td>ERC</td>
+<td>以太坊意见征求</td>
+<td>Ethereum Requests for Comment，讨论项目时，一开始会用EIP提出建议，在讨论过程中有一些要征求更多人意见时，就会把细节放在ERC中，而且他们会用同一个号码，比如ERC-20 对应 EIP-20</td>
+</tr>
+<tr>
+<td>Ethash</td>
+<td>Ethash</td>
+<td>以前这个算法称为 Dagger Hashimoto，Ethash是最新版本的 Dagger-Hashimoto 改良算法，是 Hashimoto 算法结合 Dagger 算法产成的一个新变种。实现两个主要目的：抵抗 ASIC 矿机和轻客户端易验证</td>
+</tr>
+<tr>
+<td>Ethereum</td>
+<td>以太坊</td>
+<td>Ethereum是一个基于blockchain的去中心化运行智能合约的平台，旨在解决与审查，欺诈和第三方干扰相关的问题。</td>
+</tr>
+<tr>
+<td>EVM</td>
+<td>以太坊虚拟机</td>
+<td>Ethereum Virtual Machine，借助以太坊虚拟机将 Solidity 代码变成可以在区块链上执行的加密代码。以太坊虚拟机是设计运行在点对点网络中所有参与节点上的一个虚拟机，它可以读写一个区块链中可执行的代码和数据，校验数据签名，并以半图灵完备的方式来运行代码。每个Ethereum节点都运行在 EVM 上，以保持整个块链的一致性。</td>
+</tr>
+<tr>
+<td>FLP</td>
+<td>FLP</td>
+<td>在网络可靠并且存在节点失效的异步模型中，不存在一个可以解决一致性问题的确定性算法</td>
+</tr>
+<tr>
+<td>Fork</td>
+<td>分叉</td>
+<td>分叉可以创建区块链的交叉版本，在网络不同的地方兼容的运行两个区块链。</td>
+</tr>
+<tr>
+<td>Frontier</td>
+<td>前沿</td>
+<td>以太坊开发第一阶段</td>
+</tr>
+<tr>
+<td>gas</td>
+<td>gas</td>
+<td>gas是在以太坊网络中用于衡量执行交易或智能合约工作量的计算单位</td>
+</tr>
+<tr>
+<td>gas limit</td>
+<td>gas limit</td>
+<td>某笔具体的交易能够消耗的 gas 最大值，一笔标准的以太坊交易需要 21,000 gas。当交易的 gas limit 不足时，会出现 out of gas 错误</td>
+</tr>
+<tr>
+<td>gas price</td>
+<td>gas price</td>
+<td>以另一种货币或 token（例如 Ether）计量交易花费的价格。为了稳定消耗 gas 的价值，gas price 是浮动的，根据货币或 token 价格浮动而相应变动以保持总价格稳定。gas price 由市场供需决定（用户愿意支出的价格和矿工节点愿意接受的价格的博弈）</td>
+</tr>
+<tr>
+<td>gas used</td>
+<td>gas used</td>
+<td>有效支付用于计算或智能合约运行的 gas 数量（在成功的交易中 gas fee 小于 gas limit)，一笔以太坊交易的实际矿工费(Tx Fees) = gas used * gas price</td>
+</tr>
+<tr>
+<td>Genesis Block</td>
+<td>创世区块</td>
+<td>区块链的第一个区块。</td>
+</tr>
+<tr>
+<td>Go Ethereum</td>
+<td>geth</td>
+<td>实现了以太坊协议的 JavaScript运行时环境，可以以交互式或非交互式模式运行</td>
+</tr>
+<tr>
+<td>Hard Fork</td>
+<td>硬分叉</td>
+<td>区块链发生永久性分歧，在新共识规则发布后，部分没有升级的节点无法验证已经升级的节点生产的区块，产生硬分叉。</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td>哈希</td>
+<td>对输出数据执行散列函数的行为。 这是用于确认货币交易。</td>
+</tr>
+<tr>
+<td>Hash Rate</td>
+<td>哈希率</td>
+<td>采矿钻机的性能测量值以秒为单位表示。</td>
+</tr>
+<tr>
+<td>Homestead</td>
+<td>家园</td>
+<td>以太坊开发第二阶段</td>
+</tr>
+<tr>
+<td>Hybrid PoS/PoW</td>
+<td>混合PoS / PoW</td>
+<td>混合 PoS / PoW 可以将网络上的共享分发算法作为共享证明和工作证明。 在这种方法中，可以实现矿工和选民（持有者）之间的平衡，由内部人（持有人）和外部人（矿工）创建一个基于社区的治理体系。</td>
+</tr>
+<tr>
+<td>I2P</td>
+<td>I2P</td>
+<td>Invisible Internet Project，建立在互联网上的隐匿网络层，用于为网络通讯提供隐私保护</td>
+</tr>
+<tr>
+<td>Infura</td>
+<td>Infura</td>
+<td>提供全球范围区块链集群和 API 端点等基础架构服务；可用于以太坊，IPFS 等其他新兴的分布式平台。致力于提供安全，稳定，高容错性金额可扩展的区块链访问接口</td>
+</tr>
+<tr>
+<td>keccak</td>
+<td>keccak</td>
+<td>一种SHA-3加密算法</td>
+</tr>
+<tr>
+<td>Kovri</td>
+<td>Kovri</td>
+<td>I2P 网络的 C++ 实现版本，目前还在开发中尚未集成到门罗币中，可以提高交易的安全等级（可以隐藏 IP 地址）</td>
+</tr>
+<tr>
+<td>KYC</td>
+<td>了解你的客户</td>
+<td>Know Your Customer</td>
+</tr>
+<tr>
+<td>Metropolis</td>
+<td>大都会</td>
+<td>以太坊开发第三阶段</td>
+</tr>
+<tr>
+<td>Mining</td>
+<td>挖矿</td>
+<td>挖矿是验证区块链交易的行为。 验证的必要性通常以货币的形式奖励给矿工。 在这个密码安全的繁荣期间，当正确完成计算，采矿可以是一个有利可图的业务。 通过选择最有效和最适合的硬件和采矿目标，采矿可以产生稳定的被动收入形式。</td>
+</tr>
+<tr>
+<td>Multi-Signature</td>
+<td>多重签名</td>
+<td>多重签名地址需要一个以上的密钥来授权交易，从而增加了一层安全性。</td>
+</tr>
+<tr>
+<td>Node</td>
+<td>节点</td>
+<td>由区块链网络的参与者操作的分类帐的副本。</td>
+</tr>
+<tr>
+<td>Oracles</td>
+<td>预言机</td>
+<td>Oracle 通过向智能合约提供数据，它现实世界和区块链之间的桥梁。注意此 Oracle不是指数据库。预言机连接虚拟与现实，核心功能是提供数据上链服务，是实现智能合约的必要条件。智能合约是在区块链提供的沙盒环境中运行，沙盒是个封闭环境，使合约代码不能读取链外数据，但很多时候智能合约又必须依赖外部数据，Oracle 在这里就承担了提供外部数据的功能。</td>
+</tr>
+<tr>
+<td>P2P</td>
+<td>Peer-to-Peer</td>
+<td>对等互联网网络技术。</td>
+</tr>
+<tr>
+<td>Paxos</td>
+<td>Paxos</td>
+<td>一种用于传统分布式系统的共识协议</td>
+</tr>
+<tr>
+<td>Payment Codes</td>
+<td>可重用支付码</td>
+<td>BIP47，支付码是一种用于创建永久性比特币地址的技术，这些地址可以重复使用，与现实生活中的身份公开相关，同时无损于财务隐私。它们类似于隐形地址。即使他人知道你的支付码也无法追踪你的交易历史，可以用于想要私密的接收BTC的场景</td>
+</tr>
+<tr>
+<td>PBFT</td>
+<td>实用拜占庭容错</td>
+<td>Practical Byzantine Fault Tolerance</td>
+</tr>
+<tr>
+<td>pegged zone</td>
+<td>锚定分区</td>
+<td>一种锚定分区的桥接机制，出现于Cosmos项目</td>
+</tr>
+<tr>
+<td>POA</td>
+<td>权威证明</td>
+<td>Proof Of Authority，一种共识算法</td>
+</tr>
+<tr>
+<td>portfolio</td>
+<td>投资组合</td>
+<td></td>
+</tr>
+<tr>
+<td>POS</td>
+<td>权益证明</td>
+<td>Proof of Stake，根据你持有货币的量和时间进行利息分配的制度，在 POS 模式下，你的“挖矿”收益正比于你的币龄，而与电脑的计算性能无关。</td>
+</tr>
+<tr>
+<td>POW</td>
+<td>工作量证明</td>
+<td>Proof of Work，是指获得多少货币，取决于你挖矿贡献的工作量，电脑性能越好，分给你的矿就会越多。</td>
+</tr>
+<tr>
+<td>Private Block Chains</td>
+<td>私有链</td>
+<td>私有区块链，数据记录在单一组织机构中，分权限对外开放，一般是单一企业机构构建。</td>
+</tr>
+<tr>
+<td>Private Key</td>
+<td>私钥</td>
+<td>私钥是一串数据，它是允许您访问特定钱包中的令牌。 它们作为密码，除了地址的所有者之外，都被隐藏。</td>
+</tr>
+<tr>
+<td>Public Address</td>
+<td>公用地址</td>
+<td>公共地址是公钥的密码哈希值。 它们作为可以在任何地方发布的电子邮件地址，与私钥不同。</td>
+</tr>
+<tr>
+<td>Public Block Chains</td>
+<td>公有链</td>
+<td>公共网络中任何个人团体接入，任何节点均可参与共识过程。</td>
+</tr>
+<tr>
+<td>Raft</td>
+<td>Raft</td>
+<td>Paxos协议的一种简单实现</td>
+</tr>
+<tr>
+<td>Ring Signatures</td>
+<td>环签名</td>
+<td>用于隐匿发送发信息的技术，门罗币采用</td>
+</tr>
+<tr>
+<td>RingCT</td>
+<td>环加密交易</td>
+<td>Ring Confidential Transactions，隐藏交易信息（包括交易双方信息和交易金额）的加密技术，门罗币采用</td>
+</tr>
+<tr>
+<td>RLP</td>
+<td>RLP 编码</td>
+<td>Recursive Length Prefix（递归长度前缀）是一种适用于任意二进制数据数组的编码。是以太坊中对象进行序列化/反序列化的主要编码方式。区块，交易等数据结构在持久化时会先经过RLP编码后再存储到持久层中。</td>
+</tr>
+<tr>
+<td>RPCA</td>
+<td>瑞波共识算法</td>
+<td>Ripple Protocol Consensus Algorithm，类似PBFT的共识机制</td>
+</tr>
+<tr>
+<td>Scrypt</td>
+<td>Scrypt</td>
+<td>是一种由 Litecoin 使用加密算法。 与 SHA256 相比，它的速度更快，因为它不会占用很多处理时间。</td>
+</tr>
+<tr>
+<td>Serenity</td>
+<td>宁静</td>
+<td>以太坊开发第四阶段（也是最后一个阶段）</td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td>SHA-256</td>
+<td>是比特币一些列数字货币使用的加密算法。 然而，它使用了大量的计算能力和处理时间，迫使矿工组建采矿池以获取收益。</td>
+</tr>
+<tr>
+<td>Smart Contracts</td>
+<td>智能合约</td>
+<td>智能合约将可编程语言的业务规则编码到区块上，并由网络的参与者实施。部署在区块链系统中，一段合约代码，或一套以数字形式定义的承诺，包括合约参与方可以在其上执行承诺的协议。</td>
+</tr>
+<tr>
+<td>Soft Fork</td>
+<td>软分叉</td>
+<td>软分叉与硬分叉不同之处在于，只有先前有效的交易才能使其无效。 由于旧节点将新的块识别为有效，所以软分叉基本上是向后兼容的。 这种分叉需要大多数矿工升级才能执行，而硬分叉需要所有节点就新版本达成一致。</td>
+</tr>
+<tr>
+<td>Solidity</td>
+<td>Solidity</td>
+<td>是 Ethereum 用于开发智能合约的编程语言。</td>
+</tr>
+<tr>
+<td>SPV</td>
+<td>简单支付验证</td>
+<td>Simplified Payment Verification</td>
+</tr>
+<tr>
+<td>Stealth Address</td>
+<td>隐匿地址</td>
+<td>能够隐藏接收方信息</td>
+</tr>
+<tr>
+<td>Swarm</td>
+<td>Swarm</td>
+<td>去中心化的数据存储访问协议，以 ETH 作为激励。类似使用了 Filecoin 的 IPFS</td>
+</tr>
+<tr>
+<td>Sybil Attack</td>
+<td>女巫攻击</td>
+<td>P2P网络中的一种攻击形式：攻击者利用单个节点来伪造多个身份存在于 P2P 网络中，从而达到削弱网络的冗余性，降低网络健壮性，监视或干扰网络正常活动等目的</td>
+</tr>
+<tr>
+<td>Testnet</td>
+<td>Testnet</td>
+<td>开发商使用的测试区块链，它主要是用来防止改变在主链上的资产。</td>
+</tr>
+<tr>
+<td>testrpc</td>
+<td>testrpc</td>
+<td>以太坊节点客户端</td>
+</tr>
+<tr>
+<td>Transaction Block</td>
+<td>交易区块</td>
+<td>聚集到一个块中的交易的集合，然后可以将其散列并添加到区块链中。</td>
+</tr>
+<tr>
+<td>Transaction Fee</td>
+<td>交易费</td>
+<td>所有的加密货币交易都会涉及到一笔很小的手续费。这些手续费用加起来给矿工在成功处理区块时收到的区块奖励。</td>
+</tr>
+<tr>
+<td>Truffle</td>
+<td>Truffle</td>
+<td>一个基于以太坊技术的开发、测试和部署框架，旨在帮助以太坊开发者更容易开发去中心化应用（DApp）</td>
+</tr>
+<tr>
+<td>Turing Complete</td>
+<td>图灵完备</td>
+<td>图灵完备是指计算机中一切计算的问题都可以计算，这样的虚拟机或者编程语言称为图灵完备。一个例子是 Ethereum 虚拟机（EVM）。</td>
+</tr>
+<tr>
+<td>Unlinkability</td>
+<td>无关联性</td>
+<td></td>
+</tr>
+<tr>
+<td>whisper</td>
+<td>whisper</td>
+<td>去中心化的通信协议</td>
+</tr>
+<tr>
+<td>YC</td>
+<td>YC</td>
+<td>Y Combinator，成立于 2005 年是美国著名创业孵化器，扶持初创企业并为其提供创业指南（Airbnb，Dropbox，Stripe，Reddit, Docker, Coinbase 等），投资孵化过多个区块链项目</td>
+</tr>
+<tr>
+<td>ZKRP</td>
+<td>零知识范围证明</td>
+<td>Zero Knownledge Range Proof，证明一个具体声明的真实性而不会泄露它试图证明的额外信息</td>
+</tr>
+<tr>
+<td>ZK-SNARKs</td>
+<td>零知识证明</td>
+<td>ZK-Succint Non-interactive Arguments of Knownledge</td>
+</tr>
+</tbody>
+</table>
 
                         </div>
                         
                             <div class="post-toc">
-                                <ul class="markdownIt-TOC">
-<li><a href="#%E5%8D%95%E8%AF%8D%E8%BE%B9%E7%95%8C">单词边界</a></li>
-<li><a href="#%E8%A1%8C%E8%B5%B7%E5%A7%8B%E7%BB%93%E6%9D%9F%E4%BD%8D%E7%BD%AE">行起始/结束位置</a></li>
-<li><a href="#%E7%8E%AF%E8%A7%86">环视</a></li>
-</ul>
-
+                                
                             </div>
                             
                                 
@@ -292,7 +738,7 @@ return [&quot;629212&quot;]
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/regular-expression-assert/">https://tdmaker.github.io/faded/post/regular-expression-assert/</a></span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/blockchain-industry-terms/">https://tdmaker.github.io/faded/post/blockchain-industry-terms/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -307,9 +753,9 @@ return [&quot;629212&quot;]
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/regular-expression-assert/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/regular-expression-assert/&sharesource=qzone&title=正则表达式——断言&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586756354308&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/regular-expression-assert/&sharesource=weibo&title=正则表达式——断言 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586756354308 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/blockchain-industry-terms/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/blockchain-industry-terms/&sharesource=qzone&title=区块链——行业名词&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586756354308&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/blockchain-industry-terms/&sharesource=weibo&title=区块链——行业名词 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586756354308 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -328,8 +774,8 @@ return [&quot;629212&quot;]
                                                                                     <span class="tag ">
                         
                         
-                        <a href="https://tdmaker.github.io/faded/tag/regular-expression/">#
-                    正则表达式
+                        <a href="https://tdmaker.github.io/faded/tag/blockchain/">#
+                    区块链
                         </a>
                         
                             
@@ -347,13 +793,13 @@ return [&quot;629212&quot;]
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/regular-expression-nfa/">
-                                                                                            正则表达式——NFA
+                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/blockchain-commercial-survey/">
+                                                                                            区块链——商用调查
                                                                                         </a>
                                                                                         
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/jquery-extension/">
-                                                                                                    jQuery——拓展
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/blockchain-profession-words/">
+                                                                                                    区块链——行业名词
                                                                                                 </a>
                                                                                                 
                                                                                 </section>
