@@ -2,13 +2,494 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://tdmaker.github.io/faded/</id>
     <title>Typhoeus</title>
-    <updated>2020-04-13T13:02:25.457Z</updated>
+    <updated>2020-04-14T06:52:14.949Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://tdmaker.github.io/faded/"/>
     <link rel="self" href="https://tdmaker.github.io/faded/atom.xml"/>
     <logo>https://tdmaker.github.io/faded/images/avatar.png</logo>
     <icon>https://tdmaker.github.io/faded/favicon.ico</icon>
     <rights>All rights reserved 2020, Typhoeus</rights>
+    <entry>
+        <title type="html"><![CDATA[JavaScript——7 个角度吃透 Lodash 防抖节流原理]]></title>
+        <id>https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/</id>
+        <link href="https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/">
+        </link>
+        <updated>2020-04-14T04:01:24.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.muyiy.cn/blog/7/7.5.html">浅出篇 7 个角度吃透 Lodash 防抖节流原理</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.muyiy.cn/blog/7/7.5.html">浅出篇 7 个角度吃透 Lodash 防抖节流原理</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="节流函数-throttle">节流函数 Throttle</h1>
+<p>我们先来看一张图，这张图充分说明了 Throttle（节流）和 Debounce（防抖）的区别，以及在不同配置下产生的不同效果，其中 <code>mousemove</code> 事件每 50 ms 触发一次，即下图中的每一小隔是 50 ms。今天这篇文章就从下面这张图开始介绍。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586843513764.jpg" alt="" loading="lazy"></p>
+<h2 id="角度-1">角度 1</h2>
+<p><code>lodash.throttle(fn, 200, {leading: true, trailing: true})</code></p>
+<h3 id="mousemove-第一次触发">mousemove 第一次触发</h3>
+<p>先来看下 throttle 源码</p>
+<pre><code class="language-javascript">function throttle(func, wait, options) {
+  // 首尾调用默认为 true
+  let leading = true
+  let trailing = true
+
+  if (typeof func !== 'function') {
+    throw new TypeError('Expected a function')
+  }
+  // options 是否是对象
+  if (isObject(options)) {
+    leading = 'leading' in options ? !!options.leading : leading
+    trailing = 'trailing' in options ? !!options.trailing : trailing
+  }
+  // maxWait 为 wait 的防抖函数
+  return debounce(func, wait, {
+    leading,
+    trailing,
+    'maxWait': wait,
+  })
+}
+</code></pre>
+<p>所以 <code>throttle(fn, 200, {leading: true, trailing: true})</code> 返回内容是 <code>debounce(fn, 200, {leading: true, trailing: true, maxWait: 200})</code>，多了 <code>maxWait: 200</code> 这部分。</p>
+<p>先打个预防针，后面即将开始比较难的部分，看下 <code>debounce</code> 入口函数。</p>
+<pre><code class="language-javascript">// 入口函数，返回此函数
+function debounced(...args) {
+  // 获取当前时间
+  const time = Date.now()
+  // 判断此时是否应该执行 func 函数
+  const isInvoking = shouldInvoke(time)
+
+  // 赋值给闭包，用于其他函数调用
+  lastArgs = args
+  lastThis = this
+  lastCallTime = time
+
+  // 执行
+  if (isInvoking) {
+    // 无 timerId 的情况有两种：
+    // 1、首次调用 
+    // 2、trailingEdge 执行过函数
+    if (timerId === undefined) {
+      return leadingEdge(lastCallTime)
+    }
+    
+    // 如果设置了最大等待时间，则立即执行 func
+    // 1、开启定时器，到时间后触发 trailingEdge 这个函数。
+    // 2、执行 func，并返回结果
+    if (maxing) {
+      // 循环定时器中处理调用
+      timerId = startTimer(timerExpired, wait)
+      return invokeFunc(lastCallTime)
+    }
+  }
+  // 一种特殊情况，trailing 设置为 true 时，前一个 wait 的 trailingEdge 已经执行了函数
+  // 此时函数被调用时 shouldInvoke 返回 false，所以要开启定时器
+  if (timerId === undefined) {
+    timerId = startTimer(timerExpired, wait)
+  }
+  // 不需要执行时，返回结果
+  return result
+}
+</code></pre>
+<p>对于 <code>debounce(fn, 200, {leading: true, trailing: true, maxWait: 200})</code> 来说，会经历如下过程。</p>
+<ol>
+<li><code>shouldInvoke(time)</code> 中，因为满足条件 <code>lastCallTime === undefined</code>，所以返回 <code>true</code>。</li>
+<li><code>lastCallTime = time</code>，所以 <code>lastCallTime</code> 等于当前时间，假设为 <code>0</code>。</li>
+<li><code>timerId === undefined</code> 满足，执行 <code>leadingEdge(lastCallTime)</code> 方法。</li>
+</ol>
+<pre><code class="language-javascript">// 执行连续事件刚开始的那次回调
+function leadingEdge(time) {
+  // 1、设置上一次执行 func 的时间
+  lastInvokeTime = time
+  // 2、开启定时器，为了事件结束后的那次回调
+  timerId = startTimer(timerExpired, wait)
+  // 3、如果配置了 leading 执行传入函数 func
+  // leading 来源自 !!options.leading
+  return leading ? invokeFunc(time) : result
+}
+</code></pre>
+<ol start="4">
+<li>在 <code>leadingEdge(time)</code> 中，设置 <code>lastInvokeTime</code> 为当前时间即 <code>0</code>，开启 <code>200</code> 毫秒定时器，执行 <code>invokeFunc(time)</code> 并返回。</li>
+</ol>
+<pre><code class="language-javascript">// 执行 Func 函数
+function invokeFunc(time) {
+  // 获取上一次执行 debounced 的参数
+  const args = lastArgs
+  // 获取上一次的 this
+  const thisArg = lastThis
+
+  // 重置
+  lastArgs = lastThis = undefined
+  lastInvokeTime = time
+  result = func.apply(thisArg, args)
+  return result
+}
+</code></pre>
+<ol start="5">
+<li>在 <code>invokeFunc(time)</code> 中，执行 <code>func.apply(thisArg, args)</code>，即 <code>fn</code> 函数第一次执行，并把结果赋值给 <code>result</code>，便于后续触发时直接返回。同时重置 <code>lastInvokeTime</code> 为当前时间即 <code>0</code>，清空 <code>lastArgs</code> 和 <code>lastThis</code>。</li>
+<li>第一次触发已经完成，注意此时 <code>lastCallTime</code> 和 <code>lastInvokeTime</code> 都为 <code>0</code>，<code>200</code> 毫秒的定时器还在运行中。</li>
+</ol>
+<h3 id="mousemove-第二次触发">mousemove 第二次触发</h3>
+<p><code>50</code> 毫秒后第二次触发到来，此时当前时间 <code>time</code> 为 <code>50</code>，<code>wait</code> 为 <code>200</code>， <code>maxWait</code> 为 <code>200</code>，<code>maxing</code> 为 <code>true</code>，<code>lastCallTime</code> 和 <code>lastInvokeTime</code> 都为 <code>0</code>，<code>timerId</code> 定时器存在，我们来看下执行步骤。</p>
+<pre><code class="language-javascript">function shouldInvoke(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+
+  // 下述 4 种情况返回 true
+  return ( lastCallTime === undefined || 
+          (timeSinceLastCall &gt;= wait) ||
+          (timeSinceLastCall &lt; 0) || 
+          (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) )
+}
+</code></pre>
+<ol>
+<li><code>shouldInvoke(time)</code> 中，<code>timeSinceLastCall</code> 为 <code>50</code>，<code>timeSinceLastInvoke</code> 为 <code>50</code>，<code>4</code> 种条件都不满足，返回 <code>false</code>。</li>
+<li>此时 <code>isInvoking</code> 为 <code>false</code>，同时 <code>timerId === undefined</code> 不满足，直接返回第一次触发时的 <code>result</code>。</li>
+<li>第二次触发完成，并不会执行 <code>fn</code>，只会返回上次执行的结果 <code>result</code>。</li>
+<li>第三次和第四次触发时，效果一样，就不再重复了。</li>
+</ol>
+<h3 id="mousemove-第五次触发">mousemove 第五次触发</h3>
+<p>距第一次触发 <code>200</code> 毫秒后第五次触发到来，此时当前时间 <code>time</code> 为 <code>200</code>，<code>wait</code> 为 <code>200</code>， <code>maxWait</code> 为 <code>200</code>，<code>maxing</code> 为 <code>true</code>，<code>lastCallTime</code> 为 <code>150</code>，<code>lastInvokeTime</code> 为 <code>0</code>，<code>timerId</code> 定时器存在，我们来看下执行步骤。</p>
+<ol>
+<li><code>shouldInvoke(time)</code> 中，<code>timeSinceLastInvoke</code> 为 <code>200</code>，满足 <code>(maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait)</code>，所以返回 <code>true</code>。</li>
+</ol>
+<pre><code class="language-javascript">// debounced 方法中执行到这部分
+if (maxing) {
+  // 循环定时器中处理调用
+  timerId = startTimer(timerExpired, wait)
+  return invokeFunc(lastCallTime)
+}
+</code></pre>
+<ol start="2">
+<li>满足 <code>maxing</code> 条件，重新开启 <code>200</code> 毫秒的定时器，并执行 <code>invokeFunc(lastCallTime)</code> 函数。</li>
+<li><code>invokeFunc(time)</code> 中，重置 <code>lastInvokeTime</code> 为当前时间即 <code>200</code>，清空 <code>lastArgs</code> 和 <code>lastThis</code>。</li>
+<li>第六、七、八次触发时，同第二次触发效果一致，就不再重复了。</li>
+</ol>
+<h3 id="mousemove-停止触发">mousemove 停止触发</h3>
+<p>假设第八次触发之后就停止了滚动，在第八次触发时 <code>time</code> 为 <code>350</code>，所以如果有第九次触发，那么此时是应该执行 <code>fn</code> 的，但是此时 <code>mousemove</code> 已经停止了触发，那么还会执行 <code>fn</code> 吗？答案是依旧执行，因为最开始设置了 <code>{trailing: true}</code>。</p>
+<pre><code class="language-javascript">// 开启定时器
+function startTimer(pendingFunc, wait) {
+  // 没传 wait 时调用 window.requestAnimationFrame()
+  if (useRAF) {
+    // 若想在浏览器下次重绘之前继续更新下一帧动画
+    // 那么回调函数自身必须再次调用 window.requestAnimationFrame()
+    root.cancelAnimationFrame(timerId);
+    return root.requestAnimationFrame(pendingFunc)
+  }
+  // 不使用 RAF 时开启定时器
+  return setTimeout(pendingFunc, wait)
+}
+</code></pre>
+<p>在第五次触发时开启了 <code>200</code> 毫秒的定时器，所以在时间 <code>time</code> 到 <code>400</code> 时会执行 <code>pendingFunc</code>，此时的 <code>pendingFunc</code> 就是 <code>timerExpired</code> 函数，来看下具体的代码。</p>
+<pre><code class="language-javascript">// 定时器回调函数，表示定时结束后的操作
+function timerExpired() {
+  const time = Date.now()
+  // 1、是否需要执行
+  // 执行事件结束后的那次回调，否则重启定时器
+  if (shouldInvoke(time)) {
+    return trailingEdge(time)
+  }
+  // 2、否则 计算剩余等待时间，重启定时器，保证下一次时延的末尾触发
+  timerId = startTimer(timerExpired, remainingWait(time))
+}
+</code></pre>
+<p>此时在 <code>shouldInvoke(time)</code> 中，<code>time</code> 为 <code>400</code>，<code>lastInvokeTime</code> 为 <code>200</code>，<code>timeSinceLastInvoke</code> 为 <code>200</code>，满足 <code>(maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait)</code>，所以返回 <code>true</code>。</p>
+<pre><code class="language-javascript">// 执行连续事件结束后的那次回调
+function trailingEdge(time) {
+  // 清空定时器
+  timerId = undefined
+
+  // trailing 和 lastArgs 两者同时存在时执行
+  // trailing 来源自 'trailing' in options ? !!options.trailing : trailing
+  // lastArgs 标记位的作用，意味着 debounce 至少执行过一次
+  if (trailing &amp;&amp; lastArgs) {
+    return invokeFunc(time)
+  }
+  // 清空参数
+  lastArgs = lastThis = undefined
+  return result
+}
+</code></pre>
+<p>之后执行 <code>trailingEdge(time)</code>，在这个函数中判断 <code>trailing</code> 和 <code>lastArgs</code>，此时这两个条件都是 <code>true</code>，所以会执行 <code>invokeFunc(time)</code>，最终执行函数 <code>fn</code>。</p>
+<p>这里需要说明以下两点：</p>
+<ul>
+<li>如果设置了 <code>{trailing: false}</code>，那么最后一次是不会执行的。对于 <code>throttle</code> 和 <code>debounce</code> 来说，默认值是 <code>true</code>，所以如果没有特意指定 <code>trailing</code>，那么最后一次是一定会执行的。</li>
+<li>对于 <code>lastArgs</code> 来说，执行 <code>debounced</code> 时会赋值，即每次触发都会重新赋值一次，那什么时候清空呢，在 <code>invokeFunc(time)</code> 中执行 <code>fn</code> 函数时重置为 <code>undefined</code>，所以如果 <code>debounced</code> 只触发了一次，即使设置了 <code>{trailing: true}</code> 那也不会再执行 <code>fn</code> 函数，这个就解答了上篇文章留下的第一道思考题。</li>
+</ul>
+<h2 id="角度-2">角度 2</h2>
+<p><code>lodash.throttle(fn, 200, {leading: true, trailing: false})</code><br>
+在<a href="#mousemove-%E5%81%9C%E6%AD%A2%E8%A7%A6%E5%8F%91">角度 1 之 mousemove 停止触发</a>这部分中说到，如果不设置 <code>trailing</code> 和设置 <code>{trailing: true}</code> 效果是一样的，事件回调结束后都会再执行一次传入函数 fn，但是如果设置了 <code>{trailing: false}</code>，那么事件回调结束后是不会再执行 <code>fn</code> 的。</p>
+<p>此时的配置对比角度 1 来说，区别在于设置了 <code>{trailing: false}</code>，所以实际效果对比 1 来说，就是最后不会额外再执行一次，效果见第一张图。</p>
+<h2 id="角度-3">角度 3</h2>
+<p><code>lodash.throttle(fn, 200, {leading: false, trailing: true})</code><br>
+此时的配置和角度 1 相比，区别在于设置了 <code>{leading: false}</code>，所以直接看 <code>leadingEdge(time)</code> 方法就可以了。</p>
+<pre><code class="language-javascript">// 执行连续事件刚开始的那次回调
+function leadingEdge(time) {
+  // 1、设置上一次执行 func 的时间
+  lastInvokeTime = time
+  // 2、开启定时器，为了事件结束后的那次回调
+  timerId = startTimer(timerExpired, wait)
+  // 3、如果配置了 leading 执行传入函数 func
+  // leading 来源自 !!options.leading
+  return leading ? invokeFunc(time) : result
+}
+</code></pre>
+<p>在这里，会开启 <code>200</code> 毫秒的定时器，同时因为 <code>leading</code> 为 <code>false</code>，所以并不会执行 <code>invokeFunc(time)</code>，只会返回 <code>result</code>，此时的 <code>result</code> 值是 <code>undefined</code>。</p>
+<p>这里开启一个定时器的目的是为了事件结束后的那次回调，即如果设置了 <code>{trailing: true}</code> 那么最后一次回调将执行传入函数 <code>fn</code>，哪怕 <code>debounced</code> 函数只触发一次。</p>
+<p>这里指定了 <code>{leading: false}</code>，那么 <code>leading</code> 的初始值是什么呢？在 <code>debounce</code> 中是 <code>false</code>，在 <code>throttle</code> 中是 <code>true</code>。所以在 <code>throttle</code> 中不需要刚开始就触发时，必须指定 <code>{leading: false}</code>，在 <code>debounce</code> 中就不需要了，默认不触发。</p>
+<h1 id="防抖函数-debounce">防抖函数 Debounce</h1>
+<h2 id="角度-4">角度 4</h2>
+<p><code>lodash.debounce(fn, 200, {leading: false, trailing: true})</code></p>
+<p>此时相比较 <code>throttle</code> 来说，缺少了 <code>maxWait</code> 值，所以具体触发过程中的判断就不一样了，来详细看一遍。</p>
+<ol>
+<li>在入口函数 <code>debounced</code> 中，执行 <code>shouldInvoke(time)</code>，前面讨论过因为第一次触发所以会返回 <code>true</code>，之后执行 <code>leadingEdge(lastCallTime)</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 执行连续事件刚开始的那次回调
+function leadingEdge(time) {
+  // 1、设置上一次执行 func 的时间
+  lastInvokeTime = time
+  // 2、开启定时器，为了事件结束后的那次回调
+  timerId = startTimer(timerExpired, wait)
+  // 3、如果配置了 leading 执行传入函数 func
+  // leading 来源自 !!options.leading
+  return leading ? invokeFunc(time) : result
+}
+</code></pre>
+<ol start="2">
+<li>在 <code>leadingEdge</code> 中，因为 <code>leading</code> 为 <code>false</code>，所以并不执行 <code>fn</code>，只开启 <code>200</code> 毫秒的定时器，并返回 <code>undefined</code>。此时 <code>lastInvokeTime</code> 为当前时间，假设为 <code>0</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 判断此时是否应该执行 func 函数
+function shouldInvoke(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+
+  // 下述 4 种情况返回 true
+  return ( lastCallTime === undefined || 
+          (timeSinceLastCall &gt;= wait) ||
+          (timeSinceLastCall &lt; 0) || 
+          (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) )
+}
+</code></pre>
+<ol start="3">
+<li>之后每次触发时，<code>timeSinceLastCall</code> 总是为 <code>50</code> 毫秒，<code>maxing</code> 为 <code>false</code>，所以 <code>shouldInvoke(time)</code> 总是返回 <code>false</code>，并不会执行传入函数 <code>fn</code>，只返回 <code>result</code>，即为 <code>undefined</code>。</li>
+<li>到现在为止，<code>fn</code> 一次还没有执行，<code>200</code> 毫秒后，定时器回调函数触发，执行 <code>timerExpired</code> 函数。</li>
+</ol>
+<pre><code class="language-javascript">// 定时器回调函数，表示定时结束后的操作
+function timerExpired() {
+  const time = Date.now()
+  // 1、是否需要执行
+  // 执行事件结束后的那次回调，否则重启定时器
+  if (shouldInvoke(time)) {
+    return trailingEdge(time)
+  }
+  // 2、否则 计算剩余等待时间，重启定时器，保证下一次时延的末尾触发
+  timerId = startTimer(timerExpired, remainingWait(time))
+}
+</code></pre>
+<ol start="5">
+<li>此时存在两种情况，第一种是 <code>mousemove</code> 事件一直在触发，根据前面介绍 <code>shouldInvoke(time)</code> 会返回 <code>false</code>，之后就将计算剩余等待时间，重启定时器。时间计算公式为 <code>wait - (time - lastCallTime)</code>，即 <code>200 - 50</code>，所以只要 <code>shouldInvoke(time)</code> 返回 <code>false</code>，就每隔 <code>150</code> 毫秒后执行一次 <code>timerExpired()</code>。</li>
+<li>第二种情况是 <code>mousemove</code> 事件不再触发，因为 <code>timerExpired()</code> 在循环执行，所以肯定会存在一种情况满足 <code>timeSinceLastCall &gt;= wait</code>，即 <code>shouldInvoke(time)</code> 返回 <code>true</code>，终结 <code>timerExpired()</code> 的循环，并执行 <code>trailingEdge(time)</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 执行连续事件结束后的那次回调
+function trailingEdge(time) {
+  // 清空定时器
+  timerId = undefined
+
+  // trailing 和 lastArgs 两者同时存在时执行
+  // trailing 来源自 'trailing' in options ? !!options.trailing : trailing
+  // lastArgs 标记位的作用，意味着 debounce 至少执行过一次
+  if (trailing &amp;&amp; lastArgs) {
+    return invokeFunc(time)
+  }
+  // 清空参数
+  lastArgs = lastThis = undefined
+  return result
+}
+</code></pre>
+<ol start="7">
+<li>在 <code>trailingEdge</code> 中 <code>trailing</code> 和 <code>lastArgs</code> 都是 <code>true</code>，所以会执行 <code>invokeFunc(time)</code>，即执行传入函数 <code>fn</code>。</li>
+<li>所以整个过程中只在最后执行一次传入函数 <code>fn</code>，效果同上面第一张图所示。</li>
+</ol>
+<h3 id="角度-5">角度 5</h3>
+<p><code>lodash.debounce(fn, 200, {leading: true, trailing: false})</code><br>
+此时相比角度 4 来说，差异在于 <code>{leading: true, trailing: false}</code>，但是 <code>wait</code> 和 <code>maxWait</code> 都和角度 4 一致，所以只存在下面 2 种区别，效果同上面第一张图所示。</p>
+<ul>
+<li>区别 1：<code>leadingEdge</code>  中会执行传入函数 <code>fn</code></li>
+<li>区别 2：<code>trailingEdge</code> 中不再执行传入函数 <code>fn</code></li>
+</ul>
+<h3 id="角度-6">角度 6</h3>
+<p><code>lodash.debounce(fn, 200, {leading: true, trailing: true})</code><br>
+此时相比角度 4 来说，差异仅仅在于设置了 <code>{leading: true}</code>，所以只存在一个区别，那就是在 <code>leadingEdge</code> 中会执行传入函数 <code>fn</code>，当然在 <code>trailingEdge</code> 中依旧执行传入函数 <code>fn</code>，所以会出现在 <code>mousemove</code> 事件触发过程中首尾都会执行的情况，效果同上面第一张图所示。</p>
+<p>当然一种情况除外，那就是 <code>mousemove</code> 事件永远只触发一次的情况，关键在于 <code>lastArgs</code> 变量。</p>
+<p>对于 <code>lastArgs</code> 变量来说，在入口函数 <code>debounced</code> 中赋值，即每次触发都会重新赋值一次，那什么时候清空呢，在 <code>invokeFunc(time)</code> 中重置为 <code>undefined</code>，所以如果 <code>debounced</code> 只触发了一次，而且在 <code>{leading: true}</code> 时执行过一次 <code>fn</code>，那么即使设置了 <code>{trailing: true}</code> 也不会再执行传入函数 <code>fn</code>。</p>
+<h3 id="角度-7">角度 7</h3>
+<p><code>lodash.debounce(fn, 200, {leading: false, trailing: true, maxWait: 400})</code><br>
+此时 <code>wait</code> 为 <code>200</code>，<code>maxWait</code> 为 <code>400</code>，<code>maxing</code> 为 <code>true</code>，我们来看下执行过程。</p>
+<ol>
+<li>第一次触发时，因为 <code>{leading: false}</code>，所以肯定不会执行 <code>fn</code>，此时开启了一个 <code>200</code> 毫秒的定时器。</li>
+</ol>
+<pre><code class="language-javascript">// 判断此时是否应该执行 func 函数
+function shouldInvoke(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+
+  // 下述 4 种情况返回 true
+  return ( lastCallTime === undefined || 
+          (timeSinceLastCall &gt;= wait) ||
+          (timeSinceLastCall &lt; 0) || 
+          (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) )
+}
+</code></pre>
+<ol start="2">
+<li>之后每隔 <code>50</code> 毫秒触发一次，每次都会执行 <code>shouldInvoke(time)</code> 函数，只有在第 <code>400</code> 毫秒时，才会满足 <code>maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait</code>，返回 <code>true</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 计算仍需等待的时间
+function remainingWait(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+  // 剩余等待时间
+  const timeWaiting = wait - timeSinceLastCall
+
+  // 是否设置了最大等待时间
+	// 是（节流）：返回「剩余等待时间」和「距上次执行 func 的剩余等待时间」中的最小值
+	// 否：返回剩余等待时间
+  return maxing
+    ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
+  	: timeWaiting
+}
+</code></pre>
+<ol start="3">
+<li>但是在这之前的第 <code>200</code> 毫秒，定时器触发回调函数，执行 <code>timerExpired</code>，因为此时 <code>shouldInvoke(time)</code> 返回 <code>false</code>，所以会重新计算剩余等待时间并重启计时器，其中 <code>timeWaiting</code> 是 <code>150</code> 毫秒，<code>maxWait - timeSinceLastInvoke</code> 是 <code>200</code> 毫秒，所以计算结果是 <code>150</code> 毫秒。</li>
+<li><code>150</code> 毫秒之后，即自开始之后的第 <code>350</code> 毫秒时，会重新计算时间，其中 <code>timeWaiting</code> 依旧是 <code>150</code> 毫秒，<code>maxWait - timeSinceLastInvoke</code> 是 <code>50</code> 毫秒，所以重新开启 <code>50</code> 毫秒的定时器，即在第 <code>400</code> 毫秒时触发。</li>
+<li>此时会发现定时器触发的时间是第 <code>400</code> 毫秒，<code>shouldInvoke(time)</code> 中返回 <code>true</code> 的时间也是在第 <code>400</code> 毫秒，为什么要这样呢？这样会冲突吗？首先定时器剩余时间判断和 <code>shouldInvoke(time)</code> 判断中，只要有一处满足执行 <code>fn</code> 条件，就会立马执行，同时 <code>lastInvokeTime</code> 值也会发生改变，所以另一处判断就不会生效了。另外本身定时器是不精准的，所以通过 <code>Math.min(timeWaiting, maxWait - timeSinceLastInvoke)</code> 取最小值的方式来减少误差。</li>
+<li>于此同时，需要在 <code>debounced</code> 入口函数添加这么一句 <code>if (timerId === undefined) {timerId = startTimer(timerExpired, wait)}</code>，避免 <code>trailingEdge</code> 执行后定时器被清空。</li>
+<li>最终效果和节流是一样的，只是时间间隔变大了而已，具体效果同第一张图所示。</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JavaScript——防抖和节流]]></title>
+        <id>https://tdmaker.github.io/faded/post/javascript-debounce-throttle/</id>
+        <link href="https://tdmaker.github.io/faded/post/javascript-debounce-throttle/">
+        </link>
+        <updated>2020-04-14T03:18:16.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://juejin.im/post/5b5e724af265da0f4d0d88b2">JS简单实现防抖和节流</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://juejin.im/post/5b5e724af265da0f4d0d88b2">JS简单实现防抖和节流</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="1-防抖-debounce">1 防抖 - debounce</h1>
+<p>其中一种解决方案就是每次用户停止输入后，延迟超过 500ms 时，才去搜索此时的 string，这就是防抖。</p>
+<h2 id="11-原理">1.1 原理</h2>
+<p>将若干个函数调用合成为一次，并在给定时间过去之后仅被调用一次。</p>
+<h2 id="12-代码实现">1.2 代码实现</h2>
+<pre><code class="language-javascript">function debounce(fn, delay) {
+  // 维护一个 timer，用来记录当前执行函数状态
+  let timer = null;
+
+  return function() {
+    // 通过 'this' 和 'arguments' 获取函数的作用域和变量
+    let context = this;
+    let args = arguments;
+    // 清理掉正在执行的函数，并重新执行
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      fn.apply(context, args);
+    }, delay);
+  }
+}
+let flag = 0; // 记录当前函数调用次数
+// 当用户滚动时被调用的函数
+function foo() {
+  flag++;
+  console.log('Number of calls: %d', flag);
+}
+
+// 在 debounce 中包装我们的函数，过 2 秒触发一次
+document.body.addEventListener('scroll', debounce(foo, 2000));
+</code></pre>
+<h2 id="13-解释">1.3 解释</h2>
+<ul>
+<li><code>debounce</code> 函数封装后，返回内部函数。</li>
+<li>每一次事件被触发，都会清除当前的 <code>timer</code> 然后重新设置超时并调用。这会导致每一次高频事件都会取消前一次的超时调用，导致事件处理程序不能被触发。</li>
+<li>只有当高频事件停止，最后一次事件触发的超时调用才能在 <code>delay</code> 时间后执行。</li>
+</ul>
+<h1 id="2-节流-throttle">2 节流 - throttle</h1>
+<p>另一种解决方案比防抖要宽松些，这时我们不想用户一味的输入，而是给用户一些搜索提示，所以在当中限制每过 500ms 就查询一次此时的 string，这就是节流。</p>
+<h2 id="21-原理">2.1 原理</h2>
+<p>节流函数不管事件触发有多频繁，都会保证在规定时间内一定会执行一次真正的事件处理函数。</p>
+<h2 id="22-代码实现">2.2 代码实现</h2>
+<p>代码实现有两种，一种是时间戳，另一种是定时器。</p>
+<h3 id="221-时间戳实现">2.2.1 时间戳实现</h3>
+<pre><code class="language-javascript">function throttle(func, delay){
+  let prev = Date.now();
+  return function(){
+    const context = this;
+    const args    = arguments;
+    const now     = Date.now();
+    if(now - prev &gt;= delay){
+      func.apply(context, args);
+      prev = Date.now();
+    }
+  }
+}
+</code></pre>
+<p>当高频事件触发时，第一次应该会立即执行（给事件绑定函数与真正触发事件的间隔如果大于 <code>delay</code> 的话），而后再怎么频繁触发事件，也都是会每 <code>delay</code> 秒才执行一次。而当最后一次事件触发完毕后，事件也不会再被执行了。</p>
+<h3 id="222-定时器实现">2.2.2 定时器实现</h3>
+<p>当触发事件的时候，我们设置一个定时器，再触发事件的时候，如果定时器存在，就不执行；直到 <code>delay</code> 秒后，定时器执行执行函数，清空定时器，这样就可以设置下个定时器。</p>
+<pre><code class="language-javascript">fucntion throttle(func, delay){
+  let timer = null;
+
+  return funtion(){
+    let context = this;
+    let args    = arguments;
+    if(!timer){
+      timer = setTimeout(function(){
+        func.apply(context, args);
+        timer = null;
+      }, delay);
+    }
+  }
+}
+</code></pre>
+<p>当第一次触发事件时，肯定不会立即执行函数，而是在 delay 秒后才执行。 之后连续不断触发事件，也会每 delay 秒执行一次。 当最后一次停止触发后，由于定时器的 delay 延迟，可能还会执行一次函数。</p>
+<h3 id="223-综合使用时间戳与定时器">2.2.3 综合使用时间戳与定时器</h3>
+<p>完成一个事件触发时立即执行，触发完毕还能执行一次的节流函数。</p>
+<pre><code class="language-javascript">function throttle(func, delay){
+  let timer = null;
+  let startTime = Date.now();
+
+  return function(){
+    let curTime = Date.now();
+    let remaining = delay - (curTime - startTime);
+    const context = this;
+    const args = arguments;
+
+    clearTimeout(timer);
+    if(remaining &lt;= 0){
+      func.apply(context,args);
+      startTime = Date.now();
+    }else{
+      timer = setTimeout(func, remaining);
+    }
+  }
+}
+</code></pre>
+<p>需要在每个 <code>delay</code> 时间中一定会执行一次函数，因此在节流函数内部使用开始时间、当前时间与 <code>delay</code> 来计算 <code>remaining</code>，当 <code>remaining &lt;= 0</code> 时表示该执行函数了，如果还没到时间的话就设定在 <code>remaining</code> 时间后再触发。当然在 <code>remaining</code> 这段时间中如果又一次发生事件，那么会取消当前的计时器，并重新计算一个 <code>remaining</code> 来判断当前状态。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[什么是 P 问题、NP 问题和 NPC 问题]]></title>
         <id>https://tdmaker.github.io/faded/post/what-is-p-problem-np-problem-and-npc-problem/</id>
@@ -2330,356 +2811,6 @@ static void Multiply(int[,] f, int[,] m)
 <ul>
 <li>简单计算器: 在插入模式下，输入 <code>C-r =</code>，然后输入表达式，就能在 光标处得到计算结果。</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Vim——配置入门]]></title>
-        <id>https://tdmaker.github.io/faded/post/vim-configuration-introduction/</id>
-        <link href="https://tdmaker.github.io/faded/post/vim-configuration-introduction/">
-        </link>
-        <updated>2020-04-09T07:34:01.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="http://www.ruanyifeng.com/blog/2018/09/vimrc.html">Vim 配置入门</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="http://www.ruanyifeng.com/blog/2018/09/vimrc.html">Vim 配置入门</a></p>
-</blockquote>
-<!-- more -->
-<p>Vim 的配置不太容易，它有自己的语法，许许多多的命令。我总是记不清楚，所以就整理了下面这篇文章，列出主要配置项的含义。</p>
-<h1 id="1-基础知识">1 基础知识</h1>
-<p>Vim 的全局配置一般在 <code>/etc/vim/vimrc</code> 或者 <code>/etc/vimrc</code>，对所有用户生效。用户个人的配置在 <code>~/.vimrc</code>。</p>
-<p>如果只对单次编辑启用某个配置项，可以在命令模式下，先输入一个冒号，再输入配置。举例来说，<code>set number</code> 这个配置可以写在 <code>.vimrc</code> 里面，也可以在命令模式输入。</p>
-<pre><code class="language-bash">:set number
-</code></pre>
-<p>配置项一般都有“打开”和“关闭”两个设置。“关闭”就是在“打开”前面加上前缀 &quot;no&quot;。</p>
-<pre><code class="language-bash">&quot; 打开
-set number
-
-&quot; 关闭
-set nonumber
-</code></pre>
-<p>上面代码中，双引号开始的行表示注释。</p>
-<p>查询某个配置项是打开还是关闭，可以在命令模式下，输入该配置，并在后面加上问号。</p>
-<pre><code class="language-vim">:set number?
-</code></pre>
-<p>上面的命令会返回 <code>number</code> 或者 <code>nonumber</code>。</p>
-<p>如果想查看帮助，可以使用 <code>help</code> 命令。</p>
-<pre><code class="language-vim">:help number
-</code></pre>
-<h1 id="2-基本配置">2 基本配置</h1>
-<p>（1）</p>
-<pre><code class="language-bash">set nocompatible
-</code></pre>
-<p>不与 Vi 兼容（采用 Vim 自己的操作命令）。</p>
-<p>（2）</p>
-<pre><code class="language-bash">syntax on
-</code></pre>
-<p>打开语法高亮。自动识别代码，使用多种颜色显示。</p>
-<p>（3）</p>
-<pre><code class="language-bash">set showmode
-</code></pre>
-<p>在底部显示，当前处于命令模式还是插入模式。</p>
-<p>（4）</p>
-<pre><code class="language-bash">set showcmd
-</code></pre>
-<p>命令模式下，在底部显示，当前键入的指令。比如，键入的指令是 <code>2y3d</code>，那么底部就会显示 <code>2y3</code>，当键入 <code>d</code> 的时候，操作完成，显示消失。</p>
-<p>（5）</p>
-<pre><code class="language-bash">set mouse=a
-</code></pre>
-<p>支持使用鼠标。<br>
-（6）</p>
-<pre><code class="language-bash">set encoding=utf-8  
-</code></pre>
-<p>使用 utf-8 编码。<br>
-（7）</p>
-<pre><code class="language-bash">set t_Co=256
-</code></pre>
-<p>启用256色。</p>
-<p>（8）</p>
-<pre><code class="language-bash">filetype indent on
-</code></pre>
-<p>开启文件类型检查，并且载入与该类型对应的缩进规则。比如，如果编辑的是 <code>.py</code> 文件，Vim 就是会找 Python 的缩进规则 <code>~/.vim/indent/python.vim</code>。</p>
-<h1 id="3-缩进">3 缩进</h1>
-<p>9）</p>
-<pre><code class="language-bash">set autoindent
-</code></pre>
-<p>按下回车键后，下一行的缩进会自动跟上一行的缩进保持一致。</p>
-<p>（10）</p>
-<pre><code class="language-bash">set tabstop=2
-</code></pre>
-<p>按下 Tab 键时，Vim 显示的空格数。</p>
-<p>（11）</p>
-<pre><code class="language-bash">set shiftwidth=4
-</code></pre>
-<p>在文本上按下 <code>&gt;&gt;</code>（增加一级缩进）、<code>&lt;&lt;</code>（取消一级缩进）或者 <code>==</code>（取消全部缩进）时，每一级的字符数。</p>
-<p>（12）</p>
-<pre><code class="language-bash">set expandtab
-</code></pre>
-<p>由于 Tab 键在不同的编辑器缩进不一致，该设置自动将 Tab 转为空格。</p>
-<p>（13）</p>
-<pre><code class="language-bash">set softtabstop=2
-</code></pre>
-<p>Tab 转为多少个空格。</p>
-<h1 id="4-外观">4 外观</h1>
-<p>14）</p>
-<pre><code class="language-bash">set number
-</code></pre>
-<p>显示行号</p>
-<p>（15）</p>
-<pre><code class="language-bash">set relativenumber
-</code></pre>
-<p>显示光标所在的当前行的行号，其他行都为相对于该行的相对行号。</p>
-<p>（16）</p>
-<pre><code class="language-bash">set cursorline
-</code></pre>
-<p>光标所在的当前行高亮。</p>
-<p>（17）</p>
-<pre><code class="language-bash">set textwidth=80
-</code></pre>
-<p>设置行宽，即一行显示多少个字符。</p>
-<p>（18）</p>
-<pre><code class="language-bash">set wrap
-</code></pre>
-<p>自动折行，即太长的行分成几行显示。</p>
-<pre><code class="language-bash">set nowrap
-</code></pre>
-<p>关闭自动折行</p>
-<p>（19）</p>
-<pre><code class="language-bash">set linebreak
-</code></pre>
-<p>只有遇到指定的符号（比如空格、连词号和其他标点符号），才发生折行。也就是说，不会在单词内部折行。</p>
-<p>（20）</p>
-<pre><code class="language-bash">set wrapmargin=2
-</code></pre>
-<p>指定折行处与编辑窗口的右边缘之间空出的字符数。</p>
-<p>（21）</p>
-<pre><code class="language-bash">set scrolloff=5
-</code></pre>
-<p>垂直滚动时，光标距离顶部/底部的位置（单位：行）。</p>
-<p>（22）</p>
-<pre><code class="language-bash">set sidescrolloff=15
-</code></pre>
-<p>水平滚动时，光标距离行首或行尾的位置（单位：字符）。该配置在不折行时比较有用。</p>
-<p>（23）</p>
-<pre><code class="language-bash">set laststatus=2
-</code></pre>
-<p>是否显示状态栏。0 表示不显示，1 表示只在多窗口时显示，2 表示显示。</p>
-<p>（24）</p>
-<pre><code class="language-bash">set  ruler
-</code></pre>
-<p>在状态栏显示光标的当前位置（位于哪一行哪一列）。</p>
-<h1 id="5-搜索">5 搜索</h1>
-<p>25）</p>
-<pre><code class="language-bash">set showmatch
-</code></pre>
-<p>光标遇到圆括号、方括号、大括号时，自动高亮对应的另一个圆括号、方括号和大括号。</p>
-<p>（26）</p>
-<pre><code class="language-bash">set hlsearch
-</code></pre>
-<p>搜索时，高亮显示匹配结果。</p>
-<p>（27）</p>
-<pre><code class="language-bash">set incsearch
-</code></pre>
-<p>输入搜索模式时，每输入一个字符，就自动跳到第一个匹配的结果。</p>
-<p>（28）</p>
-<pre><code class="language-bash">set ignorecase
-</code></pre>
-<p>搜索时忽略大小写。</p>
-<p>（29）</p>
-<pre><code class="language-bash">set smartcase
-</code></pre>
-<p>如果同时打开了 <code>ignorecase</code>，那么对于只有一个大写字母的搜索词，将大小写敏感；其他情况都是大小写不敏感。比如，搜索 <code>Test</code> 时，将不匹配 <code>test</code>；搜索 <code>test</code> 时，将匹配 <code>Test</code>。</p>
-<h1 id="6-编辑">6 编辑</h1>
-<p>30）</p>
-<pre><code class="language-bash">set spell spelllang=en_us
-</code></pre>
-<p>打开英语单词的拼写检查。</p>
-<p>（31）</p>
-<pre><code class="language-bash">set nobackup
-</code></pre>
-<p>不创建备份文件。默认情况下，文件保存时，会额外创建一个备份文件，它的文件名是在原文件名的末尾，再添加一个波浪号（〜）。</p>
-<p>（32）</p>
-<pre><code class="language-bash">set noswapfile
-</code></pre>
-<p>不创建交换文件。交换文件主要用于系统崩溃时恢复文件，文件名的开头是 <code>.</code>、结尾是 <code>.swp</code>。</p>
-<p>（33）</p>
-<pre><code class="language-bash">set undofile
-</code></pre>
-<p>保留撤销历史。</p>
-<p>Vim 会在编辑时保存操作历史，用来供用户撤消更改。默认情况下，操作记录只在本次编辑时有效，一旦编辑结束、文件关闭，操作历史就消失了。</p>
-<p>打开这个设置，可以在文件关闭后，操作记录保留在一个文件里面，继续存在。这意味着，重新打开一个文件，可以撤销上一次编辑时的操作。撤消文件是跟原文件保存在一起的隐藏文件，文件名以 <code>.un~</code> 开头。</p>
-<p>（34）</p>
-<pre><code class="language-bash">set backupdir=~/.vim/.backup//  
-set directory=~/.vim/.swp//
-set undodir=~/.vim/.undo// 
-</code></pre>
-<p>设置备份文件、交换文件、操作历史文件的保存位置。</p>
-<p>结尾的 <code>//</code>表示生成的文件名带有绝对路径，路径中用 <code>%</code> 替换目录分隔符，这样可以防止文件重名。</p>
-<p>（35）</p>
-<pre><code class="language-bash">set autochdir
-</code></pre>
-<p>自动切换工作目录。这主要用在一个 Vim 会话之中打开多个文件的情况，默认的工作目录是打开的第一个文件的目录。该配置可以将工作目录自动切换到，正在编辑的文件的目录。</p>
-<p>（36）</p>
-<pre><code class="language-bash">set noerrorbells
-</code></pre>
-<p>出错时，不要发出响声。</p>
-<p>（37）</p>
-<pre><code class="language-bash">set visualbell
-</code></pre>
-<p>出错时，发出视觉提示，通常是屏幕闪烁。</p>
-<p>（38）</p>
-<pre><code class="language-bash">set history=1000
-</code></pre>
-<p>Vim 需要记住多少次历史操作。</p>
-<p>（39）</p>
-<pre><code class="language-bash">set autoread
-</code></pre>
-<p>打开文件监视。如果在编辑过程中文件发生外部改变（比如被别的编辑器编辑了），就会发出提示。</p>
-<p>（40）</p>
-<pre><code class="language-bash">set listchars=tab:»■,trail:■
-set list
-</code></pre>
-<p>如果行尾有多余的空格（包括 Tab 键），该配置将让这些空格显示成可见的小方块。</p>
-<p>（41）</p>
-<pre><code class="language-bash">set wildmenu
-set wildmode=longest:list,full
-</code></pre>
-<p>命令模式下，底部操作指令按下 Tab 键自动补全。第一次按下 Tab，会显示所有匹配的操作指令的清单；第二次按下 Tab，会依次选择各个指令。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Vim——重要的命令]]></title>
-        <id>https://tdmaker.github.io/faded/post/vim-key-instruct/</id>
-        <link href="https://tdmaker.github.io/faded/post/vim-key-instruct/">
-        </link>
-        <updated>2020-04-09T05:23:13.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://linux.cn/article-4669-1.html">一些不起眼但非常有用的 Vim 命令</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://linux.cn/article-4669-1.html">一些不起眼但非常有用的 Vim 命令</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="1-保存文件并退出">1 保存文件并退出</h1>
-<pre><code class="language-vim">:x
-:wq
-</code></pre>
-<p>都是保存当前文件并退出。这两个命令实际上并不完全等价，当文件被修改时两个命令时相同的。但如果未被修改，使用 <code>:x</code> 不会更改文件的修改时间，而使用 <code>:wq</code> 会改变文件的修改时间。</p>
-<h1 id="2-基本计算器">2 基本计算器</h1>
-<p>在插入模式下，你可以使用 Ctrl+r 键然后输入 =，再输入一个简单的算式。按 Enter 键，计算结果就会插入到文件中。例如，尝试输入：</p>
-<pre><code class="language-vim">Ctrl+r '=2+2' ENTER
-</code></pre>
-<p><img src="https://tdmaker.github.io/faded//post-images/1586410130425.png" alt="" loading="lazy"><br>
-然后计算结果“4 ”会被插入到文件中。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586410173096.png" alt="" loading="lazy"></p>
-<h1 id="3-查找重复的连续的单词">3 查找重复的连续的单词</h1>
-<p>当你很快地打字时，很有可能会连续输入同一个单词两次，就像 this this。这种错误可能骗过任何一个人，即使是你自己重新阅读一遍也不可避免。幸运的是，有一个简单的正则表达式可以用来预防这个错误。使用搜索命令（默认时 /）然后输入：</p>
-<pre><code class="language-vim">\(\&lt;\w\+\&gt;\)\_s*\1
-</code></pre>
-<p>这会显示所有重复的单词。要达到最好的效果，不要忘记把下面的命令：</p>
-<pre><code class="language-bash">set hlsearch
-</code></pre>
-<p>放到你的 .vimrc 文件中高亮所有的匹配。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586410335520.png" alt="" loading="lazy"></p>
-<h1 id="4-缩写">4 缩写</h1>
-<p>一个很可能是最令人印象深刻的窍门是你可以在 Vim 中定义缩写，它可以实时地把你输入的东西替换为另外的东西。语法格式如下：</p>
-<pre><code class="language-vim">:ab [缩写] [要替换的文字]
-</code></pre>
-<p>一个通用的例子是：</p>
-<pre><code class="language-vim">:ab asap as soon as possible
-</code></pre>
-<p>会把你输入的 “asap” 替换为 “as soon as possible”。</p>
-<h1 id="5-在你忘记用-root-方式打开文件时的文件保存">5 在你忘记用 root 方式打开文件时的文件保存</h1>
-<p>这可能是一个在论坛中一直受欢迎的命令。每当你打开一个你没有写入权限的文件（比如系统配置文件）并做了一些修改，Vim 无法通过普通的 <code>:w</code> 命令来保存。</p>
-<p>你不需要重新以 root 方式打开文件再进行修改，只需要运行：</p>
-<pre><code class="language-vim">:w !sudo tee %
-</code></pre>
-<p>这会直接以 root 方式保存。</p>
-<h1 id="6-实时加密文本">6 实时加密文本</h1>
-<p>如果你不想让别人看懂你的屏幕上的内容，你可以使用一个内置的选项，通过下面的命令使用 <a href="https://en.wikipedia.org/wiki/ROT13">ROT13</a> 来对文本进行编码：</p>
-<pre><code class="language-vim">ggVGg?
-</code></pre>
-<p><img src="https://tdmaker.github.io/faded//post-images/1586410711296.png" alt="" loading="lazy"><br>
-<code>gg</code> 把光标移动到 Vim 缓冲区的第一行，<code>V</code> 进入可视模式，<code>G</code> 把光标移动到缓冲区的最后一行。因此，<code>ggVG</code> 使可视模式覆盖这个当前缓冲区。最后 <code>g?</code> 使用 ROT13 对整个区域进行编码。</p>
-<p>注意它可以被映射到一个最常使用的键。它对字母符号也可以很好地工作。要对它进行撤销，最好的方法就是使用撤销命令：<code>u</code>。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586410826069.png" alt="" loading="lazy"></p>
-<h1 id="7-自动补全">7 自动补全</h1>
-<p>这是另外一个令我感到惭愧的功能，但我发现周围很多人并不知道。Vim 默认有自动补全的功能。的确这个功能是很基本的，并且可以通过插件来增强，但它也很有帮助。方法很简单。Vim 尝试通过已经输入的单词来预测单词的结尾。比如当你在同一个文件中第二次输入 “compiler” 时，仅仅输入 “com” 然后保持在插入模式，按 Ctrl+n 键就可以看到 Vim 为你补全了单词。很简单，但也很有用。</p>
-<h1 id="8-比较两个文件的不同">8 比较两个文件的不同</h1>
-<p>你们中的大多数很可能都知道 vimdiff 命令，它可以使用分离模式打开 Vim 并比较两个文件的不同。语法如下：</p>
-<pre><code class="language-bash">$ vimdiff [文件1] [文件2]
-</code></pre>
-<p>但同样的结果也可以通过下面的 Vim 命令来获得：</p>
-<pre><code class="language-vim">:diffthis
-</code></pre>
-<p>首先在 Vim 中打开原始文件。然后使用分离模式带来第二个文件：</p>
-<pre><code class="language-vim">:vsp [文件2]
-</code></pre>
-<p>最后在第一个缓冲区里输入：</p>
-<pre><code class="language-vim">:diffthis
-</code></pre>
-<p>通过 Ctrl+w 来切换缓冲区并再次输入：</p>
-<pre><code class="language-vim">:diffthis
-</code></pre>
-<p>这样两个文件中不同的部分就会被高亮。<br>
-（译者注：可以直接在一个缓冲区里使用命令 :windo diffthis，而不用输入 :diffthis 两次）<br>
-要停止比较，使用：</p>
-<pre><code class="language-vim">:diffoff
-</code></pre>
-<h1 id="9-按时间回退文件">9 按时间回退文件</h1>
-<p>Vim 会记录文件的更改，你很容易可以回退到之前某个时间。该命令是相当直观的。比如：</p>
-<pre><code class="language-vim">:earlier 1m
-</code></pre>
-<p>会把文件回退到 1 分钟以前的状态。</p>
-<p>注意，你可以使用下面的命令进行相反的转换：</p>
-<pre><code class="language-vim">:later
-</code></pre>
-<h1 id="10-删除标记内部的文字">10 删除标记内部的文字</h1>
-<p>当我开始使用 Vim 时，一件我总是想很方便做的事情是如何轻松的删除方括号或圆括号里的内容。转到开始的标记，然后使用下面的语法：</p>
-<pre><code class="language-vim">di[标记]
-</code></pre>
-<p>比如，把光标放在开始的圆括号上，使用下面的命令来删除圆括号内的文字：</p>
-<pre><code class="language-vim">di(
-</code></pre>
-<p>如果是方括号或者是引号，则使用：</p>
-<pre><code class="language-vim">di{
-</code></pre>
-<p>和：</p>
-<pre><code class="language-vim">di&quot;
-</code></pre>
-<h1 id="11-删除指定标记前的内容">11 删除指定标记前的内容</h1>
-<p>和删除标记内部有些相似，但目的不同。命令如下：</p>
-<pre><code class="language-vim">dt[标记]
-</code></pre>
-<p>会删除所有光标和标记之间的内容（保持标记不动），如果在同一行有这个标记的话。例如</p>
-<pre><code class="language-vim">dt.
-</code></pre>
-<p>会删除至句子的末尾，但保持 <code>.</code> 不动。</p>
-<h1 id="12-把-vim-变为十六进制编辑器">12 把 Vim 变为十六进制编辑器</h1>
-<p>这不是我最喜欢的窍门，但有时会很有趣。你可以把 Vim 和 xxd 功能连起来来把文件转换为十六进制模式。命令如下：<code>:%!xxd</code><br>
-<img src="https://tdmaker.github.io/faded//post-images/1586412158407.png" alt="" loading="lazy"><br>
-类似的，你可以通过下面的命令恢复原来的状态：</p>
-<pre><code class="language-vim">:%!xxd -r
-</code></pre>
-<h1 id="13-把光标下的文字置于屏幕中央">13 把光标下的文字置于屏幕中央</h1>
-<p>我们所要做的事情如标题所示。如果你想强制滚动屏幕来把光标下的文字置于屏幕的中央，在可视模式中使用命令（译者注：在普通模式中也可以）：</p>
-<pre><code class="language-vim">zz
-</code></pre>
-<h1 id="14-跳到上一个下一个位置">14 跳到上一个／下一个位置</h1>
-<p>当你编辑一个很大的文件时，经常要做的事是在某处进行修改，然后跳到另外一处。如果你想跳回之前修改的地方，使用命令：</p>
-<pre><code class="language-vim">Ctrl+o
-</code></pre>
-<p>来回到之前修改的地方；类似的：</p>
-<pre><code class="language-vim">Ctrl+i
-</code></pre>
-<p>会回退上面的跳动。</p>
-<h1 id="15-把当前文件转化为网页">15 把当前文件转化为网页</h1>
-<p>这会生成一个 HTML 文件来显示文本，并在分开的窗口显示源代码：</p>
-<pre><code class="language-vim">:%TOhtml
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://tdmaker.github.io/faded//post-images/1586413621493.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>

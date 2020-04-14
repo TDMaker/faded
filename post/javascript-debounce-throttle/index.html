@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                关于
+                                JavaScript——防抖和节流
                             </h1>
                             
                                     <!--zh-->
@@ -174,12 +174,18 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2019-01-25</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-14</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">0.1
+                                    href="#">3.9
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">31</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">983</a></span>
                                         
+                                            <span class="post-category">&#x5206;&#x7C7B;:
+                                
+                                <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">JavaScript</a>
+                                
+                            </span>
+                                            
                                                 阅读量:
                                                 <span data-hk-page="current"> - </span>
                                                 
@@ -189,23 +195,129 @@
                         
                         <div class="post-content">
                             <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
+<p><a href="https://juejin.im/post/5b5e724af265da0f4d0d88b2">JS简单实现防抖和节流</a></p>
 </blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+<!-- more -->
+<h1 id="1-防抖-debounce">1 防抖 - debounce</h1>
+<p>其中一种解决方案就是每次用户停止输入后，延迟超过 500ms 时，才去搜索此时的 string，这就是防抖。</p>
+<h2 id="11-原理">1.1 原理</h2>
+<p>将若干个函数调用合成为一次，并在给定时间过去之后仅被调用一次。</p>
+<h2 id="12-代码实现">1.2 代码实现</h2>
+<pre><code class="language-javascript">function debounce(fn, delay) {
+  // 维护一个 timer，用来记录当前执行函数状态
+  let timer = null;
+
+  return function() {
+    // 通过 'this' 和 'arguments' 获取函数的作用域和变量
+    let context = this;
+    let args = arguments;
+    // 清理掉正在执行的函数，并重新执行
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      fn.apply(context, args);
+    }, delay);
+  }
+}
+let flag = 0; // 记录当前函数调用次数
+// 当用户滚动时被调用的函数
+function foo() {
+  flag++;
+  console.log('Number of calls: %d', flag);
+}
+
+// 在 debounce 中包装我们的函数，过 2 秒触发一次
+document.body.addEventListener('scroll', debounce(foo, 2000));
+</code></pre>
+<h2 id="13-解释">1.3 解释</h2>
+<ul>
+<li><code>debounce</code> 函数封装后，返回内部函数。</li>
+<li>每一次事件被触发，都会清除当前的 <code>timer</code> 然后重新设置超时并调用。这会导致每一次高频事件都会取消前一次的超时调用，导致事件处理程序不能被触发。</li>
+<li>只有当高频事件停止，最后一次事件触发的超时调用才能在 <code>delay</code> 时间后执行。</li>
+</ul>
+<h1 id="2-节流-throttle">2 节流 - throttle</h1>
+<p>另一种解决方案比防抖要宽松些，这时我们不想用户一味的输入，而是给用户一些搜索提示，所以在当中限制每过 500ms 就查询一次此时的 string，这就是节流。</p>
+<h2 id="21-原理">2.1 原理</h2>
+<p>节流函数不管事件触发有多频繁，都会保证在规定时间内一定会执行一次真正的事件处理函数。</p>
+<h2 id="22-代码实现">2.2 代码实现</h2>
+<p>代码实现有两种，一种是时间戳，另一种是定时器。</p>
+<h3 id="221-时间戳实现">2.2.1 时间戳实现</h3>
+<pre><code class="language-javascript">function throttle(func, delay){
+  let prev = Date.now();
+  return function(){
+    const context = this;
+    const args    = arguments;
+    const now     = Date.now();
+    if(now - prev &gt;= delay){
+      func.apply(context, args);
+      prev = Date.now();
+    }
+  }
+}
+</code></pre>
+<p>当高频事件触发时，第一次应该会立即执行（给事件绑定函数与真正触发事件的间隔如果大于 <code>delay</code> 的话），而后再怎么频繁触发事件，也都是会每 <code>delay</code> 秒才执行一次。而当最后一次事件触发完毕后，事件也不会再被执行了。</p>
+<h3 id="222-定时器实现">2.2.2 定时器实现</h3>
+<p>当触发事件的时候，我们设置一个定时器，再触发事件的时候，如果定时器存在，就不执行；直到 <code>delay</code> 秒后，定时器执行执行函数，清空定时器，这样就可以设置下个定时器。</p>
+<pre><code class="language-javascript">fucntion throttle(func, delay){
+  let timer = null;
+
+  return funtion(){
+    let context = this;
+    let args    = arguments;
+    if(!timer){
+      timer = setTimeout(function(){
+        func.apply(context, args);
+        timer = null;
+      }, delay);
+    }
+  }
+}
+</code></pre>
+<p>当第一次触发事件时，肯定不会立即执行函数，而是在 delay 秒后才执行。 之后连续不断触发事件，也会每 delay 秒执行一次。 当最后一次停止触发后，由于定时器的 delay 延迟，可能还会执行一次函数。</p>
+<h3 id="223-综合使用时间戳与定时器">2.2.3 综合使用时间戳与定时器</h3>
+<p>完成一个事件触发时立即执行，触发完毕还能执行一次的节流函数。</p>
+<pre><code class="language-javascript">function throttle(func, delay){
+  let timer = null;
+  let startTime = Date.now();
+
+  return function(){
+    let curTime = Date.now();
+    let remaining = delay - (curTime - startTime);
+    const context = this;
+    const args = arguments;
+
+    clearTimeout(timer);
+    if(remaining &lt;= 0){
+      func.apply(context,args);
+      startTime = Date.now();
+    }else{
+      timer = setTimeout(func, remaining);
+    }
+  }
+}
+</code></pre>
+<p>需要在每个 <code>delay</code> 时间中一定会执行一次函数，因此在节流函数内部使用开始时间、当前时间与 <code>delay</code> 来计算 <code>remaining</code>，当 <code>remaining &lt;= 0</code> 时表示该执行函数了，如果还没到时间的话就设定在 <code>remaining</code> 时间后再触发。当然在 <code>remaining</code> 这段时间中如果又一次发生事件，那么会取消当前的计时器，并重新计算一个 <code>remaining</code> 来判断当前状态。</p>
 
                         </div>
                         
                             <div class="post-toc">
                                 <ul class="markdownIt-TOC">
-<li>
+<li><a href="#1-%E9%98%B2%E6%8A%96-debounce">1 防抖 - debounce</a>
 <ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
+<li><a href="#11-%E5%8E%9F%E7%90%86">1.1 原理</a></li>
+<li><a href="#12-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">1.2 代码实现</a></li>
+<li><a href="#13-%E8%A7%A3%E9%87%8A">1.3 解释</a></li>
+</ul>
+</li>
+<li><a href="#2-%E8%8A%82%E6%B5%81-throttle">2 节流 - throttle</a>
+<ul>
+<li><a href="#21-%E5%8E%9F%E7%90%86">2.1 原理</a></li>
+<li><a href="#22-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">2.2 代码实现</a>
+<ul>
+<li><a href="#221-%E6%97%B6%E9%97%B4%E6%88%B3%E5%AE%9E%E7%8E%B0">2.2.1 时间戳实现</a></li>
+<li><a href="#222-%E5%AE%9A%E6%97%B6%E5%99%A8%E5%AE%9E%E7%8E%B0">2.2.2 定时器实现</a></li>
+<li><a href="#223-%E7%BB%BC%E5%90%88%E4%BD%BF%E7%94%A8%E6%97%B6%E9%97%B4%E6%88%B3%E4%B8%8E%E5%AE%9A%E6%97%B6%E5%99%A8">2.2.3 综合使用时间戳与定时器</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -223,7 +335,7 @@
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/about/">https://tdmaker.github.io/faded/post/about/</a></span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/javascript-debounce-throttle/">https://tdmaker.github.io/faded/post/javascript-debounce-throttle/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -238,9 +350,15 @@
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/about/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/about/&sharesource=qzone&title=关于&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/about/&sharesource=weibo&title=关于 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/javascript-debounce-throttle/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/javascript-debounce-throttle/&sharesource=qzone&title=JavaScript——防抖和节流&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392&summary=&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://juejin.im/post/5b5e724af265da0f4d0d88b2&#34;&gt;JS简单实现防抖和节流&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+"><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/javascript-debounce-throttle/&sharesource=weibo&title=JavaScript——防抖和节流 + " - " + &lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://juejin.im/post/5b5e724af265da0f4d0d88b2&#34;&gt;JS简单实现防抖和节流&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -258,6 +376,12 @@
                                                                                     <span>&#x6807;&#x7B7E;:</span>
                                                                                     <span class="tag ">
                         
+                        
+                        <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">#
+                    JavaScript
+                        </a>
+                        
+                            
                                 </span>
                                                                                 </div>
                                                                                 <div>
@@ -272,7 +396,15 @@
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
+                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/">
+                                                                                            JavaScript——7 个角度吃透 Lodash 防抖节流原理
+                                                                                        </a>
+                                                                                        
                                                                                             
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/what-is-p-problem-np-problem-and-npc-problem/">
+                                                                                                    什么是 P 问题、NP 问题和 NPC 问题
+                                                                                                </a>
+                                                                                                
                                                                                 </section>
                     </article>
                 </div>

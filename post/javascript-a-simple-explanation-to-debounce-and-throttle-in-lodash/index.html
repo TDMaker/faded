@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                关于
+                                JavaScript——7 个角度吃透 Lodash 防抖节流原理
                             </h1>
                             
                                     <!--zh-->
@@ -174,12 +174,18 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2019-01-25</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-14</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">0.1
+                                    href="#">15.6
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">31</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">3867</a></span>
                                         
+                                            <span class="post-category">&#x5206;&#x7C7B;:
+                                
+                                <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">JavaScript</a>
+                                
+                            </span>
+                                            
                                                 阅读量:
                                                 <span data-hk-page="current"> - </span>
                                                 
@@ -189,23 +195,388 @@
                         
                         <div class="post-content">
                             <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
+<p><a href="https://www.muyiy.cn/blog/7/7.5.html">浅出篇 7 个角度吃透 Lodash 防抖节流原理</a></p>
 </blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+<!-- more -->
+<h1 id="节流函数-throttle">节流函数 Throttle</h1>
+<p>我们先来看一张图，这张图充分说明了 Throttle（节流）和 Debounce（防抖）的区别，以及在不同配置下产生的不同效果，其中 <code>mousemove</code> 事件每 50 ms 触发一次，即下图中的每一小隔是 50 ms。今天这篇文章就从下面这张图开始介绍。<br>
+<img src="https://tdmaker.github.io/faded//post-images/1586843513764.jpg" alt="" loading="lazy"></p>
+<h2 id="角度-1">角度 1</h2>
+<p><code>lodash.throttle(fn, 200, {leading: true, trailing: true})</code></p>
+<h3 id="mousemove-第一次触发">mousemove 第一次触发</h3>
+<p>先来看下 throttle 源码</p>
+<pre><code class="language-javascript">function throttle(func, wait, options) {
+  // 首尾调用默认为 true
+  let leading = true
+  let trailing = true
+
+  if (typeof func !== 'function') {
+    throw new TypeError('Expected a function')
+  }
+  // options 是否是对象
+  if (isObject(options)) {
+    leading = 'leading' in options ? !!options.leading : leading
+    trailing = 'trailing' in options ? !!options.trailing : trailing
+  }
+  // maxWait 为 wait 的防抖函数
+  return debounce(func, wait, {
+    leading,
+    trailing,
+    'maxWait': wait,
+  })
+}
+</code></pre>
+<p>所以 <code>throttle(fn, 200, {leading: true, trailing: true})</code> 返回内容是 <code>debounce(fn, 200, {leading: true, trailing: true, maxWait: 200})</code>，多了 <code>maxWait: 200</code> 这部分。</p>
+<p>先打个预防针，后面即将开始比较难的部分，看下 <code>debounce</code> 入口函数。</p>
+<pre><code class="language-javascript">// 入口函数，返回此函数
+function debounced(...args) {
+  // 获取当前时间
+  const time = Date.now()
+  // 判断此时是否应该执行 func 函数
+  const isInvoking = shouldInvoke(time)
+
+  // 赋值给闭包，用于其他函数调用
+  lastArgs = args
+  lastThis = this
+  lastCallTime = time
+
+  // 执行
+  if (isInvoking) {
+    // 无 timerId 的情况有两种：
+    // 1、首次调用 
+    // 2、trailingEdge 执行过函数
+    if (timerId === undefined) {
+      return leadingEdge(lastCallTime)
+    }
+    
+    // 如果设置了最大等待时间，则立即执行 func
+    // 1、开启定时器，到时间后触发 trailingEdge 这个函数。
+    // 2、执行 func，并返回结果
+    if (maxing) {
+      // 循环定时器中处理调用
+      timerId = startTimer(timerExpired, wait)
+      return invokeFunc(lastCallTime)
+    }
+  }
+  // 一种特殊情况，trailing 设置为 true 时，前一个 wait 的 trailingEdge 已经执行了函数
+  // 此时函数被调用时 shouldInvoke 返回 false，所以要开启定时器
+  if (timerId === undefined) {
+    timerId = startTimer(timerExpired, wait)
+  }
+  // 不需要执行时，返回结果
+  return result
+}
+</code></pre>
+<p>对于 <code>debounce(fn, 200, {leading: true, trailing: true, maxWait: 200})</code> 来说，会经历如下过程。</p>
+<ol>
+<li><code>shouldInvoke(time)</code> 中，因为满足条件 <code>lastCallTime === undefined</code>，所以返回 <code>true</code>。</li>
+<li><code>lastCallTime = time</code>，所以 <code>lastCallTime</code> 等于当前时间，假设为 <code>0</code>。</li>
+<li><code>timerId === undefined</code> 满足，执行 <code>leadingEdge(lastCallTime)</code> 方法。</li>
+</ol>
+<pre><code class="language-javascript">// 执行连续事件刚开始的那次回调
+function leadingEdge(time) {
+  // 1、设置上一次执行 func 的时间
+  lastInvokeTime = time
+  // 2、开启定时器，为了事件结束后的那次回调
+  timerId = startTimer(timerExpired, wait)
+  // 3、如果配置了 leading 执行传入函数 func
+  // leading 来源自 !!options.leading
+  return leading ? invokeFunc(time) : result
+}
+</code></pre>
+<ol start="4">
+<li>在 <code>leadingEdge(time)</code> 中，设置 <code>lastInvokeTime</code> 为当前时间即 <code>0</code>，开启 <code>200</code> 毫秒定时器，执行 <code>invokeFunc(time)</code> 并返回。</li>
+</ol>
+<pre><code class="language-javascript">// 执行 Func 函数
+function invokeFunc(time) {
+  // 获取上一次执行 debounced 的参数
+  const args = lastArgs
+  // 获取上一次的 this
+  const thisArg = lastThis
+
+  // 重置
+  lastArgs = lastThis = undefined
+  lastInvokeTime = time
+  result = func.apply(thisArg, args)
+  return result
+}
+</code></pre>
+<ol start="5">
+<li>在 <code>invokeFunc(time)</code> 中，执行 <code>func.apply(thisArg, args)</code>，即 <code>fn</code> 函数第一次执行，并把结果赋值给 <code>result</code>，便于后续触发时直接返回。同时重置 <code>lastInvokeTime</code> 为当前时间即 <code>0</code>，清空 <code>lastArgs</code> 和 <code>lastThis</code>。</li>
+<li>第一次触发已经完成，注意此时 <code>lastCallTime</code> 和 <code>lastInvokeTime</code> 都为 <code>0</code>，<code>200</code> 毫秒的定时器还在运行中。</li>
+</ol>
+<h3 id="mousemove-第二次触发">mousemove 第二次触发</h3>
+<p><code>50</code> 毫秒后第二次触发到来，此时当前时间 <code>time</code> 为 <code>50</code>，<code>wait</code> 为 <code>200</code>， <code>maxWait</code> 为 <code>200</code>，<code>maxing</code> 为 <code>true</code>，<code>lastCallTime</code> 和 <code>lastInvokeTime</code> 都为 <code>0</code>，<code>timerId</code> 定时器存在，我们来看下执行步骤。</p>
+<pre><code class="language-javascript">function shouldInvoke(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+
+  // 下述 4 种情况返回 true
+  return ( lastCallTime === undefined || 
+          (timeSinceLastCall &gt;= wait) ||
+          (timeSinceLastCall &lt; 0) || 
+          (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) )
+}
+</code></pre>
+<ol>
+<li><code>shouldInvoke(time)</code> 中，<code>timeSinceLastCall</code> 为 <code>50</code>，<code>timeSinceLastInvoke</code> 为 <code>50</code>，<code>4</code> 种条件都不满足，返回 <code>false</code>。</li>
+<li>此时 <code>isInvoking</code> 为 <code>false</code>，同时 <code>timerId === undefined</code> 不满足，直接返回第一次触发时的 <code>result</code>。</li>
+<li>第二次触发完成，并不会执行 <code>fn</code>，只会返回上次执行的结果 <code>result</code>。</li>
+<li>第三次和第四次触发时，效果一样，就不再重复了。</li>
+</ol>
+<h3 id="mousemove-第五次触发">mousemove 第五次触发</h3>
+<p>距第一次触发 <code>200</code> 毫秒后第五次触发到来，此时当前时间 <code>time</code> 为 <code>200</code>，<code>wait</code> 为 <code>200</code>， <code>maxWait</code> 为 <code>200</code>，<code>maxing</code> 为 <code>true</code>，<code>lastCallTime</code> 为 <code>150</code>，<code>lastInvokeTime</code> 为 <code>0</code>，<code>timerId</code> 定时器存在，我们来看下执行步骤。</p>
+<ol>
+<li><code>shouldInvoke(time)</code> 中，<code>timeSinceLastInvoke</code> 为 <code>200</code>，满足 <code>(maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait)</code>，所以返回 <code>true</code>。</li>
+</ol>
+<pre><code class="language-javascript">// debounced 方法中执行到这部分
+if (maxing) {
+  // 循环定时器中处理调用
+  timerId = startTimer(timerExpired, wait)
+  return invokeFunc(lastCallTime)
+}
+</code></pre>
+<ol start="2">
+<li>满足 <code>maxing</code> 条件，重新开启 <code>200</code> 毫秒的定时器，并执行 <code>invokeFunc(lastCallTime)</code> 函数。</li>
+<li><code>invokeFunc(time)</code> 中，重置 <code>lastInvokeTime</code> 为当前时间即 <code>200</code>，清空 <code>lastArgs</code> 和 <code>lastThis</code>。</li>
+<li>第六、七、八次触发时，同第二次触发效果一致，就不再重复了。</li>
+</ol>
+<h3 id="mousemove-停止触发">mousemove 停止触发</h3>
+<p>假设第八次触发之后就停止了滚动，在第八次触发时 <code>time</code> 为 <code>350</code>，所以如果有第九次触发，那么此时是应该执行 <code>fn</code> 的，但是此时 <code>mousemove</code> 已经停止了触发，那么还会执行 <code>fn</code> 吗？答案是依旧执行，因为最开始设置了 <code>{trailing: true}</code>。</p>
+<pre><code class="language-javascript">// 开启定时器
+function startTimer(pendingFunc, wait) {
+  // 没传 wait 时调用 window.requestAnimationFrame()
+  if (useRAF) {
+    // 若想在浏览器下次重绘之前继续更新下一帧动画
+    // 那么回调函数自身必须再次调用 window.requestAnimationFrame()
+    root.cancelAnimationFrame(timerId);
+    return root.requestAnimationFrame(pendingFunc)
+  }
+  // 不使用 RAF 时开启定时器
+  return setTimeout(pendingFunc, wait)
+}
+</code></pre>
+<p>在第五次触发时开启了 <code>200</code> 毫秒的定时器，所以在时间 <code>time</code> 到 <code>400</code> 时会执行 <code>pendingFunc</code>，此时的 <code>pendingFunc</code> 就是 <code>timerExpired</code> 函数，来看下具体的代码。</p>
+<pre><code class="language-javascript">// 定时器回调函数，表示定时结束后的操作
+function timerExpired() {
+  const time = Date.now()
+  // 1、是否需要执行
+  // 执行事件结束后的那次回调，否则重启定时器
+  if (shouldInvoke(time)) {
+    return trailingEdge(time)
+  }
+  // 2、否则 计算剩余等待时间，重启定时器，保证下一次时延的末尾触发
+  timerId = startTimer(timerExpired, remainingWait(time))
+}
+</code></pre>
+<p>此时在 <code>shouldInvoke(time)</code> 中，<code>time</code> 为 <code>400</code>，<code>lastInvokeTime</code> 为 <code>200</code>，<code>timeSinceLastInvoke</code> 为 <code>200</code>，满足 <code>(maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait)</code>，所以返回 <code>true</code>。</p>
+<pre><code class="language-javascript">// 执行连续事件结束后的那次回调
+function trailingEdge(time) {
+  // 清空定时器
+  timerId = undefined
+
+  // trailing 和 lastArgs 两者同时存在时执行
+  // trailing 来源自 'trailing' in options ? !!options.trailing : trailing
+  // lastArgs 标记位的作用，意味着 debounce 至少执行过一次
+  if (trailing &amp;&amp; lastArgs) {
+    return invokeFunc(time)
+  }
+  // 清空参数
+  lastArgs = lastThis = undefined
+  return result
+}
+</code></pre>
+<p>之后执行 <code>trailingEdge(time)</code>，在这个函数中判断 <code>trailing</code> 和 <code>lastArgs</code>，此时这两个条件都是 <code>true</code>，所以会执行 <code>invokeFunc(time)</code>，最终执行函数 <code>fn</code>。</p>
+<p>这里需要说明以下两点：</p>
+<ul>
+<li>如果设置了 <code>{trailing: false}</code>，那么最后一次是不会执行的。对于 <code>throttle</code> 和 <code>debounce</code> 来说，默认值是 <code>true</code>，所以如果没有特意指定 <code>trailing</code>，那么最后一次是一定会执行的。</li>
+<li>对于 <code>lastArgs</code> 来说，执行 <code>debounced</code> 时会赋值，即每次触发都会重新赋值一次，那什么时候清空呢，在 <code>invokeFunc(time)</code> 中执行 <code>fn</code> 函数时重置为 <code>undefined</code>，所以如果 <code>debounced</code> 只触发了一次，即使设置了 <code>{trailing: true}</code> 那也不会再执行 <code>fn</code> 函数，这个就解答了上篇文章留下的第一道思考题。</li>
+</ul>
+<h2 id="角度-2">角度 2</h2>
+<p><code>lodash.throttle(fn, 200, {leading: true, trailing: false})</code><br>
+在<a href="#mousemove-%E5%81%9C%E6%AD%A2%E8%A7%A6%E5%8F%91">角度 1 之 mousemove 停止触发</a>这部分中说到，如果不设置 <code>trailing</code> 和设置 <code>{trailing: true}</code> 效果是一样的，事件回调结束后都会再执行一次传入函数 fn，但是如果设置了 <code>{trailing: false}</code>，那么事件回调结束后是不会再执行 <code>fn</code> 的。</p>
+<p>此时的配置对比角度 1 来说，区别在于设置了 <code>{trailing: false}</code>，所以实际效果对比 1 来说，就是最后不会额外再执行一次，效果见第一张图。</p>
+<h2 id="角度-3">角度 3</h2>
+<p><code>lodash.throttle(fn, 200, {leading: false, trailing: true})</code><br>
+此时的配置和角度 1 相比，区别在于设置了 <code>{leading: false}</code>，所以直接看 <code>leadingEdge(time)</code> 方法就可以了。</p>
+<pre><code class="language-javascript">// 执行连续事件刚开始的那次回调
+function leadingEdge(time) {
+  // 1、设置上一次执行 func 的时间
+  lastInvokeTime = time
+  // 2、开启定时器，为了事件结束后的那次回调
+  timerId = startTimer(timerExpired, wait)
+  // 3、如果配置了 leading 执行传入函数 func
+  // leading 来源自 !!options.leading
+  return leading ? invokeFunc(time) : result
+}
+</code></pre>
+<p>在这里，会开启 <code>200</code> 毫秒的定时器，同时因为 <code>leading</code> 为 <code>false</code>，所以并不会执行 <code>invokeFunc(time)</code>，只会返回 <code>result</code>，此时的 <code>result</code> 值是 <code>undefined</code>。</p>
+<p>这里开启一个定时器的目的是为了事件结束后的那次回调，即如果设置了 <code>{trailing: true}</code> 那么最后一次回调将执行传入函数 <code>fn</code>，哪怕 <code>debounced</code> 函数只触发一次。</p>
+<p>这里指定了 <code>{leading: false}</code>，那么 <code>leading</code> 的初始值是什么呢？在 <code>debounce</code> 中是 <code>false</code>，在 <code>throttle</code> 中是 <code>true</code>。所以在 <code>throttle</code> 中不需要刚开始就触发时，必须指定 <code>{leading: false}</code>，在 <code>debounce</code> 中就不需要了，默认不触发。</p>
+<h1 id="防抖函数-debounce">防抖函数 Debounce</h1>
+<h2 id="角度-4">角度 4</h2>
+<p><code>lodash.debounce(fn, 200, {leading: false, trailing: true})</code></p>
+<p>此时相比较 <code>throttle</code> 来说，缺少了 <code>maxWait</code> 值，所以具体触发过程中的判断就不一样了，来详细看一遍。</p>
+<ol>
+<li>在入口函数 <code>debounced</code> 中，执行 <code>shouldInvoke(time)</code>，前面讨论过因为第一次触发所以会返回 <code>true</code>，之后执行 <code>leadingEdge(lastCallTime)</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 执行连续事件刚开始的那次回调
+function leadingEdge(time) {
+  // 1、设置上一次执行 func 的时间
+  lastInvokeTime = time
+  // 2、开启定时器，为了事件结束后的那次回调
+  timerId = startTimer(timerExpired, wait)
+  // 3、如果配置了 leading 执行传入函数 func
+  // leading 来源自 !!options.leading
+  return leading ? invokeFunc(time) : result
+}
+</code></pre>
+<ol start="2">
+<li>在 <code>leadingEdge</code> 中，因为 <code>leading</code> 为 <code>false</code>，所以并不执行 <code>fn</code>，只开启 <code>200</code> 毫秒的定时器，并返回 <code>undefined</code>。此时 <code>lastInvokeTime</code> 为当前时间，假设为 <code>0</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 判断此时是否应该执行 func 函数
+function shouldInvoke(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+
+  // 下述 4 种情况返回 true
+  return ( lastCallTime === undefined || 
+          (timeSinceLastCall &gt;= wait) ||
+          (timeSinceLastCall &lt; 0) || 
+          (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) )
+}
+</code></pre>
+<ol start="3">
+<li>之后每次触发时，<code>timeSinceLastCall</code> 总是为 <code>50</code> 毫秒，<code>maxing</code> 为 <code>false</code>，所以 <code>shouldInvoke(time)</code> 总是返回 <code>false</code>，并不会执行传入函数 <code>fn</code>，只返回 <code>result</code>，即为 <code>undefined</code>。</li>
+<li>到现在为止，<code>fn</code> 一次还没有执行，<code>200</code> 毫秒后，定时器回调函数触发，执行 <code>timerExpired</code> 函数。</li>
+</ol>
+<pre><code class="language-javascript">// 定时器回调函数，表示定时结束后的操作
+function timerExpired() {
+  const time = Date.now()
+  // 1、是否需要执行
+  // 执行事件结束后的那次回调，否则重启定时器
+  if (shouldInvoke(time)) {
+    return trailingEdge(time)
+  }
+  // 2、否则 计算剩余等待时间，重启定时器，保证下一次时延的末尾触发
+  timerId = startTimer(timerExpired, remainingWait(time))
+}
+</code></pre>
+<ol start="5">
+<li>此时存在两种情况，第一种是 <code>mousemove</code> 事件一直在触发，根据前面介绍 <code>shouldInvoke(time)</code> 会返回 <code>false</code>，之后就将计算剩余等待时间，重启定时器。时间计算公式为 <code>wait - (time - lastCallTime)</code>，即 <code>200 - 50</code>，所以只要 <code>shouldInvoke(time)</code> 返回 <code>false</code>，就每隔 <code>150</code> 毫秒后执行一次 <code>timerExpired()</code>。</li>
+<li>第二种情况是 <code>mousemove</code> 事件不再触发，因为 <code>timerExpired()</code> 在循环执行，所以肯定会存在一种情况满足 <code>timeSinceLastCall &gt;= wait</code>，即 <code>shouldInvoke(time)</code> 返回 <code>true</code>，终结 <code>timerExpired()</code> 的循环，并执行 <code>trailingEdge(time)</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 执行连续事件结束后的那次回调
+function trailingEdge(time) {
+  // 清空定时器
+  timerId = undefined
+
+  // trailing 和 lastArgs 两者同时存在时执行
+  // trailing 来源自 'trailing' in options ? !!options.trailing : trailing
+  // lastArgs 标记位的作用，意味着 debounce 至少执行过一次
+  if (trailing &amp;&amp; lastArgs) {
+    return invokeFunc(time)
+  }
+  // 清空参数
+  lastArgs = lastThis = undefined
+  return result
+}
+</code></pre>
+<ol start="7">
+<li>在 <code>trailingEdge</code> 中 <code>trailing</code> 和 <code>lastArgs</code> 都是 <code>true</code>，所以会执行 <code>invokeFunc(time)</code>，即执行传入函数 <code>fn</code>。</li>
+<li>所以整个过程中只在最后执行一次传入函数 <code>fn</code>，效果同上面第一张图所示。</li>
+</ol>
+<h3 id="角度-5">角度 5</h3>
+<p><code>lodash.debounce(fn, 200, {leading: true, trailing: false})</code><br>
+此时相比角度 4 来说，差异在于 <code>{leading: true, trailing: false}</code>，但是 <code>wait</code> 和 <code>maxWait</code> 都和角度 4 一致，所以只存在下面 2 种区别，效果同上面第一张图所示。</p>
+<ul>
+<li>区别 1：<code>leadingEdge</code>  中会执行传入函数 <code>fn</code></li>
+<li>区别 2：<code>trailingEdge</code> 中不再执行传入函数 <code>fn</code></li>
+</ul>
+<h3 id="角度-6">角度 6</h3>
+<p><code>lodash.debounce(fn, 200, {leading: true, trailing: true})</code><br>
+此时相比角度 4 来说，差异仅仅在于设置了 <code>{leading: true}</code>，所以只存在一个区别，那就是在 <code>leadingEdge</code> 中会执行传入函数 <code>fn</code>，当然在 <code>trailingEdge</code> 中依旧执行传入函数 <code>fn</code>，所以会出现在 <code>mousemove</code> 事件触发过程中首尾都会执行的情况，效果同上面第一张图所示。</p>
+<p>当然一种情况除外，那就是 <code>mousemove</code> 事件永远只触发一次的情况，关键在于 <code>lastArgs</code> 变量。</p>
+<p>对于 <code>lastArgs</code> 变量来说，在入口函数 <code>debounced</code> 中赋值，即每次触发都会重新赋值一次，那什么时候清空呢，在 <code>invokeFunc(time)</code> 中重置为 <code>undefined</code>，所以如果 <code>debounced</code> 只触发了一次，而且在 <code>{leading: true}</code> 时执行过一次 <code>fn</code>，那么即使设置了 <code>{trailing: true}</code> 也不会再执行传入函数 <code>fn</code>。</p>
+<h3 id="角度-7">角度 7</h3>
+<p><code>lodash.debounce(fn, 200, {leading: false, trailing: true, maxWait: 400})</code><br>
+此时 <code>wait</code> 为 <code>200</code>，<code>maxWait</code> 为 <code>400</code>，<code>maxing</code> 为 <code>true</code>，我们来看下执行过程。</p>
+<ol>
+<li>第一次触发时，因为 <code>{leading: false}</code>，所以肯定不会执行 <code>fn</code>，此时开启了一个 <code>200</code> 毫秒的定时器。</li>
+</ol>
+<pre><code class="language-javascript">// 判断此时是否应该执行 func 函数
+function shouldInvoke(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+
+  // 下述 4 种情况返回 true
+  return ( lastCallTime === undefined || 
+          (timeSinceLastCall &gt;= wait) ||
+          (timeSinceLastCall &lt; 0) || 
+          (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) )
+}
+</code></pre>
+<ol start="2">
+<li>之后每隔 <code>50</code> 毫秒触发一次，每次都会执行 <code>shouldInvoke(time)</code> 函数，只有在第 <code>400</code> 毫秒时，才会满足 <code>maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait</code>，返回 <code>true</code>。</li>
+</ol>
+<pre><code class="language-javascript">// 计算仍需等待的时间
+function remainingWait(time) {
+  // 当前时间距离上一次调用 debounce 的时间差
+  const timeSinceLastCall = time - lastCallTime
+  // 当前时间距离上一次执行 func 的时间差
+  const timeSinceLastInvoke = time - lastInvokeTime
+  // 剩余等待时间
+  const timeWaiting = wait - timeSinceLastCall
+
+  // 是否设置了最大等待时间
+	// 是（节流）：返回「剩余等待时间」和「距上次执行 func 的剩余等待时间」中的最小值
+	// 否：返回剩余等待时间
+  return maxing
+    ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
+  	: timeWaiting
+}
+</code></pre>
+<ol start="3">
+<li>但是在这之前的第 <code>200</code> 毫秒，定时器触发回调函数，执行 <code>timerExpired</code>，因为此时 <code>shouldInvoke(time)</code> 返回 <code>false</code>，所以会重新计算剩余等待时间并重启计时器，其中 <code>timeWaiting</code> 是 <code>150</code> 毫秒，<code>maxWait - timeSinceLastInvoke</code> 是 <code>200</code> 毫秒，所以计算结果是 <code>150</code> 毫秒。</li>
+<li><code>150</code> 毫秒之后，即自开始之后的第 <code>350</code> 毫秒时，会重新计算时间，其中 <code>timeWaiting</code> 依旧是 <code>150</code> 毫秒，<code>maxWait - timeSinceLastInvoke</code> 是 <code>50</code> 毫秒，所以重新开启 <code>50</code> 毫秒的定时器，即在第 <code>400</code> 毫秒时触发。</li>
+<li>此时会发现定时器触发的时间是第 <code>400</code> 毫秒，<code>shouldInvoke(time)</code> 中返回 <code>true</code> 的时间也是在第 <code>400</code> 毫秒，为什么要这样呢？这样会冲突吗？首先定时器剩余时间判断和 <code>shouldInvoke(time)</code> 判断中，只要有一处满足执行 <code>fn</code> 条件，就会立马执行，同时 <code>lastInvokeTime</code> 值也会发生改变，所以另一处判断就不会生效了。另外本身定时器是不精准的，所以通过 <code>Math.min(timeWaiting, maxWait - timeSinceLastInvoke)</code> 取最小值的方式来减少误差。</li>
+<li>于此同时，需要在 <code>debounced</code> 入口函数添加这么一句 <code>if (timerId === undefined) {timerId = startTimer(timerExpired, wait)}</code>，避免 <code>trailingEdge</code> 执行后定时器被清空。</li>
+<li>最终效果和节流是一样的，只是时间间隔变大了而已，具体效果同第一张图所示。</li>
+</ol>
 
                         </div>
                         
                             <div class="post-toc">
                                 <ul class="markdownIt-TOC">
-<li>
+<li><a href="#%E8%8A%82%E6%B5%81%E5%87%BD%E6%95%B0-throttle">节流函数 Throttle</a>
 <ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
+<li><a href="#%E8%A7%92%E5%BA%A6-1">角度 1</a>
+<ul>
+<li><a href="#mousemove-%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%A7%A6%E5%8F%91">mousemove 第一次触发</a></li>
+<li><a href="#mousemove-%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%A7%A6%E5%8F%91">mousemove 第二次触发</a></li>
+<li><a href="#mousemove-%E7%AC%AC%E4%BA%94%E6%AC%A1%E8%A7%A6%E5%8F%91">mousemove 第五次触发</a></li>
+<li><a href="#mousemove-%E5%81%9C%E6%AD%A2%E8%A7%A6%E5%8F%91">mousemove 停止触发</a></li>
+</ul>
+</li>
+<li><a href="#%E8%A7%92%E5%BA%A6-2">角度 2</a></li>
+<li><a href="#%E8%A7%92%E5%BA%A6-3">角度 3</a></li>
+</ul>
+</li>
+<li><a href="#%E9%98%B2%E6%8A%96%E5%87%BD%E6%95%B0-debounce">防抖函数 Debounce</a>
+<ul>
+<li><a href="#%E8%A7%92%E5%BA%A6-4">角度 4</a>
+<ul>
+<li><a href="#%E8%A7%92%E5%BA%A6-5">角度 5</a></li>
+<li><a href="#%E8%A7%92%E5%BA%A6-6">角度 6</a></li>
+<li><a href="#%E8%A7%92%E5%BA%A6-7">角度 7</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -223,7 +594,7 @@
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/about/">https://tdmaker.github.io/faded/post/about/</a></span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/">https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -238,9 +609,15 @@
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/about/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/about/&sharesource=qzone&title=关于&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/about/&sharesource=weibo&title=关于 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/&sharesource=qzone&title=JavaScript——7 个角度吃透 Lodash 防抖节流原理&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392&summary=&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.muyiy.cn/blog/7/7.5.html&#34;&gt;浅出篇 7 个角度吃透 Lodash 防抖节流原理&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+"><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/javascript-a-simple-explanation-to-debounce-and-throttle-in-lodash/&sharesource=weibo&title=JavaScript——7 个角度吃透 Lodash 防抖节流原理 + " - " + &lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.muyiy.cn/blog/7/7.5.html&#34;&gt;浅出篇 7 个角度吃透 Lodash 防抖节流原理&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586847121392 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -258,6 +635,12 @@
                                                                                     <span>&#x6807;&#x7B7E;:</span>
                                                                                     <span class="tag ">
                         
+                        
+                        <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">#
+                    JavaScript
+                        </a>
+                        
+                            
                                 </span>
                                                                                 </div>
                                                                                 <div>
@@ -273,6 +656,10 @@
                                                                                 <section class="post-nav">
                                                                                     
                                                                                             
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/javascript-debounce-throttle/">
+                                                                                                    JavaScript——防抖和节流
+                                                                                                </a>
+                                                                                                
                                                                                 </section>
                     </article>
                 </div>
