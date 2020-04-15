@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                《雷神之锤 3》中的平方根算法
+                                JavaScript——闭包实际场景应用
                             </h1>
                             
                                     <!--zh-->
@@ -174,15 +174,15 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-11</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-15</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">2.7
+                                    href="#">2.6
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">648</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">544</a></span>
                                         
                                             <span class="post-category">&#x5206;&#x7C7B;:
                                 
-                                <a href="https://tdmaker.github.io/faded/tag/algorithm/">算法</a>
+                                <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">JavaScript</a>
                                 
                             </span>
                                             
@@ -194,44 +194,167 @@
                         </header>
                         
                         <div class="post-content">
-                            <p>《雷神之锤 3》的作者是约翰卡马克，早前，《雷神之锤 3》的源码公开。卡马克大神有一段代码，简直是吊炸天。</p>
-<pre><code class="language-c">float Q_rsqrt(float number)
-{
-    long i;
-    float x2, y;
-    const float threehalfs = 1.5F;
-    x2 = number * 0.5F;
-    y = number;
-    i = *(long) &amp;y; // evil floating point bit level hacking
-    i = 0x5f3759df - (i &gt;&gt; 1); // what the fuck?
-    y= *(float*) &amp;i;
-    y = y * (threehalfs - (x2 * y * y)); //1st iteration
-    // y = y * (threehalfs - (x2 * y * y)); // 2nd iteration, this can be removed
-    #ifndef Q_3VM
-    #ifdef __linux__
-    assert(!isnan(y)); //bk010122 - FPE?
-    #endif
-    #endif
-    return y;
+                            <h1 id="1-函数防抖">1. 函数防抖</h1>
+<p>比如要缩放窗口 触发 <code>onresize</code> 事件 需要在这时候做一件事情,但是我们希望拖动的时候只触发一次,比如：</p>
+<pre><code class="language-javascript">window.onresize = function () {
+    console.log('onresize')//只想触发一次
 }
 </code></pre>
-<p>这段代码，据说主要用处是把一个数开平方并且取倒。经过测试之后，据说上面这段代码，尽然比 <code>(float)(1.0/sqrt(x))</code> 更快，而且是快 4 倍。</p>
-<p>具体的实现过程比较复杂，下面是实现过程。</p>
-<p>函数返回 <code>1 / sqr(x)</code>，这个函数在图像处理中比 <code>sqrt(x)</code> 更有用。<br>
-注意到这个函数只用了一次迭代！（其实就是根本没用迭代，直接运算）。编译，实验，这个函数不仅工作的很好，而且比标准的 <code>sqrt()</code> 函数快 4 倍！要知道，编译器自带的函数，可是经过严格仔细的汇编优化的啊！<br>
-这个简洁的函数，最核心，也是最让人费解的，就是标注了 &quot;what the fuck?&quot; 的一句<br>
-<code>i = 0x5f3759df - (i &gt;&gt; 1);</code> 再加上 <code>y = y * ( threehalfs - (x2 * y * y));</code> 两句话就完成了开方运算!而且注意到，核心那句是定点移位运算，速度极快!特别在很多没有乘法指令的 <code>RISC</code>结构 CPU上，这样做是极其高效的。算法的原理其实不复杂就是牛顿迭代法用 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>−</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><msup><mi>f</mi><mo mathvariant="normal">′</mo></msup><mo>(</mo><mi>x</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x-f(x)f&#x27;(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.001892em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span> 不断的逼近 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">f(x)=a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span></span></span></span> 的根。<br>
-简单来说比如求平方根，<code>f(x) = x ^ 2 = a</code>，<code>f'(x) = 2 * x</code>，<code>f(x) / f'(x) = x / 2</code>， 把 <code>f(x)</code> 代入 <code>x - f(x) / f'(x)</code> 后有 <code>(x + a / x) / 2</code>，现在我们选 <code>a = 5</code>，选一个猜测值比如 2，<br>
-那么我们可以这么算<br>
-<code>5 / 2 = 2.5; (2.5 + 2) / 2 = 2.25; 5 / 2 .25 = xxx; (2.25 + xxx) / 2 = xxxx ...</code><br>
-这样反复迭代下去，结果必定收敛于 <code>sqrt(5)</code>，没错，一般的求平方根都是这么算的<br>
-但是卡马克（quake 3 作者）真正牛B的地方是他选择了一个神秘的常数 <code>0x5f3759df</code> 来计算那个猜测值<br>
-就是我们加注释的那一行，那一行算出的值非常接近 <code>1 / sqrt(n)</code>，这样我们只需要 2 次牛顿迭代就可以达到我们所需要的精度。</p>
+<h2 id="一般方法">一般方法</h2>
+<pre><code class="language-javascript">window.onresize = function () {
+    debounce(fn, 1000)
+}
+var fn = function () {
+    console.log('fn')
+}
+var time = ''
+function debounce(fn, timeLong) {
+    if (time) {
+        clearTimeout(time)
+        time = ''
+    }
+
+    time = setTimeout(function () {
+        fn()
+    }, timeLong)
+}
+</code></pre>
+<h2 id="闭包">闭包</h2>
+<pre><code class="language-javascript">window.onresize = debounce(fn, 500)
+function debounce(fn) {
+    var timer = null
+    return function () {
+        if (timer) {     //timer第一次执行后会保存在内存里 永远都是执行器 直到最后被触发
+            clearTimeout(timer)
+            timer = null
+        }
+        timer = setTimeout(function () {
+            fn()
+        }, 1000)
+    }
+
+}
+var fn = function () {
+
+    console.log('fn')
+}
+</code></pre>
+<h1 id="2-使用闭包设计单例模式">2 使用闭包设计单例模式</h1>
+<pre><code class="language-javascript">class CreateUser {
+    constructor(name) {
+        this.name = name;
+        this.getName();
+    }
+    getName() {
+        return this.name;
+    }
+}
+// 代理实现单例模式
+var ProxyMode = (function () {
+    var instance = null;
+    return function (name) {
+        if (!instance) {
+            instance = new CreateUser(name);
+        }
+        return instance;
+    }
+})();
+// 测试单体模式的实例
+var a = ProxyMode(&quot;aaa&quot;);
+var b = ProxyMode(&quot;bbb&quot;);
+// 因为单体模式是只实例化一次，所以下面的实例是相等的
+console.log(a === b);    //true
+</code></pre>
+<h1 id="3-为多个组件独立属性">3 为多个组件独立属性</h1>
+<p>假如我现在要在页面中使用 <code>Echarts</code>画 6 个线状图，需要 6 个容器。需要为每个容器元素声明一个独立 <code>id</code>，不然会混乱。</p>
+<pre><code class="language-typescript">constructor(){
+    this.state = { id: &quot;EchartsLine&quot; + Util.clourse() };
+}
+componentDidMount() {
+    this.myEChart = echarts.init(document.getElementById(this.state.id));//不同 id  
+}
+</code></pre>
+<pre><code class="language-html">&lt;div id={this.state.id} className='echarts-line'&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-javascript">clourse(){
+    let clourse = (function () {
+        var a = 1;
+        return function () {
+            return a++;
+        }
+    })(this);
+    this.clourse = clourse;
+}
+//使用数字命名 不用害怕被篡改
+</code></pre>
+<h1 id="4-设置私有变量">4 设置私有变量</h1>
+<p>内部属性在 <code>Java</code> 里使用 <code>private</code> 就可以，但是 <code>JS</code> 还没有这个东东。</p>
+<pre><code class="language-javascript">let _width = Symbol();
+class Private {
+    constructor(s) {
+        this[_width] = s
+    }
+    foo() {
+        console.log(this[_width])
+    }
+}
+var p = new Private(&quot;50&quot;);
+p.foo();
+console.log(p[_width]); //可以拿到
+</code></pre>
+<pre><code class="language-javascript">// 赋值到闭包里
+let sque = (function () {
+    let _width = Symbol();
+    class Squery {
+        constructor(s) {
+            this[_width] = s
+        }
+
+        foo() {
+            console.log(this[_width])
+        }
+    }
+    return Squery
+})();
+
+let ss = new sque(20);
+ss.foo();
+console.log(ss[_width])
+</code></pre>
+<h1 id="5-拿到正确的值">5 拿到正确的值</h1>
+<pre><code class="language-javascript">for (var i = 0; i &lt; 10; i++) {
+    setTimeout(function () {
+        console.log(i) // 10 个 10
+    }, 1000)
+}
+</code></pre>
+<p>遇到这种问题 如何用解决呢？</p>
+<pre><code class="language-javascript">for (var i = 0; i &lt; 10; i++) {
+    ((j) =&gt; {
+        setTimeout(function () {
+            console.log(j)//1-10
+        }, 1000)
+    })(i)
+}
+</code></pre>
+<p>原理是 声明了10个自执行函数，保存当时的值到内部。</p>
 
                         </div>
                         
                             <div class="post-toc">
-                                
+                                <ul class="markdownIt-TOC">
+<li><a href="#1-%E5%87%BD%E6%95%B0%E9%98%B2%E6%8A%96">1. 函数防抖</a>
+<ul>
+<li><a href="#%E4%B8%80%E8%88%AC%E6%96%B9%E6%B3%95">一般方法</a></li>
+<li><a href="#%E9%97%AD%E5%8C%85">闭包</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%BD%BF%E7%94%A8%E9%97%AD%E5%8C%85%E8%AE%BE%E8%AE%A1%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F">2 使用闭包设计单例模式</a></li>
+<li><a href="#3-%E4%B8%BA%E5%A4%9A%E4%B8%AA%E7%BB%84%E4%BB%B6%E7%8B%AC%E7%AB%8B%E5%B1%9E%E6%80%A7">3 为多个组件独立属性</a></li>
+<li><a href="#4-%E8%AE%BE%E7%BD%AE%E7%A7%81%E6%9C%89%E5%8F%98%E9%87%8F">4 设置私有变量</a></li>
+<li><a href="#5-%E6%8B%BF%E5%88%B0%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%80%BC">5 拿到正确的值</a></li>
+</ul>
+
                             </div>
                             
                                 
@@ -245,7 +368,7 @@
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/">https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/</a></span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/javascript-closure-application-scenarios/">https://tdmaker.github.io/faded/post/javascript-closure-application-scenarios/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -260,9 +383,9 @@
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/&sharesource=qzone&title=《雷神之锤 3》中的平方根算法&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/&sharesource=weibo&title=《雷神之锤 3》中的平方根算法 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/javascript-closure-application-scenarios/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/javascript-closure-application-scenarios/&sharesource=qzone&title=JavaScript——闭包实际场景应用&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638&summary="><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/javascript-closure-application-scenarios/&sharesource=weibo&title=JavaScript——闭包实际场景应用 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -281,8 +404,8 @@
                                                                                     <span class="tag ">
                         
                         
-                        <a href="https://tdmaker.github.io/faded/tag/algorithm/">#
-                    算法
+                        <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">#
+                    JavaScript
                         </a>
                         
                             
@@ -300,13 +423,13 @@
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/a-beautiful-big-o-cheatsheet/">
-                                                                                            一个漂亮的大 O 速查表
+                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/how-to-forget-about-jquery-and-start-using-native/">
+                                                                                            忘记 jQuery 使用原生接口
                                                                                         </a>
                                                                                         
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/vim-common-commands/">
-                                                                                                    Vim——常用命令大全
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/javascript-closure-introduction/">
+                                                                                                    JavaScript——闭包简介
                                                                                                 </a>
                                                                                                 
                                                                                 </section>

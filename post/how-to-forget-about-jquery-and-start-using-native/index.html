@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                《雷神之锤 3》中的平方根算法
+                                忘记 jQuery 使用原生接口
                             </h1>
                             
                                     <!--zh-->
@@ -174,15 +174,15 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-11</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-15</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">2.7
+                                    href="#">3.5
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">648</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">673</a></span>
                                         
                                             <span class="post-category">&#x5206;&#x7C7B;:
                                 
-                                <a href="https://tdmaker.github.io/faded/tag/algorithm/">算法</a>
+                                <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">JavaScript</a>
                                 
                             </span>
                                             
@@ -194,44 +194,214 @@
                         </header>
                         
                         <div class="post-content">
-                            <p>《雷神之锤 3》的作者是约翰卡马克，早前，《雷神之锤 3》的源码公开。卡马克大神有一段代码，简直是吊炸天。</p>
-<pre><code class="language-c">float Q_rsqrt(float number)
-{
-    long i;
-    float x2, y;
-    const float threehalfs = 1.5F;
-    x2 = number * 0.5F;
-    y = number;
-    i = *(long) &amp;y; // evil floating point bit level hacking
-    i = 0x5f3759df - (i &gt;&gt; 1); // what the fuck?
-    y= *(float*) &amp;i;
-    y = y * (threehalfs - (x2 * y * y)); //1st iteration
-    // y = y * (threehalfs - (x2 * y * y)); // 2nd iteration, this can be removed
-    #ifndef Q_3VM
-    #ifdef __linux__
-    assert(!isnan(y)); //bk010122 - FPE?
-    #endif
-    #endif
-    return y;
+                            <p><a href="https://www.jeffjade.com/2015/11/25/2015-11-31-jQuery-vs-javaScript/">jQuery VS JavaScript原生API</a></p>
+<!-- more -->
+<h1 id="1-选择元素">1 选择元素</h1>
+<pre><code class="language-javascript">// jQuery  
+var els = $('.el');  
+//==========================================================//
+// 原生方法  
+var els = document.querySelectorAll('.el');  
+// 函数法  
+var $ = function (el) {  
+ return document.querySelectorAll(el);  
+}  
+var els = $('.el');
+</code></pre>
+<h1 id="2-创建元素">2 创建元素</h1>
+<pre><code class="language-javascript">// jQuery  
+var newEl = $('&lt;div/&gt;');  
+//==========================================================//
+// 原生方法  
+var newEl = document.createElement('div');
+</code></pre>
+<h1 id="3-添加-移除-切换类">3 添加 / 移除 / 切换类</h1>
+<pre><code class="language-javascript">// jQuery  
+$('.el').addClass('class');  
+$('.el').removeClass('class');  
+$('.el').toggleClass('class');  
+//==========================================================//
+// 原生方法  
+document.querySelector('.el').classList.add('class');  
+document.querySelector('.el').classList.remove('class');
+document.querySelector('.el').classList.toggle('class');
+</code></pre>
+<p>4 判断是否包含类</p>
+<pre><code class="language-javascript">// jQuery
+$('.el').hasClass('className');
+$('.el').has('.className'); //也可以用来 判断是否包含某个元素
+//==========================================================//
+// 原生方法(1)
+_hasClass(document.querySelector('.el'), className);
+function _hasClass( elements,cName ){
+    return !!elements.className.match( new RegExp( &quot;(\\s|^)&quot; + cName + &quot;(\\s|$)&quot;) );
+};
+// 原生方法(2)
+if(el.classList.contains(&quot;someClass&quot;)){}
+</code></pre>
+<h1 id="5-添加事件监听器">5 添加事件监听器</h1>
+<pre><code class="language-javascript">// jQuery  
+$('.el').on('event', function() {
+});  
+//==========================================================//  
+// 原生方法  
+[].forEach.call(document.querySelectorAll('.el'), function (el) {  
+  el.addEventListener('event', function() {
+  }, false);
+});
+</code></pre>
+<h2 id="原生-dom绑定事件-优化1-参考here">原生－DOM绑定事件－优化1 参考<a href="https://www.cnblogs.com/coffeedeveloper/p/4811850.html">HERE</a></h2>
+<pre><code class="language-javascript">//DOM绑定事件-之自执行
+var BindEvent = (function () {
+  if ('addEventListener' in document) {
+    return function (dom, event, handle, ex) {
+      dom.addEventListener(event, handle, ex || false);
+    }
+  } else if ('attachEvent' in document) {
+    return function (dom, event, handle) {
+      dom.attachEvent('on' + event, handle);
+    }
+  } else {
+    return function (dom, event, handle) {
+      dom['on' + event] = handle;
+    }
+  }
+})();```
+
+## 原生－DOM绑定事件－优化2
+```javascript
+//DOM绑定事件-之惰性加载(调用方去触发BindEvent之时才去做初始化)//
+var BindEvent = function (dom, event, handle, ex) {
+  if ('addEventListener' in document) {
+    BindEvent = function (dom, event, handle, ex) {
+      dom.addEventListener(event, handle, ex || false);
+    }
+  } else if ('attachEvent' in document) {
+trueBindEvent = function (dom, event, handle) {
+      dom.attachEvent('on' + event, handle);
+    }
+  } else {
+    BindEvent = function (dom, event, handle) {
+      dom['on' + event] = handle;
+    }
+  }
+  BindEvent(dom, event, handle, ex);
+};
+</code></pre>
+<h1 id="6-设置-获取属性">6 设置 / 获取属性</h1>
+<pre><code class="language-javascript">// jQuery  
+$('.el').filter(':first').attr('key', 'value');  
+$('.el').filter(':first').attr('key');  
+//==========================================================//
+// 原生方法  
+document.querySelector('.el').setAttribute('key', 'value');  
+document.querySelector('.el').getAttribute('key');
+</code></pre>
+<h1 id="7-附加内容append">7 附加内容（Append）</h1>
+<pre><code class="language-javascript">// jQuery  
+$('.el').append($('&lt;div/&gt;'));  
+//==========================================================//
+// 原生方法  
+document.querySelector('.el').appendChild(document.createElement('div'));
+</code></pre>
+<h1 id="8-克隆元素">8 克隆元素</h1>
+<pre><code class="language-javascript">// jQuery  
+var clonedEl = $('.el').clone();  
+//==========================================================//
+// 原生方法  
+var clonedEl = document.querySelector('.el').cloneNode(true);
+</code></pre>
+<h1 id="9-移除元素">9 移除元素</h1>
+<pre><code class="language-javascript">// jQuery  
+$('.el').remove();  
+//==========================================================//
+// 原生方法  
+remove('.el');  
+function remove(el) {  
+  var toRemove = document.querySelector(el);  
+  toRemove.parentNode.removeChild(toRemove);  
 }
 </code></pre>
-<p>这段代码，据说主要用处是把一个数开平方并且取倒。经过测试之后，据说上面这段代码，尽然比 <code>(float)(1.0/sqrt(x))</code> 更快，而且是快 4 倍。</p>
-<p>具体的实现过程比较复杂，下面是实现过程。</p>
-<p>函数返回 <code>1 / sqr(x)</code>，这个函数在图像处理中比 <code>sqrt(x)</code> 更有用。<br>
-注意到这个函数只用了一次迭代！（其实就是根本没用迭代，直接运算）。编译，实验，这个函数不仅工作的很好，而且比标准的 <code>sqrt()</code> 函数快 4 倍！要知道，编译器自带的函数，可是经过严格仔细的汇编优化的啊！<br>
-这个简洁的函数，最核心，也是最让人费解的，就是标注了 &quot;what the fuck?&quot; 的一句<br>
-<code>i = 0x5f3759df - (i &gt;&gt; 1);</code> 再加上 <code>y = y * ( threehalfs - (x2 * y * y));</code> 两句话就完成了开方运算!而且注意到，核心那句是定点移位运算，速度极快!特别在很多没有乘法指令的 <code>RISC</code>结构 CPU上，这样做是极其高效的。算法的原理其实不复杂就是牛顿迭代法用 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>−</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><msup><mi>f</mi><mo mathvariant="normal">′</mo></msup><mo>(</mo><mi>x</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x-f(x)f&#x27;(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.001892em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span> 不断的逼近 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">f(x)=a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span></span></span></span> 的根。<br>
-简单来说比如求平方根，<code>f(x) = x ^ 2 = a</code>，<code>f'(x) = 2 * x</code>，<code>f(x) / f'(x) = x / 2</code>， 把 <code>f(x)</code> 代入 <code>x - f(x) / f'(x)</code> 后有 <code>(x + a / x) / 2</code>，现在我们选 <code>a = 5</code>，选一个猜测值比如 2，<br>
-那么我们可以这么算<br>
-<code>5 / 2 = 2.5; (2.5 + 2) / 2 = 2.25; 5 / 2 .25 = xxx; (2.25 + xxx) / 2 = xxxx ...</code><br>
-这样反复迭代下去，结果必定收敛于 <code>sqrt(5)</code>，没错，一般的求平方根都是这么算的<br>
-但是卡马克（quake 3 作者）真正牛B的地方是他选择了一个神秘的常数 <code>0x5f3759df</code> 来计算那个猜测值<br>
-就是我们加注释的那一行，那一行算出的值非常接近 <code>1 / sqrt(n)</code>，这样我们只需要 2 次牛顿迭代就可以达到我们所需要的精度。</p>
+<h1 id="10-获取父元素">10 获取父元素</h1>
+<pre><code class="language-javascript">// jQuery  
+$('.el').parent();  
+//==========================================================//
+// 原生方法  
+document.querySelector('.el').parentNode;
+</code></pre>
+<h1 id="11-上一个-下一个元素">11 上一个 / 下一个元素</h1>
+<pre><code class="language-javascript">// jQuery  
+$('.el').prev();  
+$('.el').next();  
+//==========================================================//
+// 原生方法  
+document.querySelector('.el').previousElementSibling;  
+document.querySelector('.el').nextElementSibling;
+</code></pre>
+<h1 id="12-修改css属性">12 修改CSS属性</h1>
+<p>总是通过 <code>Javascript</code> 修改和检索 <code>CSS</code> 属性，这样会比使用 <code>jQuery CSS</code> 函数更加简单快速，并且没有任何不必要的代码。</p>
+<pre><code class="language-javascript">//----设置CSS属性----
+/* jQuery */
+  $(el).css({
+    background: &quot;#FF0000&quot;,
+&quot;box-shadow&quot;: &quot;1px 1px 5px 5px red&quot;,
+    width: &quot;100px&quot;,
+    height: &quot;100px&quot;,
+    display: &quot;block&quot;
+  });
+//==========================================================//
+/* 原生 */
+var el = document.querySelector(&quot;.main-content&quot;);
+el.style.background = &quot;#FF0000&quot;;
+el.style.width = &quot;100px&quot;;
+el.style.height = &quot;100px&quot;;
+el.style.display = &quot;block&quot;;
+el.style.boxShadow = &quot;1px 1px 5px 5px red&quot;;
+</code></pre>
+<h1 id="13-xhr-或-ajax">13 XHR 或 Ajax</h1>
+<pre><code class="language-javascript">// jQuery  
+$.get('url', function (data) {  
+});  
+$.post('url', {data: data}, function (data) {  
+});  
+//==========================================================//
+// 原生方法  
+// get  
+var xhr = new XMLHttpRequest();  
+xhr.open('GET', url);  
+xhr.onreadystatechange = function (data) {  
+}  
+xhr.send();  
+// post  
+var xhr = new XMLHttpRequest()  
+xhr.open('POST', url);  
+xhr.onreadystatechange = function (data) {  
+}  
+xhr.send({data: data});
+</code></pre>
 
                         </div>
                         
                             <div class="post-toc">
-                                
+                                <ul class="markdownIt-TOC">
+<li><a href="#1-%E9%80%89%E6%8B%A9%E5%85%83%E7%B4%A0">1 选择元素</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BA%E5%85%83%E7%B4%A0">2 创建元素</a></li>
+<li><a href="#3-%E6%B7%BB%E5%8A%A0-%E7%A7%BB%E9%99%A4-%E5%88%87%E6%8D%A2%E7%B1%BB">3 添加 / 移除 / 切换类</a></li>
+<li><a href="#5-%E6%B7%BB%E5%8A%A0%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E5%99%A8">5 添加事件监听器</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%94%9F-dom%E7%BB%91%E5%AE%9A%E4%BA%8B%E4%BB%B6-%E4%BC%98%E5%8C%961-%E5%8F%82%E8%80%83here">原生－DOM绑定事件－优化1 参考HERE</a></li>
+</ul>
+</li>
+<li><a href="#6-%E8%AE%BE%E7%BD%AE-%E8%8E%B7%E5%8F%96%E5%B1%9E%E6%80%A7">6 设置 / 获取属性</a></li>
+<li><a href="#7-%E9%99%84%E5%8A%A0%E5%86%85%E5%AE%B9append">7 附加内容（Append）</a></li>
+<li><a href="#8-%E5%85%8B%E9%9A%86%E5%85%83%E7%B4%A0">8 克隆元素</a></li>
+<li><a href="#9-%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0">9 移除元素</a></li>
+<li><a href="#10-%E8%8E%B7%E5%8F%96%E7%88%B6%E5%85%83%E7%B4%A0">10 获取父元素</a></li>
+<li><a href="#11-%E4%B8%8A%E4%B8%80%E4%B8%AA-%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0">11 上一个 / 下一个元素</a></li>
+<li><a href="#12-%E4%BF%AE%E6%94%B9css%E5%B1%9E%E6%80%A7">12 修改CSS属性</a></li>
+<li><a href="#13-xhr-%E6%88%96-ajax">13 XHR 或 Ajax</a></li>
+</ul>
+
                             </div>
                             
                                 
@@ -245,7 +415,7 @@
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/">https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/</a></span>
+                                                    <span><a href="https://tdmaker.github.io/faded/post/how-to-forget-about-jquery-and-start-using-native/">https://tdmaker.github.io/faded/post/how-to-forget-about-jquery-and-start-using-native/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -260,9 +430,11 @@
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/&sharesource=qzone&title=《雷神之锤 3》中的平方根算法&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/square-root-algorithm-in-quake-3/&sharesource=weibo&title=《雷神之锤 3》中的平方根算法 + " - " + &pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/how-to-forget-about-jquery-and-start-using-native/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/how-to-forget-about-jquery-and-start-using-native/&sharesource=qzone&title=忘记 jQuery 使用原生接口&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638&summary=&lt;p&gt;&lt;a href=&#34;https://www.jeffjade.com/2015/11/25/2015-11-31-jQuery-vs-javaScript/&#34;&gt;jQuery VS JavaScript原生API&lt;/a&gt;&lt;/p&gt;
+"><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/how-to-forget-about-jquery-and-start-using-native/&sharesource=weibo&title=忘记 jQuery 使用原生接口 + " - " + &lt;p&gt;&lt;a href=&#34;https://www.jeffjade.com/2015/11/25/2015-11-31-jQuery-vs-javaScript/&#34;&gt;jQuery VS JavaScript原生API&lt;/a&gt;&lt;/p&gt;
+&pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586955438638 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -281,8 +453,8 @@
                                                                                     <span class="tag ">
                         
                         
-                        <a href="https://tdmaker.github.io/faded/tag/algorithm/">#
-                    算法
+                        <a href="https://tdmaker.github.io/faded/tag/E9jf1aKKC/">#
+                    JavaScript
                         </a>
                         
                             
@@ -300,13 +472,13 @@
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/a-beautiful-big-o-cheatsheet/">
-                                                                                            一个漂亮的大 O 速查表
+                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/javascript-discover-the-power-of-closures/">
+                                                                                            JavaScript——发现闭包的强大威力
                                                                                         </a>
                                                                                         
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/vim-common-commands/">
-                                                                                                    Vim——常用命令大全
+                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/javascript-closure-application-scenarios/">
+                                                                                                    JavaScript——闭包实际场景应用
                                                                                                 </a>
                                                                                                 
                                                                                 </section>
