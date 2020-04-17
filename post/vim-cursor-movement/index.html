@@ -15,7 +15,7 @@
 <meta name="keywords" content="Hit, Love, Melody">
 <script async src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/css/style.min.css" />
-<link rel="stylesheet" href="https://tdmaker.github.io/faded//styles/main.css" />
+<link rel="stylesheet" href="https://faded.auspicious.space/styles/main.css" />
 <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/itjoker233/Gridea-theme-Chic/assets/media/script/tocbot.min.js"></script>
@@ -58,7 +58,7 @@
     <nav class="navbar">
         <div class="container">
             <div class="navbar-header header-logo">
-                <a href="https://tdmaker.github.io/faded/">
+                <a href="https://faded.auspicious.space">
                     Typhoeus
                 </a>
             </div>
@@ -84,7 +84,7 @@
                         <input id="switch_default" type="checkbox" class="switch_default">
                         <label for="switch_default" class="toggleBtn"></label>
             </div>
-            <form id="gridea-search-form" data-update="1586955562306" action="/search/index.html">
+            <form id="gridea-search-form" data-update="1587135428001" action="/search/index.html">
                 <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
             </form>
         </div>
@@ -95,7 +95,7 @@
             <div class="container">
                 <div class="navbar-header">
                     <div>
-                        <a href="https://tdmaker.github.io/faded/">
+                        <a href="https://faded.auspicious.space">
                             Typhoeus
                         </a>
                         <!--en-->
@@ -103,7 +103,7 @@
                         <!--zh-->
                         <a id="mobile-toggle-theme-zh" class="a zh">&nbsp;&#x6697;&#x9ED1;</a>
                     </div>
-                    <form id="gridea-search-form" data-update="1586955562306" action="/search/index.html">
+                    <form id="gridea-search-form" data-update="1587135428001" action="/search/index.html">
                         <input class="search-input" autocomplete="off" spellcheck="false" name="q" autofocus="true" placeholder="Search...">
                     </form>
                     <!--en-->
@@ -182,7 +182,7 @@
                                         
                                             <span class="post-category">&#x5206;&#x7C7B;:
                                 
-                                <a href="https://tdmaker.github.io/faded/tag/vim/">vim</a>
+                                <a href="https://faded.auspicious.space/tag/vim/">vim</a>
                                 
                             </span>
                                             
@@ -229,13 +229,13 @@ T{char}  :  反向移动到上一个{char}的后一个字符上
 <h1 id="4-精确的文本对象选择">4 精确的文本对象选择</h1>
 <p>这个是一个很NB的功能，完全颠覆了对文本编辑器的认知。<br>
 现在有一个 JS 文件，内容如图：<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586408369240.png" alt="" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586408369240.png" alt="" loading="lazy"><br>
 这里认识 <code>a</code> 和 <code>i</code> 两个命令，不是普通的插入命令，需要和 <code>v</code> 命令配合使用，选中匹配的文本对象。例如在当前光标所在处输入 <code>vi}</code> 会达到以下效果。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586408458485.png" alt="{}内的内容被选中" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586408458485.png" alt="{}内的内容被选中" loading="lazy"><br>
 如果光标的位置在 <code>href</code> 上呢？相同命令下：<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586408537529.png" alt="" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586408537529.png" alt="" loading="lazy"><br>
 如果换做是 <code>a</code> 命令呢？<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586408587971.png" alt="" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586408587971.png" alt="" loading="lazy"><br>
 <code>i</code> 命令可以理解为 inside，即选中匹配符号之间不包含匹配符号的内容。而 <code>a</code> 则选中包含匹配项的内容。<br>
 常见分隔符总结：</p>
 <pre><code class="language-shell">'a)' 或 'ab'  :  一对()
@@ -273,15 +273,15 @@ ap  :  当前段落及一个空行
 </code></pre>
 <h1 id="7-匹配括号间跳转">7 匹配括号间跳转</h1>
 <p>Vim的 <code>%</code> 命令允许光标在一对闭括号间跳转。例如当前光标在 <code>[</code> 上， <code>%</code> 命令可以跳转到对应的 <code>]</code> 上，反过来也一样ok。例如将一对 <code>{}</code> 修改为一对 <code>[]</code>。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586409013523.png" alt="" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586409013523.png" alt="" loading="lazy"><br>
 当前光标在 <code>{</code> 上，输入 <code>%</code> 命令<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586409054358.png" alt="" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586409054358.png" alt="" loading="lazy"><br>
 替换当前光标下的字符，通过 <code>r]</code> 将 <code>}</code> 替换为 <code>]</code>。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586409179661.png" alt="" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586409179661.png" alt="" loading="lazy"><br>
 输入 <code>``</code> 命令，跳转回上次跳转的位置。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586409233002.png" alt="" loading="lazy"><br>
+<img src="https://faded.auspicious.space/post-images/1586409233002.png" alt="" loading="lazy"><br>
 之后再通过 'r[' 将 '{' 转为 '['。<br>
-<img src="https://tdmaker.github.io/faded//post-images/1586409270289.png" alt="" loading="lazy"></p>
+<img src="https://faded.auspicious.space/post-images/1586409270289.png" alt="" loading="lazy"></p>
 
                         </div>
                         
@@ -309,7 +309,7 @@ ap  :  当前段落及一个空行
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://tdmaker.github.io/faded/post/vim-cursor-movement/">https://tdmaker.github.io/faded/post/vim-cursor-movement/</a></span>
+                                                    <span><a href="https://faded.auspicious.space/post/vim-cursor-movement/">https://faded.auspicious.space/post/vim-cursor-movement/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -324,15 +324,15 @@ ap  :  当前段落及一个空行
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://tdmaker.github.io/faded/post/vim-cursor-movement/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://tdmaker.github.io/faded/post/vim-cursor-movement/&sharesource=qzone&title=Vim——光标移动篇&pics=https://tdmaker.github.io/faded//images/avatar.png?v=1586955562306&summary=&lt;blockquote&gt;
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://faded.auspicious.space/post/vim-cursor-movement/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://faded.auspicious.space/post/vim-cursor-movement/&sharesource=qzone&title=Vim——光标移动篇&pics=https://faded.auspicious.space/images/avatar.png?v=1587135428001&summary=&lt;blockquote&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.jianshu.com/p/52b1b41de71f&#34;&gt;Vim常用文档动作命令总结&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 "><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://tdmaker.github.io/faded/post/vim-cursor-movement/&sharesource=weibo&title=Vim——光标移动篇 + " - " + &lt;blockquote&gt;
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://faded.auspicious.space/post/vim-cursor-movement/&sharesource=weibo&title=Vim——光标移动篇 + " - " + &lt;blockquote&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.jianshu.com/p/52b1b41de71f&#34;&gt;Vim常用文档动作命令总结&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
-&pic="https://tdmaker.github.io/faded//images/avatar.png?v=1586955562306 "><i class="fa fa-weibo "></i></a>
+&pic="https://faded.auspicious.space/images/avatar.png?v=1587135428001 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -351,7 +351,7 @@ ap  :  当前段落及一个空行
                                                                                     <span class="tag ">
                         
                         
-                        <a href="https://tdmaker.github.io/faded/tag/vim/">#
+                        <a href="https://faded.auspicious.space/tag/vim/">#
                     vim
                         </a>
                         
@@ -370,12 +370,12 @@ ap  :  当前段落及一个空行
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://tdmaker.github.io/faded/post/vim-key-instruct/">
+                                                                                        <a class="prev" rel="prev" href="https://faded.auspicious.space/post/vim-key-instruct/">
                                                                                             Vim——重要的命令
                                                                                         </a>
                                                                                         
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://tdmaker.github.io/faded/post/bash-key-for-cursor-movement/">
+                                                                                                <a class="next" rel="next" href="https://faded.auspicious.space/post/bash-key-for-cursor-movement/">
                                                                                                     Bash 移动光标快捷键
                                                                                                 </a>
                                                                                                 
@@ -476,7 +476,7 @@ ap  :  当前段落及一个空行
                     CheckVersion();
                     
                     var newDate = new Date();
-                    newDate.setTime(1586955562306);
+                    newDate.setTime(1587135428001);
                     console.log(" Blog Update Time: " + newDate.toLocaleDateString());
                     console.log("\n %c \u26a1Theme:Chic Author's Blog:https://blog.itjoker.cn  Write By ITJoker  \n\n", "color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;");
                 </script>
