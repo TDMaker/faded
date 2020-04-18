@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                笔算平方根
+                                如何优雅地链式取值
                             </h1>
                             
                                     <!--zh-->
@@ -174,15 +174,15 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-11</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-18</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">1.4
+                                    href="#">4.3
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">335</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">919</a></span>
                                         
                                             <span class="post-category">&#x5206;&#x7C7B;:
                                 
-                                <a href="https://faded.auspicious.space/tag/algorithm/">算法</a>
+                                <a href="https://faded.auspicious.space/tag/E9jf1aKKC/">JavaScript</a>
                                 
                             </span>
                                             
@@ -194,25 +194,136 @@
                         </header>
                         
                         <div class="post-content">
-                            <p>我以计算 2016 的算术平方根作为例子。全程用竖式计算。<br>
-首先， 以小数点为基准，每两位数作为一组。像这样写：<br>
-<img src="https://faded.auspicious.space/post-images/1586585643820.png" alt="" loading="lazy"></p>
-<p>注意，平方根的两倍那个位置要往左边写一点，不然后面不够位置。接下来估算第一节，是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>20</mn></mrow><annotation encoding="application/x-tex">20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>4</mn><mn>2</mn></msup><mo>&lt;</mo><mn>20</mn><mo>&lt;</mo><msup><mn>5</mn><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">4^2 \lt 20 \lt 5^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.853208em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，所以在第一节的上面写上 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span>，对应的在左边写上 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>4</mn><mn>2</mn></msup><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">4^2=16</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">6</span></span></span></span> 写到 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>20</mn></mrow><annotation encoding="application/x-tex">20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span></span></span></span> 的下面，减一下，把下一节拉下来：<br>
-<img src="https://faded.auspicious.space/post-images/1586586062853.png" alt="" loading="lazy"></p>
-<p>估计下一位的方法是： <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>416</mn></mrow><annotation encoding="application/x-tex">8?\times?=416</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">1</span><span class="mord">6</span></span></span></span>。因为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>83</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>249</mn></mrow><annotation encoding="application/x-tex">83 \times 3=249</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">4</span><span class="mord">9</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>84</mn><mo>×</mo><mn>4</mn><mo>=</mo><mn>336</mn></mrow><annotation encoding="application/x-tex">84 \times 4=336</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord">3</span><span class="mord">6</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>85</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>425</mn></mrow><annotation encoding="application/x-tex">85 \times 5=425</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">2</span><span class="mord">5</span></span></span></span>， <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>425</mn></mrow><annotation encoding="application/x-tex">425</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">2</span><span class="mord">5</span></span></span></span> 大于 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>416</mn></mrow><annotation encoding="application/x-tex">416</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">1</span><span class="mord">6</span></span></span></span> 了，所以下一位就是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span> 了，更新算式，把下一节拉下来：<br>
-<img src="https://faded.auspicious.space/post-images/1586586335482.png" alt="" loading="lazy"></p>
-<p>再估计下一位： <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>88</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>8000</mn></mrow><annotation encoding="application/x-tex">88? \times ?=8000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span></span></span></span>。 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>888</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>7104</mn></mrow><annotation encoding="application/x-tex">888 \times 8=7104</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mord">1</span><span class="mord">0</span><span class="mord">4</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>889</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>8001</mn></mrow><annotation encoding="application/x-tex">889 \times 9=8001</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">0</span><span class="mord">1</span></span></span></span>， 哎呀，差一点点，还是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 吧：<br>
-<img src="https://faded.auspicious.space/post-images/1586586557307.png" alt="" loading="lazy"><br>
-下一位：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>896</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>89600</mn></mrow><annotation encoding="application/x-tex">896? \times ?=89600</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mord">0</span><span class="mord">0</span></span></span></span>， 由于刚才就差一点点，这次应该是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn></mrow><annotation encoding="application/x-tex">9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span></span></span></span> 了。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8969</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>80721</mn></mrow><annotation encoding="application/x-tex">8969 \times 9=80721</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">7</span><span class="mord">2</span><span class="mord">1</span></span></span></span>，没问题：<br>
-<img src="https://faded.auspicious.space/post-images/1586586738767.png" alt="" loading="lazy"></p>
-<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8978</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>887900</mn></mrow><annotation encoding="application/x-tex">8978? \times ?=887900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">7</span><span class="mord">9</span><span class="mord">0</span><span class="mord">0</span></span></span></span>，凭感觉应该还是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn></mrow><annotation encoding="application/x-tex">9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>89789</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>808101</mn></mrow><annotation encoding="application/x-tex">89789 \times 9=808101</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">8</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">8</span><span class="mord">1</span><span class="mord">0</span><span class="mord">1</span></span></span></span>，OK：<br>
-<img src="https://faded.auspicious.space/post-images/1586586923209.png" alt="" loading="lazy"><br>
-<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>89798</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>7979900</mn></mrow><annotation encoding="application/x-tex">89798? \times ?=7979900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">9</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mord">9</span><span class="mord">7</span><span class="mord">9</span><span class="mord">9</span><span class="mord">0</span><span class="mord">0</span></span></span></span>，这回是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 了。 不过我还是不写下去了, 因为示范了那么多步，大家应该知道步骤了吧？</p>
+                            <blockquote>
+<p><a href="https://juejin.im/post/5ba08483e51d450e99430a7f">如何优雅地链式取值</a></p>
+</blockquote>
+<!-- more -->
+<p>开发中，链式取值是非常正常的操作，如：</p>
+<pre><code class="language-javascript">res.data.goods.list[0].price
+</code></pre>
+<p>但是对于这种操作报出类似于 <code>Uncaught TypeError: Cannot read property 'goods' of undefined</code> 这种错误也是再正常不过了，如果说是 <code>res</code> 数据是自己定义，那么可控性会大一些，但是如果这些数据来自于不同端（如前后端），那么这种数据对于我们来说我们都是不可控的，因此为了保证程序能够正常运行下去，我们需要对此校验：</p>
+<pre><code class="language-javascript">if (res.data.goods.list[0] &amp;&amp; res.data.goods.list[0].price) {
+// your code
+}
+</code></pre>
+<p>如果再精细一点，对于所有都进行校验的话，就会像这样：</p>
+<pre><code class="language-javascript">if (res &amp;&amp; res.data &amp;&amp; res.data.goods &amp;&amp; res.data.goods.list &amp;&amp; res.data.goods.list[0] &amp;&amp; res.data.goods.list[0].price){
+// your code
+}
+</code></pre>
+<p>不敢想象，如果数据的层级再深一点会怎样，这种实现实在是非常不优雅，那么如果优雅地来实现链式取值呢？</p>
+<h1 id="optional-chaining">optional chaining</h1>
+<p>这是一个出于 stage 2 的 ecma 新语法，目前已经有了 babel 的插件 <code>babel-plugin-transform-optional-chaining</code>，这种语法在 <code>swift</code> 中有，可以看下官方给的实例：</p>
+<pre><code class="language-javascript">a?.b                          // undefined if `a` is null/undefined, `a.b` otherwise.
+a == null ? undefined : a.b
+
+a?.[x]                        // undefined if `a` is null/undefined, `a[x]` otherwise.
+a == null ? undefined : a[x]
+
+a?.b()                        // undefined if `a` is null/undefined
+a == null ? undefined : a.b() // throws a TypeError if `a.b` is not a function
+                              // otherwise, evaluates to `a.b()`
+
+a?.()                        // undefined if `a` is null/undefined
+a == null ? undefined : a()  // throws a TypeError if `a` is neither null/undefined, nor a function
+                             // invokes the function `a` otherwise
+</code></pre>
+<h1 id="通过函数解析字符串">通过函数解析字符串</h1>
+<p>我们可以通过函数解析字符串来解决这个问题，这种实现就是 <code>lodash</code> 的 <code>_.get</code> 方法。</p>
+<pre><code class="language-javascript">var object = { a: [{ b: { c: 3 } }] };
+var result = _.get(object, 'a[0].b.c', 1);
+console.log(result);
+// output: 3
+</code></pre>
+<p>实现起来也非常简单，只是简单的字符串解析而已：</p>
+<pre><code class="language-javascript">function get (obj, props, def) {
+    if((obj == null) || obj == null || typeof props !== 'string') return def;
+    const temp = props.split('.');
+    const fieldArr = [].concat(temp);
+    temp.forEach((e, i) =&gt; {
+        if(/^(\w+)\[(\w+)\]$/.test(e)) {
+            const matchs = e.match(/^(\w+)\[(\w+)\]$/);
+            const field1 = matchs[1];
+            const field2 = matchs[2];
+            const index = fieldArr.indexOf(e);
+            fieldArr.splice(index, 1, field1, field2);
+        }
+    })
+    return fieldArr.reduce((pre, cur) =&gt; {
+        const target = pre[cur] || def;
+
+        if(target instanceof Array) {
+            return [].concat(target);
+        }
+        if(target instanceof Object) {
+            return Object.assign({}, target)
+        }
+        return target;
+    }, obj)
+}
+</code></pre>
+<pre><code class="language-javascript">var c = {a: {b : [1,2,3] }}
+get(c ,'a.b')     // [1,2,3]
+get(c, 'a.b[1]')  // 2
+get(c, 'a.d', 12)  // 12
+</code></pre>
+<h1 id="使用解构赋值">使用解构赋值</h1>
+<p>这个思路是来自 github 上 <a href="https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore">You-Dont-Need-Lodash-Underscore</a> 这个仓库，看到这个的时候真的佩服。</p>
+<pre><code class="language-javascript">const c = {a:{b: [1,2,3,4]}}
+
+const { a: result } = c;
+// result : {b: [1,2,3,4]}
+const {a: { c: result = 12 }} = c
+// result: 12
+</code></pre>
+<p>当然，这个时候为了保证不报 <code>uncaught Typeerror</code>，我们仍然需要定义默认值， 就像这样, 貌似如果不加 <code>lint</code> 可读性堪忧。</p>
+<pre><code class="language-javascript">const {a: {c: {d: result2} = {}}} = c
+</code></pre>
+<h1 id="使用-proxy">使用 Proxy</h1>
+<p>这个是组内同事提到的，一个简单实现如下：</p>
+<pre><code class="language-javascript">function pointer(obj, path = []) {
+    return new Proxy(() =&gt; {}, {
+        get (target, property) {
+            return pointer(obj, path.concat(property))
+        },
+        apply (target, self, args) {
+            let val = obj;
+            let parent;
+            for(let i = 0; i &lt; path.length; i++) {
+                if(val === null || val === undefined) break;
+                parent = val;
+                val = val[path[i]]    
+            }
+            if(val === null || val === undefined) {
+                val = args[0]
+            }
+            return val;
+        }
+    })
+}
+</code></pre>
+<p>我们可以这样使用：</p>
+<pre><code class="language-javascript">let c = {a: {b: [1, ,2 ,3]}}
+
+pointer(c).a();   // {b: [1,2,3]}
+
+pointer(c).a.b(); // [1,2,3]
+
+pointer(d).a.b.d('default value');  // default value
+</code></pre>
+<p>这差不多就是心中所谓的优雅了。</p>
+<p>综上，在实际工作中，使用方法四会是最优雅，可读性也非常强，但考虑到浏览器的话，可能方法二会更加常用，当然，如果你所要取的值层级不是太深，你组内的同事要严格的 <code>lint</code>，方法三也不失为一种好的选择。</p>
 
                         </div>
                         
                             <div class="post-toc">
-                                
+                                <ul class="markdownIt-TOC">
+<li><a href="#optional-chaining">optional chaining</a></li>
+<li><a href="#%E9%80%9A%E8%BF%87%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90%E5%AD%97%E7%AC%A6%E4%B8%B2">通过函数解析字符串</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC">使用解构赋值</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8-proxy">使用 Proxy</a></li>
+</ul>
+
                             </div>
                             
                                 
@@ -226,7 +337,7 @@
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://faded.auspicious.space/post/written-calculation-of-square-root/">https://faded.auspicious.space/post/written-calculation-of-square-root/</a></span>
+                                                    <span><a href="https://faded.auspicious.space/post/how-to-elegantly-optional-chaining/">https://faded.auspicious.space/post/how-to-elegantly-optional-chaining/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -241,9 +352,15 @@
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://faded.auspicious.space/post/written-calculation-of-square-root/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://faded.auspicious.space/post/written-calculation-of-square-root/&sharesource=qzone&title=笔算平方根&pics=https://faded.auspicious.space/images/avatar.png?v=1587192112643&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://faded.auspicious.space/post/written-calculation-of-square-root/&sharesource=weibo&title=笔算平方根 + " - " + &pic="https://faded.auspicious.space/images/avatar.png?v=1587192112643 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://faded.auspicious.space/post/how-to-elegantly-optional-chaining/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://faded.auspicious.space/post/how-to-elegantly-optional-chaining/&sharesource=qzone&title=如何优雅地链式取值&pics=https://faded.auspicious.space/images/avatar.png?v=1587192112643&summary=&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://juejin.im/post/5ba08483e51d450e99430a7f&#34;&gt;如何优雅地链式取值&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+"><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://faded.auspicious.space/post/how-to-elegantly-optional-chaining/&sharesource=weibo&title=如何优雅地链式取值 + " - " + &lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://juejin.im/post/5ba08483e51d450e99430a7f&#34;&gt;如何优雅地链式取值&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&pic="https://faded.auspicious.space/images/avatar.png?v=1587192112643 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -262,8 +379,8 @@
                                                                                     <span class="tag ">
                         
                         
-                        <a href="https://faded.auspicious.space/tag/algorithm/">#
-                    算法
+                        <a href="https://faded.auspicious.space/tag/E9jf1aKKC/">#
+                    JavaScript
                         </a>
                         
                             
@@ -281,13 +398,9 @@
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://faded.auspicious.space/post/algorithm-complexity-comparison/">
-                                                                                            算法复杂度比较
-                                                                                        </a>
-                                                                                        
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://faded.auspicious.space/post/algorithm-complexity-analysis/">
-                                                                                                    算法复杂度分析
+                                                                                                <a class="next" rel="next" href="https://faded.auspicious.space/post/names-of-three-sign/">
+                                                                                                    &amp; * # 这三个是什么符号？
                                                                                                 </a>
                                                                                                 
                                                                                 </section>

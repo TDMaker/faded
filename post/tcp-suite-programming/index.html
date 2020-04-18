@@ -165,7 +165,7 @@
                     <article class="post-wrap">
                         <header class="post-header">
                             <h1 class="post-title">
-                                笔算平方根
+                                TCP——套接口编程
                             </h1>
                             
                                     <!--zh-->
@@ -174,15 +174,15 @@
                                         <a itemprop="author" rel="author" href="/">
                                             Typhoeus
                                         </a>
-                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-11</a></span>
+                                        <span class="post-time">&#x65E5;&#x671F;: <a href="#">2020-04-18</a></span>
                                         <span class="post-readtime">&#x9605;&#x8BFB;&#x65F6;&#x95F4;:<a
-                                    href="#">1.4
+                                    href="#">10.3
                                     &#x5206;&#x949F;</a></span>
-                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">335</a></span>
+                                        <span class="post-words">&#x5B57;&#x6570;:<a href="#">2645</a></span>
                                         
                                             <span class="post-category">&#x5206;&#x7C7B;:
                                 
-                                <a href="https://faded.auspicious.space/tag/algorithm/">算法</a>
+                                <a href="https://faded.auspicious.space/tag/POiBgibFI/">计算机网络</a>
                                 
                             </span>
                                             
@@ -194,25 +194,318 @@
                         </header>
                         
                         <div class="post-content">
-                            <p>我以计算 2016 的算术平方根作为例子。全程用竖式计算。<br>
-首先， 以小数点为基准，每两位数作为一组。像这样写：<br>
-<img src="https://faded.auspicious.space/post-images/1586585643820.png" alt="" loading="lazy"></p>
-<p>注意，平方根的两倍那个位置要往左边写一点，不然后面不够位置。接下来估算第一节，是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>20</mn></mrow><annotation encoding="application/x-tex">20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>4</mn><mn>2</mn></msup><mo>&lt;</mo><mn>20</mn><mo>&lt;</mo><msup><mn>5</mn><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">4^2 \lt 20 \lt 5^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.853208em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">2</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，所以在第一节的上面写上 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span>，对应的在左边写上 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>4</mn><mn>2</mn></msup><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">4^2=16</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">4</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">6</span></span></span></span> 写到 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>20</mn></mrow><annotation encoding="application/x-tex">20</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">0</span></span></span></span> 的下面，减一下，把下一节拉下来：<br>
-<img src="https://faded.auspicious.space/post-images/1586586062853.png" alt="" loading="lazy"></p>
-<p>估计下一位的方法是： <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>416</mn></mrow><annotation encoding="application/x-tex">8?\times?=416</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">1</span><span class="mord">6</span></span></span></span>。因为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>83</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>249</mn></mrow><annotation encoding="application/x-tex">83 \times 3=249</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">4</span><span class="mord">9</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>84</mn><mo>×</mo><mn>4</mn><mo>=</mo><mn>336</mn></mrow><annotation encoding="application/x-tex">84 \times 4=336</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mord">3</span><span class="mord">6</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>85</mn><mo>×</mo><mn>5</mn><mo>=</mo><mn>425</mn></mrow><annotation encoding="application/x-tex">85 \times 5=425</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">2</span><span class="mord">5</span></span></span></span>， <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>425</mn></mrow><annotation encoding="application/x-tex">425</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">2</span><span class="mord">5</span></span></span></span> 大于 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>416</mn></mrow><annotation encoding="application/x-tex">416</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">1</span><span class="mord">6</span></span></span></span> 了，所以下一位就是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span> 了，更新算式，把下一节拉下来：<br>
-<img src="https://faded.auspicious.space/post-images/1586586335482.png" alt="" loading="lazy"></p>
-<p>再估计下一位： <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>88</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>8000</mn></mrow><annotation encoding="application/x-tex">88? \times ?=8000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span></span></span></span>。 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>888</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>7104</mn></mrow><annotation encoding="application/x-tex">888 \times 8=7104</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">8</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mord">1</span><span class="mord">0</span><span class="mord">4</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>889</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>8001</mn></mrow><annotation encoding="application/x-tex">889 \times 9=8001</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">0</span><span class="mord">1</span></span></span></span>， 哎呀，差一点点，还是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 吧：<br>
-<img src="https://faded.auspicious.space/post-images/1586586557307.png" alt="" loading="lazy"><br>
-下一位：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>896</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>89600</mn></mrow><annotation encoding="application/x-tex">896? \times ?=89600</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mord">0</span><span class="mord">0</span></span></span></span>， 由于刚才就差一点点，这次应该是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn></mrow><annotation encoding="application/x-tex">9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span></span></span></span> 了。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8969</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>80721</mn></mrow><annotation encoding="application/x-tex">8969 \times 9=80721</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">6</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">7</span><span class="mord">2</span><span class="mord">1</span></span></span></span>，没问题：<br>
-<img src="https://faded.auspicious.space/post-images/1586586738767.png" alt="" loading="lazy"></p>
-<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8978</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>887900</mn></mrow><annotation encoding="application/x-tex">8978? \times ?=887900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">8</span><span class="mord">7</span><span class="mord">9</span><span class="mord">0</span><span class="mord">0</span></span></span></span>，凭感觉应该还是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>9</mn></mrow><annotation encoding="application/x-tex">9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>89789</mn><mo>×</mo><mn>9</mn><mo>=</mo><mn>808101</mn></mrow><annotation encoding="application/x-tex">89789 \times 9=808101</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">8</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">9</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span><span class="mord">0</span><span class="mord">8</span><span class="mord">1</span><span class="mord">0</span><span class="mord">1</span></span></span></span>，OK：<br>
-<img src="https://faded.auspicious.space/post-images/1586586923209.png" alt="" loading="lazy"><br>
-<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>89798</mn><mo>?</mo><mo>×</mo><mo>?</mo><mo>=</mo><mn>7979900</mn></mrow><annotation encoding="application/x-tex">89798? \times ?=7979900</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord">8</span><span class="mord">9</span><span class="mord">7</span><span class="mord">9</span><span class="mord">8</span><span class="mclose">?</span><span class="mord">×</span><span class="mclose">?</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mord">9</span><span class="mord">7</span><span class="mord">9</span><span class="mord">9</span><span class="mord">0</span><span class="mord">0</span></span></span></span>，这回是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 了。 不过我还是不写下去了, 因为示范了那么多步，大家应该知道步骤了吧？</p>
+                            <blockquote>
+<p><a href="https://juejin.im/post/5bc01a34f265da0ac446ce96">值得收藏的TCP套接口编程文章</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="tcp-客户端-服务器典型事件">TCP 客户端-服务器典型事件</h1>
+<p>下图是 TCP 客户端与服务器之间交互的一系列典型事件时间表：</p>
+<ol>
+<li>首先启动服务器，等待客户端连接。</li>
+<li>启动客户端，连接到服务器。</li>
+<li>客户端发送一个请求给服务器，服务器处理请求，响应客户端。</li>
+<li>循环步骤3。</li>
+<li>客户端给服务器发一个文件结束符，关闭客户端连接。</li>
+<li>服务器也关闭连接。</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587184330372.png" alt="基本TCP客户-服务器程序的套接口函数" loading="lazy"></figure>
+<h1 id="套接口编程基本函数">套接口编程基本函数</h1>
+<h2 id="socket-函数">socket 函数</h2>
+<p>为了执行网络 I/O，一个进程（无论是服务端还是客户端）必须做的第一件事情就是调用 <code>socket</code> 函数。</p>
+<pre><code class="language-c">#include &lt;sys/socket.h&gt; /* basic socket definitions */
+int socket(int family, int type, int protocol);/* 返回：非负描述字——成功，-1——出错 */
+</code></pre>
+<h3 id="family协议族">family——协议族</h3>
+<table>
+<thead>
+<tr>
+<th>族</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AF_INET</td>
+<td>IPv4 协议</td>
+</tr>
+<tr>
+<td>AF_INET6</td>
+<td>IPv6 协议</td>
+</tr>
+<tr>
+<td>AF_LOCAL</td>
+<td>Unix 域协议</td>
+</tr>
+<tr>
+<td>AF_ROUTE</td>
+<td>路由套接口</td>
+</tr>
+<tr>
+<td>AF_KEY</td>
+<td>密钥套接口</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type套接口类型">type——套接口类型</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOCK_STREAM</td>
+<td>字节流套接口</td>
+</tr>
+<tr>
+<td>SOCK_DGRAM</td>
+<td>数据报套接口</td>
+</tr>
+<tr>
+<td>SOCK_RAW</td>
+<td>原始套接口</td>
+</tr>
+</tbody>
+</table>
+<h3 id="有效的-family-和-type-组合简略版">有效的 family 和 type 组合（简略版）</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>AF_INET</th>
+<th>AF_INET6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOCK_STREAM</td>
+<td>TCP</td>
+<td>TCP</td>
+</tr>
+<tr>
+<td>SOCK_DGRAM</td>
+<td>UDP</td>
+<td>UDP</td>
+</tr>
+<tr>
+<td>SOCK_RAW</td>
+<td>IPv4</td>
+<td>IPv6</td>
+</tr>
+</tbody>
+</table>
+<p><code>socket</code> 函数返回一个套接口描述字，简称套接字（<code>sockfd</code>）。获取套接字无需指定地址，只需要指定协议族和套接口类型（如上表中的组合）。</p>
+<h2 id="connect-函数">connect 函数</h2>
+<p>TCP 客户用 <code>connect</code> 函数来建立一个与 TCP 服务器的连接。</p>
+<pre><code class="language-c">#include &lt;sys/socket.h&gt; /* basic socket definitions */
+int connect(int sockfd, const struct sockaddr * servaddr, socklen_t addrlen);/* 返回：0——成功，-1——出错 */
+</code></pre>
+<ul>
+<li>参数 <code>sockfd</code> 便是 <code>socket</code> 函数返回的套接口描述字。</li>
+<li>套接口地址结构 <code>servaddr</code> 必须包含服务器的 IP 地址和端口号。</li>
+<li>客户端不必非要绑定一个端口（调用 <code>bind</code> 函数），内核会选择源 IP 和一个临时端口。</li>
+<li><code>connect</code> 函数会触发 TCP 三次握手。有可能出现下面的错误情况：
+<ol>
+<li>
+<p>客户端未收到 <code>SYN</code> 分节的响应：<br>
+第一次发出未收到，间隔 6s 再发一次，再没收到，隔 24s 再发一次，总共等待 75s 还没收到则返回错误（<code>ETIMEDOUT</code>）。可以用时间日期程序验证一下：</p>
+<p>查看本地网络信息：</p>
+<pre><code class="language-bash">
+JACKIELUO-MC0:intro jackieluo$ ifconfig
+en0: flags=8863&lt;UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500
+ether f4:0f:24:2a:72:a6
+inet6 fe80::1830:dbd:1b29:2989%en0 prefixlen 64 secured scopeid 0x6
+inet 192.168.0.101 netmask 0xffffff00 broadcast 192.168.0.255
+nd6 options=201&lt;PERFORMNUD,DAD&gt;
+media: autoselect
+status: active
+</code></pre>
+<p>将程序指向本地地址 <code>192.168.0.101</code>（确保时间日期服务器程序已运行），成功：</p>
+<pre><code class="language-bash">
+JACKIELUO-MC0:intro jackieluo$ ./daytimetcpcli 192.168.0.101
+Sat Oct  6 17:06:55 2018
+</code></pre>
+<p>将程序指向本地子网地址 <code>192.168.0.102</code>，其主机ID（102）不存在，等待几分钟后超时返回：</p>
+<pre><code class="language-bash">
+JACKIELUO-MC0:intro jackieluo$ ./daytimetcpcli 192.168.0.102
+connect error: Operation timed out
+</code></pre>
+</li>
+<li>
+<p>收到 <code>RST</code>：<br>
+即服务器主机在指定端口上没有等待连接的进程，这称为“<code>hard error</code>”，客户端一接收到 <code>RST</code>，马上返回错误（<code>ECONNREFUSED</code>）。验证：</p>
+<p>关闭之前本机运行的 <code>daytimetcpsrv</code> 进程</p>
+<p>将程序指向本地地址<code>192.168.0.101</code>：</p>
+<pre><code class="language-bash">
+JACKIELUO-MC0:intro jackieluo$ ./daytimetcpcli 192.168.0.101
+connect error: Connection refused
+</code></pre>
+</li>
+<li>
+<p>发出的 <code>SYN</code> 在路由器上引发了目的不可达 <code>ICMP</code> 错误：<br>
+这个错误被称为“<code>soft error</code>”，最终返回 <code>EHOSTUNREACH</code> 或者 <code>ENETUNREACH</code>。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="bind-函数">bind 函数</h2>
+<p>函数 <code>bind</code> 为套接口分配一个本地协议地址，包括 IP 地址和端口号。</p>
+<pre><code class="language-c">#include &lt;sys/socket.h&gt; /* basic socket definitions */
+int bind(int sockfd, const struct sockaddr * servaddr, socklen_t addrlen);/* 返回：0——成功，-1——出错 */
+</code></pre>
+<ul>
+<li>客户端可以不调用这个函数，由内核选择一个本地 IP 的临时端口就好。</li>
+<li>服务器一般都会调用 <code>bind</code> 函数绑定 IP 地址和端口，供客户端调用。一个例外是 RPC（远程过程调用）服务器，它由内核为其选择临时端口。然后通过 RPC 端口映射器进行注册，客户端与该服务器连接之前，先通过端口映射器获取服务器的端口。</li>
+<li>进程可以把一个特定的 IP 地址捆绑到它的套接口上。对于客户端，它发送的请求，源IP地址就是这个地址；对于服务器，如果绑定了 IP 地址，则只接受目的地为此 IP 地址的客户连接。</li>
+<li>如果服务器不把 IP 地址绑定到套接口上，那么内核把客户端发送 <code>SYN</code> 所在分组的目的 IP 地址作为服务器的源 IP 地址。（即服务器收到 <code>SYN</code> 的 IP）</li>
+</ul>
+<p>给函数 <code>bind</code> 指定用于捆绑的 IP 地址和 / 或端口号的结果：</p>
+<table>
+<thead>
+<tr>
+<th>IP地址</th>
+<th>端口</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>0</td>
+<td>内核选择 IP 地址和端口</td>
+</tr>
+<tr>
+<td></td>
+<td>非 0</td>
+<td>内核选择 IP 地址，进程指定端口</td>
+</tr>
+<tr>
+<td>本地 IP 地址</td>
+<td>0</td>
+<td>进程选择 IP 地址，内核指定端口</td>
+</tr>
+<tr>
+<td>本地 IP 地址</td>
+<td>非 0</td>
+<td>进程选择 IP 地址和端口</td>
+</tr>
+</tbody>
+</table>
+<h2 id="listen-函数">listen 函数</h2>
+<p>函数 <code>listen</code> 仅被 TCP 服务器调用。</p>
+<pre><code class="language-c">#include &lt;sys/socket.h&gt; /* basic socket definitions */
+int listen(int sockfd, int backlog);/* 返回：0——成功，-1——出错 */
+</code></pre>
+<p>调用函数 <code>socket</code> 函数创建的套接口，默认是主动方，下一步应是调用 <code>connect</code>，<code>CLOSED</code> 的下一个状态是 <code>SYN_SENT</code>（见 TCP 状态转换图）。而函数 <code>listen</code> 将套接口转换成被动方，告诉内核，应接受指向此套接口的连接请求，<code>CLOSED</code> 状态变成 <code>LISTEN</code>。</p>
+<p>函数 <code>listen</code> 的第二个参数 <code>backlog</code> 表示内核为此套接口排队的最大连接数。对于给定的监听套接口，内核会维护两个队列：</p>
+<ol>
+<li>未完成连接队列（incomplete connection queue）<code>SYN</code> 分节已由客户发出，到达服务器，正在进行 TCP 的三路握手。此时这些套接口处于 <code>SYN_RCVD</code> 状态。</li>
+<li>已完成连接队列（completed connection queue）<code>SYN</code> 分节已由客户发出，到达服务器，并且已完成三路握手。此时这些套接口处于 <code>ESTABLISHED</code> 状态。</li>
+<li>当来自客户的 <code>SYN</code> 到达时，TCP 在未完成连接队列中创建一个新条目，直到三路握手中，第三个分节（客户对服务 <code>SYN</code> 的 <code>ACK</code>）到达，这个条目移到已完成连接队列的队尾。</li>
+<li>当进程调用 <code>accept</code> 函数时，已完成连接队列的头部条目返回给进程。</li>
+<li>两个队列之和不能超过 <code>backlog</code>。</li>
+<li>当一个客户 <code>SYN</code> 到达时，若这两个队列都是满的，TCP 就忽略此分节，且不发送 <code>RST</code>。客户 TCP 将重发 <code>SYN</code>，期望不久就能在队列中找到空闲位置。<br>
+<img src="https://faded.auspicious.space/post-images/1587185907119.png" alt="" loading="lazy"><br>
+TCP 为监听套接口维护的两个队列。</li>
+</ol>
+<h2 id="accept-函数">accept 函数</h2>
+<p>函数 <code>accept</code> 由 TCP 服务器调用，从已完成连接队列头部返回下一个已完成连接，若该队列为空，则进程睡眠（假定套接口为默认的阻塞方式）。</p>
+<pre><code class="language-c">#include &lt;sys/socket.h&gt; /* basic socket definitions */
+int accept(int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);/* 返回：非负描述字——成功，-1——出错 */
+</code></pre>
+<p>函数 <code>accept</code> 的第一个参数和返回值都是套接口描述字。其中，</p>
+<ol>
+<li>第一个参数，称为监听套接口描述字，即由函数 <code>socket</code> 返回，也用于 <code>bind</code>，<code>listen</code> 的第一个参数。</li>
+<li>返回值，称为已连接套接口描述字。</li>
+</ol>
+<p>通常一个服务器，只生成一个监听套接口描述字，直到其关闭。而内核为每个被接受的客户连接，创建一个已连接套接口，当客户连接完成时，关闭该已连接套接口。</p>
+<p>注意到 <code>intro/daytimetcpsrv.c</code> 中，后两个参数传的都是空指针，这是因为我们不关注客户的身份，无需知道客户的协议地址。</p>
+<pre><code class="language-c">connfd = Accept(listenfd, (SA *) NULL, NULL);
+</code></pre>
+<p>稍作修改，不再传入空指针，见 <code>intro/daytimetcpsrv1.c</code>：</p>
+<pre><code class="language-c">socklen_t len;
+struct sockaddr_in servaddr, cliaddr;
+...
+connfd = Accept(listenfd, (SA *) &amp;cliaddr, &amp;len);
+printf(&quot;connection from %s, port %d\n&quot;,
+    Inet_ntop(AF_INET, &amp;cliaddr.sin_addr, buff, sizeof(buff)),
+    ntohs(cliaddr.sin_port));
+</code></pre>
+<p>kill 掉之前的 <code>daytimetcpsrv</code> 进程：</p>
+<pre><code class="language-bash">
+$ sudo lsof -i -P | grep -i &quot;listen&quot;
+daytimetc 80986           root    3u  IPv4 0xae12d925e4528793      0t0    TCP *:13 (LISTEN)
+$ sudo kill -9 80986
+</code></pre>
+<p>编译运行新的服务端程序：</p>
+<pre><code class="language-bash">
+$ make daytimetcpsrv1.c daytimetcpsrv1
+$ ./daytimetcpsrv1
+</code></pre>
+<p>重复执行客户端程序，发几个请求：</p>
+<pre><code class="language-bash">
+$ ./daytimetcpcli 127.0.0.1
+Wed Sep 26 14:11:20 2018
+$ ./daytimetcpcli 127.0.0.1
+Wed Sep 26 14:17:06 2018
+</code></pre>
+<p>查看服务端打印：</p>
+<pre><code class="language-bash">
+connection from 127.0.0.1, port 58201
+connection from 127.0.0.1, port 58342
+</code></pre>
+<p>注意到，由于客户端程序没有调用 <code>bind</code> 函数，内核为它的协议地址选择了源 <code>ip</code> 作为 IP 地址，临时端口号也发生了变化。</p>
+<h2 id="fork-和-exec-函数">fork 和 exec 函数</h2>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+pid_t fork(void);/* 返回：在子进程中为0，在父进程中为子进程ID，-1——出错 */
+</code></pre>
+<p><code>fork</code> 函数调用一次，却返回两次。</p>
+<ol>
+<li>在调用它的进程（即父进程），它返回一次，返回值是派生出来的子进程的进程 ID。 父进程可能有很多子进程，必须通过返回值跟踪记录子进程 ID。</li>
+<li>在子进程，它还返回一次，返回值为 0。 子进程只有一个父进程，总可以通过 <code>getppid</code> 来得到父进程的 ID。</li>
+</ol>
+<p>通过返回值可以判断当前进程是子进程还是父进程。</p>
+<p>父进程在调用 <code>fork</code> 之前打开的所有描述字在函数 <code>fork</code> 返回后都是共享的。网络服务器会利用这一特性：</p>
+<ol>
+<li>父进程调用 <code>accept</code>。</li>
+<li>父进程调用 <code>fork</code>，已连接套接口就在父进程与子进程间共享。（一般来说就是子进程读、写已连接套接口，而父进程关闭已连接套接口）。</li>
+</ol>
+<p><code>fork</code> 有两个典型应用：</p>
+<ol>
+<li>一个进程为自己派生一个拷贝，并发执行任务，这也是典型的并发网络服务器模型。</li>
+<li>一个进程想执行其他的程序，于是调用 <code>fork</code> 生成一个拷贝，利用子进程调用 <code>exec</code> 来执行新的程序。典型应用是 <code>shell</code>。</li>
+</ol>
+<p>以文件形式存储在硬盘上的可执行程序若要被执行，需要由一个现有进程调用 <code>exec</code> 函数。我们将调用 <code>exec</code> 的进程称为调用进程，新程序的进程 ID 并不改变，仍处于当前进程。</p>
+<h1 id="小结">小结</h1>
+<p>客户和服务器，从调用 <code>socket</code> 开始，返回一个套接口描述字。客户调用 <code>connect</code>，服务器调用 <code>bind</code>、<code>listen</code>、<code>accept</code>。最后套接口由 <code>close</code> 关闭。</p>
+<p>多数 TCP 服务器是调用 <code>fork</code> 来实现并发处理多客户请求的。多数 UDP 服务器则是迭代的。</p>
 
                         </div>
                         
                             <div class="post-toc">
-                                
+                                <ul class="markdownIt-TOC">
+<li><a href="#tcp-%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%B8%E5%9E%8B%E4%BA%8B%E4%BB%B6">TCP 客户端-服务器典型事件</a></li>
+<li><a href="#%E5%A5%97%E6%8E%A5%E5%8F%A3%E7%BC%96%E7%A8%8B%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0">套接口编程基本函数</a>
+<ul>
+<li><a href="#socket-%E5%87%BD%E6%95%B0">socket 函数</a>
+<ul>
+<li><a href="#family%E5%8D%8F%E8%AE%AE%E6%97%8F">family——协议族</a></li>
+<li><a href="#type%E5%A5%97%E6%8E%A5%E5%8F%A3%E7%B1%BB%E5%9E%8B">type——套接口类型</a></li>
+<li><a href="#%E6%9C%89%E6%95%88%E7%9A%84-family-%E5%92%8C-type-%E7%BB%84%E5%90%88%E7%AE%80%E7%95%A5%E7%89%88">有效的 family 和 type 组合（简略版）</a></li>
+</ul>
+</li>
+<li><a href="#connect-%E5%87%BD%E6%95%B0">connect 函数</a></li>
+<li><a href="#bind-%E5%87%BD%E6%95%B0">bind 函数</a></li>
+<li><a href="#listen-%E5%87%BD%E6%95%B0">listen 函数</a></li>
+<li><a href="#accept-%E5%87%BD%E6%95%B0">accept 函数</a></li>
+<li><a href="#fork-%E5%92%8C-exec-%E5%87%BD%E6%95%B0">fork 和 exec 函数</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
+</ul>
+
                             </div>
                             
                                 
@@ -226,7 +519,7 @@
 
                                                 <p class="copyright-item">
                                                     <span>&#x6C38;&#x4E45;&#x94FE;&#x63A5;:</span>
-                                                    <span><a href="https://faded.auspicious.space/post/written-calculation-of-square-root/">https://faded.auspicious.space/post/written-calculation-of-square-root/</a></span>
+                                                    <span><a href="https://faded.auspicious.space/post/tcp-suite-programming/">https://faded.auspicious.space/post/tcp-suite-programming/</a></span>
                                                 </p>
 
                                                 <p class="copyright-item">
@@ -241,9 +534,15 @@
                                                                     <span style="margin-right:15px">
                         <i class="post-share"></i>
                         <span>&#x5206;&#x4EAB;:</span>
-                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://faded.auspicious.space/post/written-calculation-of-square-root/"><i class="fa fa-qrcode"></i></a>
-                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://faded.auspicious.space/post/written-calculation-of-square-root/&sharesource=qzone&title=笔算平方根&pics=https://faded.auspicious.space/images/avatar.png?v=1587192112643&summary="><i class="fa fa-qq"></i></a>
-                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://faded.auspicious.space/post/written-calculation-of-square-root/&sharesource=weibo&title=笔算平方根 + " - " + &pic="https://faded.auspicious.space/images/avatar.png?v=1587192112643 "><i class="fa fa-weibo "></i></a>
+                                                                    <a title="QR 码" target="_blank" href="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://faded.auspicious.space/post/tcp-suite-programming/"><i class="fa fa-qrcode"></i></a>
+                                                                    <a title="QQ" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://faded.auspicious.space/post/tcp-suite-programming/&sharesource=qzone&title=TCP——套接口编程&pics=https://faded.auspicious.space/images/avatar.png?v=1587192112643&summary=&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://juejin.im/post/5bc01a34f265da0ac446ce96&#34;&gt;值得收藏的TCP套接口编程文章&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+"><i class="fa fa-qq"></i></a>
+                                                                    <a title="新浪微博" target="_blank" href="https://service.weibo.com/share/share.php?url=https://faded.auspicious.space/post/tcp-suite-programming/&sharesource=weibo&title=TCP——套接口编程 + " - " + &lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://juejin.im/post/5bc01a34f265da0ac446ce96&#34;&gt;值得收藏的TCP套接口编程文章&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&pic="https://faded.auspicious.space/images/avatar.png?v=1587192112643 "><i class="fa fa-weibo "></i></a>
 
                                                                     </span>
                                                                     
@@ -262,8 +561,8 @@
                                                                                     <span class="tag ">
                         
                         
-                        <a href="https://faded.auspicious.space/tag/algorithm/">#
-                    算法
+                        <a href="https://faded.auspicious.space/tag/POiBgibFI/">#
+                    计算机网络
                         </a>
                         
                             
@@ -281,13 +580,13 @@
                                                                                 <!---->
                                                                                 <section class="post-nav">
                                                                                     
-                                                                                        <a class="prev" rel="prev" href="https://faded.auspicious.space/post/algorithm-complexity-comparison/">
-                                                                                            算法复杂度比较
+                                                                                        <a class="prev" rel="prev" href="https://faded.auspicious.space/post/names-of-three-sign/">
+                                                                                            &amp; * # 这三个是什么符号？
                                                                                         </a>
                                                                                         
                                                                                             
-                                                                                                <a class="next" rel="next" href="https://faded.auspicious.space/post/algorithm-complexity-analysis/">
-                                                                                                    算法复杂度分析
+                                                                                                <a class="next" rel="next" href="https://faded.auspicious.space/post/git-super-detailed-tutorials-and-commands/">
+                                                                                                    Git——超详实教程与命令大全
                                                                                                 </a>
                                                                                                 
                                                                                 </section>
