@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://faded.auspicious.space</id>
     <title>Typhoeus</title>
-    <updated>2020-04-17T14:58:33.606Z</updated>
+    <updated>2020-04-18T03:07:38.293Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://faded.auspicious.space"/>
     <link rel="self" href="https://faded.auspicious.space/atom.xml"/>
@@ -457,7 +457,7 @@ doc/**/*.txt
 </li>
 <li><code>git branch v2.0 372aa8e425b57ca30e2974b8e7737133caaa0b7f</code> // 在 <code>372aa8e425b57ca30e2974b8e7737133caaa0b7f</code> 提交处创建名为 <code>v2.0</code> 的分支（创建完不会切到 <code>v2.0</code> 分支上）。</li>
 <li><code>git branch -m v1.0 x1.0</code> // 将分支 <code>v1.0</code> 重命名为 <code>x1.0</code>。</li>
-<li><code>git checkout v1.0 // 切换到</code>v1.0<code>分支上（</code>v1.0` 分支不存在则命令执行失败）。</li>
+<li><code>git checkout v1.0</code> // 切换到 <code>v1.0</code> 分支上（<code>v1.0</code> 分支不存在则命令执行失败）。</li>
 <li><code>git checkout -b v1.0</code> // 创建并切换到 <code>v1.0</code> 分支上（<code>v1.0</code> 分支存在则命令执行失败）。</li>
 <li><code>git checkout -B v1.0</code> // 不存在则创建，并切换到 <code>v1.0</code> 分支上。</li>
 <li><code>git checkout -b v1.0 5a95f2d</code> // 在 <code>5a95f2d</code> 提交处创建并切换到 <code>v1.0</code> 的分支上。</li>
@@ -474,7 +474,7 @@ doc/**/*.txt
 <li><code>git checkout -f -B v1.0 origin/v1.0</code> // 不存在则创建，强制切换到 <code>v1.0</code> 分支上，丢弃暂存区和工作区中的所有文件的修改，并将 <code>HEAD</code> 指向 <code>origin/v1.0</code> 处（工作区中未追踪的文件不受影响）。</li>
 <li><code>git checkout -</code> // 切换到上一次分支。</li>
 <li><code>git branch -d v2.0</code> // 删除名为 <code>v2.0</code> 的分支（必须先切到其他分支上才能执行删除操作）。</li>
-<li><code>git branch -D v2.0 // 强制删除名为</code>v2.0` 的分支（必须先切到其他分支上才能执行删除操作）。</li>
+<li><code>git branch -D v2.0</code> // 强制删除名为 <code>v2.0</code> 的分支（必须先切到其他分支上才能执行删除操作）。</li>
 <li><code>git branch -dr origin/v2.0</code> // 删除远程分支 <code>origin/v2.0 cache</code>。</li>
 </ul>
 <h2 id="文件增加删除提交撤销">文件（增加/删除/提交/撤销）</h2>
@@ -584,7 +584,7 @@ $ git reset --keep start                    (3)
 </ol>
 </li>
 <li>
-<p><code>git checkout -- README.md</code> // <code>--</code> 符号非常重，否则就变成了切换到 <code>README.md</code> 分支了。<br>
+<p><code>git checkout -- README.md</code> // <code>--</code> 符号非常重要，否则就变成了切换到 <code>README.md</code> 分支了。<br>
 // 当 <code>README.md</code> 在暂存区中有修改时，使用暂存区中的修改覆盖工作区中的 <code>README.md</code>。<br>
 // 当 <code>README.md</code> 不在暂存区中时，使用本地版本库中的 <code>HEAD</code> 指针处的修改覆盖工作区中的 <code>README.md</code>。</p>
 </li>
@@ -841,7 +841,7 @@ v3.1 pushes to v3.1 (up to date)
 <ul>
 <li><code>git count-objects -v</code> // 查看 <code>git</code> 对象的统计信息。</li>
 <li><code>find .git/objects -type f -print0 | xargs -0 du -hk | sort -nr | head -5</code> // 查找 <code>git</code> 库中最大的 <code>5</code> 个文件（<code>du -hk</code> 中的 <code>k</code> 代表单位为 KB）。</li>
-<li><code>find .git/objects -type f -size +1M -print0 | xargs -0 du -hm | sort -nr | head -5</code> // 查找 <code>git</code> 库中 <code>size</code> 超过 <code>1M</code> 的最大的 <code>5</code> 个文件（<code>du -hm</code> 中的 <code>k</code> 代表单位为 MB）。</li>
+<li><code>find .git/objects -type f -size +1M -print0 | xargs -0 du -hm | sort -nr | head -5</code> // 查找 <code>git</code> 库中 <code>size</code> 超过 <code>1M</code> 的最大的 <code>5</code> 个文件（<code>du -hm</code> 中的 <code>m</code> 代表单位为 MB）。</li>
 <li><code>git verify-pack -v .git/objects/pack/pack-b340eea7566df839294b71ec91a327ca2ece0b94.idx | sort -k 3 -nr | head -5</code> // 对压缩存储的 <code>git</code> 库查找最大的 <code>5</code> 个文件。</li>
 <li><code>git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch FramePro.cpp' --prune-empty --tag-name-filter cat -- --all</code> // 从 <code>git</code> 库的历史记录中彻底清理 <code>FramePro.cpp</code>。</li>
 <li><code>git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin</code> // 清理所有废弃的 <code>ref</code> 引用。</li>
@@ -865,7 +865,7 @@ v3.1 pushes to v3.1 (up to date)
 对外发布的工作完成后，发布分支会合并到 <code>master</code> 分支并分配一个版本号打好 <code>Tag</code>。另外，这些从新建发布分支以来的做的修改要合并回 <code>develop</code> 分支。</li>
 <li><code>hotfix</code> 分支用于生成快速给产品发布版本（production releases）打补丁，修复完成，修改应该马上合并回 <code>master</code> 分支（打好 <code>Tag</code>）和 <code>develop</code> 分支（当前的发布分支）。</li>
 </ol>
-<h2 id="参考">参考</h2>
+<h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://github.com/bingoHuang/progit2-gitbook">Pro Git 第二版pdf</a></li>
 <li><a href="http://www.ruanyifeng.com/blog/2018/10/git-internals.html">Git 原理入门</a></li>
