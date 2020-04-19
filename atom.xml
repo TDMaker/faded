@@ -2,13 +2,214 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://faded.auspicious.space</id>
     <title>Typhoeus</title>
-    <updated>2020-04-19T10:28:32.654Z</updated>
+    <updated>2020-04-19T13:49:31.996Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://faded.auspicious.space"/>
     <link rel="self" href="https://faded.auspicious.space/atom.xml"/>
     <logo>https://faded.auspicious.space/images/avatar.png</logo>
     <icon>https://faded.auspicious.space/favicon.ico</icon>
     <rights>All rights reserved 2020, Typhoeus</rights>
+    <entry>
+        <title type="html"><![CDATA[TCP——三次握手和四次挥手]]></title>
+        <id>https://faded.auspicious.space/post/tcp-three-handshake-and-four-waves/</id>
+        <link href="https://faded.auspicious.space/post/tcp-three-handshake-and-four-waves/">
+        </link>
+        <updated>2020-04-19T13:01:26.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/f876f19112a2">TCP 三次握手 和 四次挥手</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/f876f19112a2">TCP 三次握手 和 四次挥手</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="概述">概述</h1>
+<p>我们都知道 TCP 是 可靠的数据传输协议，UDP 是不可靠传输，那么 TCP 它是怎么保证可靠传输的呢？那我们就不得不提 TCP 的三次握手和四次挥手。</p>
+<h1 id="三次握手">三次握手</h1>
+<p>下图为三次握手的流程图：<br>
+<img src="https://faded.auspicious.space/post-images/1587301423349.png" alt="" loading="lazy"></p>
+<p>下面通过我们 Wireshark 抓包工具来分析三次握手：<br>
+<img src="https://faded.auspicious.space/post-images/1587301710261.png" alt="" loading="lazy"></p>
+<h2 id="第一次握手">第一次握手</h2>
+<p>建立连接。客户端发送连接请求报文段，将 <code>SYN</code> 位置为 <code>1</code>，<code>Sequence Number</code> 为 <code>x</code>；（<code>x</code> 是随机生成的一个 <code>int</code> 数值）然后，客户端进入 <code>SYN_SEND</code> 状态，等待服务器的确认；<br>
+<img src="https://faded.auspicious.space/post-images/1587301974117.png" alt="" loading="lazy"></p>
+<h2 id="第二次握手">第二次握手</h2>
+<p>服务器收到 <code>SYN</code> 报文段。服务器收到客户端的 <code>SYN</code> 报文段，需要对这个 <code>SYN</code> 报文段进行确认，设置 <code>Acknowledgment Number</code> 为 <code>x+1</code>(<code>Sequence Number+1</code>)；同时，自己自己还要发送 <code>SYN</code> 请求信息，将 <code>SYN</code> 位置为<code>1</code>，<code>Sequence Number</code> 为 <code>y</code> （<code>y</code> 是随机生存的一个 <code>int</code> 数值）；服务器端将上述所有信息放到一个报文段（即 <code>SYN + ACK</code> 报文段）中，一并发送给客户端，此时服务器进入 <code>SYN_RECV</code> 状态；<br>
+<img src="https://faded.auspicious.space/post-images/1587302254938.png" alt="" loading="lazy"></p>
+<h2 id="第三次握手">第三次握手</h2>
+<p>客户端收到服务器的 <code>SYN + ACK</code> 报文段。然后将 <code>Acknowledgment Number</code> 设置为 <code>y + 1</code>，向服务器发送 <code>ACK</code> 报文段，这个报文段发送完毕以后，客户端和服务器端都进入 <code>ESTABLISHED</code> 状态，完成 TCP 三次握手。<br>
+<img src="https://faded.auspicious.space/post-images/1587302315024.png" alt="" loading="lazy"></p>
+<h1 id="四次挥手">四次挥手</h1>
+<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587302377110.png" alt="" loading="lazy"></figure>
+<h2 id="第一次挥手">第一次挥手</h2>
+<p><strong>Client</strong>（可以使客户端，也可以是服务器端），设置 <code>Sequence Number</code> 和 <code>Acknowledgment Number</code>，向 <strong>Server</strong> 发送一个 <code>FIN</code> 报文段；此时，<strong>Client</strong> 进入 <code>FIN_WAIT_1</code> 状态；这表示 <strong>Client</strong> 没有数据要发送给 <strong>Server</strong> 了；</p>
+<p><strong>客户端发送第一次挥手后，就不能在向服务端发送数据了。</strong></p>
+<h2 id="第二次挥手">第二次挥手</h2>
+<p><strong>Server</strong> 收到了 <strong>Client</strong> 发送的 <code>FIN</code> 报文段，向 <strong>Client</strong> 回一个 <code>ACK</code> 报文段，<code>Acknowledgment Number</code> 为 <code>Sequence Number</code> 加 <code>1</code>；<strong>Client</strong> 进入 <code>FIN_WAIT_2</code> 状态；<strong>Server</strong> 告诉 <strong>Client</strong> ，我“同意”你的关闭请求；</p>
+<p><strong>Server 第一次响应后，还可以继续向 Client 发送数据，这里只是告诉 Client ，我收到你发送的关闭请求。</strong></p>
+<h2 id="第三次挥手">第三次挥手</h2>
+<p><strong>Server</strong> 向 <strong>Client</strong> 发送 <code>FIN</code> 报文段，请求关闭连接，同时 <strong>Server</strong> 进入 <code>CLOSE_WAIT</code> 状态；</p>
+<p><strong>当 Server 的数据响应完成后，再告诉 Client，我这边也可以关闭请求了， 这时<br>
+Server 就不能再向 Client 发送数据了。</strong></p>
+<h2 id="第四次挥手">第四次挥手</h2>
+<p><strong>Client</strong> 收到 <strong>Server</strong> 发送的 <code>FIN</code> 报文段，向 <strong>Server</strong> 发送 <code>ACK</code> 报文段，然后 <strong>Client</strong> 进入 <code>TIME_WAIT</code> 状态；<strong>Server</strong> 收到 <strong>Client</strong> 的 <code>ACK</code> 报文段以后，就关闭连接；此时，<strong>Client</strong> 等待 2 MSL 后依然没有收到回复，则证明 <strong>Server</strong> 端已正常关闭，那好，<strong>Client</strong> 也可以关闭连接了。</p>
+<h3 id="什么是-msl">什么是 MSL</h3>
+<p><strong>MSL</strong> 是 Maximum Segment Lifetime 英文的缩写，中文可以译为“<strong>报文最大生存时间</strong>”，他是任何报文在网络上存在的最长时间，超过这个时间报文将被丢弃。因为 TCP 报文（segment）是 IP 数据报（datagram）的数据部分，具体称谓请参见《数据在网络各层中的称呼》一文，而 IP 头中有一个 TTL 域，TTL 是 Time To Live 的缩写，中文可以译为“生存时间”，这个生存时间是由源主机设置初始值但不是存的具体时间，而是存储了一个 IP 数据报可以经过的最大路由数，每经过一个处理他的路由器此值就减 1，当此值为 0 则数据报将被丢弃，同时发送 ICMP 报文通知源主机。<strong>RFC 793</strong> 中规定 MSL 为 2 分钟，实际应用中常用的是 30 秒，1 分钟和 2 分钟等。</p>
+<p>2 MSL 即两倍的 MSL，TCP 的 <code>TIME_WAIT</code> 状态也称为 2 MSL 等待状态，当 TCP 的一端发起主动关闭，在发出最后一个 <code>ACK</code> 包后，即第 3 次握手完成后发送了第四次握手的 <code>ACK</code> 包后就进入了 <code>TIME_WAIT</code> 状态，必须在此状态上停留两倍的 MSL 时间，等待 2 MSL 时间主要目的是怕最后一个 <code>ACK</code> 包对方没收到，那么对方在超时后将重发第三次握手的 <code>FIN</code> 包，主动关闭端接到重发的 <code>FIN</code> 包后可以再发一个 <code>ACK</code> 应答包。在 <code>TIME_WAIT</code> 状态时两端的端口不能使用，要等到 2 MSL 时间结束才可继续使用。当连接处于 2 MSL 等待阶段时任何迟到的报文段都将被丢弃。不过在实际应用中可以通过设置 <code>SO_REUSEADDR</code> 选项达到不必等待 2 MSL 时间结束再使用此端口。</p>
+<p>TTL 与 MSL 是有关系的但不是简单的相等的关系，MSL 要大于等于 TTL。</p>
+<h1 id="为什么要三次握手">为什么要三次握手？</h1>
+<p>TCP 建立连接，其实通过两次握手就可以建立连接了，为什么要三次呢？是不是多此一举呢？</p>
+<h2 id="计算机网络中是这样说的">《计算机网络》中是这样说的</h2>
+<p>为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误。在书中同时举了一个例子，如下：“已失效的连接请求报文段”的产生在这样一种情况下： <strong>Client</strong> 发出的第一个连接请求报文段并没有丢失，而是在某个网络结点长时间的滞留了，以致延误到连接释放以后的某个时间才到达 <strong>Server</strong>。本来这是一个早已失效的报文段。但 <strong>Server</strong> 收到此失效的连接请求报文段后，就误认为是 <strong>Client</strong> 再次发出的一个新的连接请求。于是就向 <strong>Client</strong> 发出确认报文段，同意建立连接。假设不采用“三次握手”，那么只要 <strong>Server</strong> 发出确认，新的连接就建立了。由于现在 <strong>Client</strong> 并没有发出建立连接的请求，因此不会理睬 <strong>Server</strong> 的确认，也不会向 <strong>Server</strong> 发送数据。但 <strong>Server</strong> 却以为新的运输连接已经建立，并一直等待 <strong>Client</strong> 发来数据。这样， <strong>Server</strong> 的很多资源就白白浪费掉了。采用“三次握手”的办法可以防止上述现象发生。例如刚才那种情况， <strong>Client</strong> 不会向 <strong>Server</strong> 的确认发出确认。 <strong>Server</strong> 由于收不到确认，就知道 <strong>Client</strong> 并没有要求建立连接。”</p>
+<h2 id="网络故障">网络故障</h2>
+<p>比如，现在网络出现了故障，只能发请求数据包，而接收不到响应数据包，那么只要发送一次请求，服务器就建立请求，这样肯定也是不对的，网络请求有来有回才能完成通讯。所以三次握手是必不可少的。</p>
+<h1 id="为什么要四次挥手呢">为什么要四次挥手呢？</h1>
+<p>TCP 协议是一种面向连接的、可靠的、基于字节流的运输层通信协议。TCP 是全双工模式，这就意味着，当 <strong>Client</strong> 发出 <code>FIN</code> 报文段时，只是表示 <strong>Client</strong> 已经没有数据要发送了，<strong>Client</strong> 告诉 <strong>Server</strong>，它的数据已经全部发送完毕了；但是，这个时候 <strong>Client</strong> 还是可以接受来自 <strong>Server</strong> 的数据；当 <strong>Server</strong> 返回 <code>ACK</code> 报文段时，表示它已经知道 <strong>Client</strong> 没有数据发送了，但是 <strong>Server</strong> 还是可以发送数据到 <strong>Client</strong> 的；当 <strong>Server</strong> 也发送了 <code>FIN</code> 报文段时，这个时候就表示 <strong>Server</strong> 也没有数据要发送了，就会告诉 <strong>Client</strong>，我也没有数据要发送了，之后彼此就会愉快的中断这次 TCP 连接。如果要正确的理解四次分手的原理，就需要了解四次分手过程中的状态变化。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[芙蓉女儿诔]]></title>
+        <id>https://faded.auspicious.space/post/hibiscus-girl-dirge/</id>
+        <link href="https://faded.auspicious.space/post/hibiscus-girl-dirge/">
+        </link>
+        <updated>2020-04-19T12:46:45.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.douban.com/note/24854910/">芙蓉女儿诔---注音版</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.douban.com/note/24854910/">芙蓉女儿诔---注音版</a></p>
+</blockquote>
+<!-- more -->
+<h1>芙蓉女儿诔（lěi）</h1>
+<h2>贾宝玉（《红楼梦》第七十八回）</h2>
+<p>维太平不易之元，蓉桂竞芳之月，无可奈何之日，怡红院浊玉，谨以群花之蕊，冰鲛之縠（hú），沁芳之泉，枫露之茗（míng），四者虽微，聊以达诚申信，乃致祭于白帝宫中抚司秋艳芙蓉女儿之前曰：<br>
+　　窃思女儿自临浊世，迄今凡十有六载。其先之乡籍姓氏，湮（yān）沦（lún）而莫能考者久矣。而玉得于衾（qīn）枕栉（zhì）沐（mù）之间，栖息宴游之夕，亲昵（nì）狎（xiá）亵（xiè），相与共处者，仅五年八月有（yòu）奇（jī）。<br>
+　　忆女儿曩（nǎng）生之昔，其为质则金玉不足喻其贵，其为性则冰雪不足喻其洁，其为神则星日不足喻其精，其为貌则花月不足喻其色。姊妹悉慕媖（yīng）娴（xián），妪（yù）媪（ǎo）咸仰惠德。<br>
+　　孰料鸠（jiū）鸩（zhèn）恶（wù）其高，鹰鸷（zhì）翻遭罦（fú）罬（zhuó）；薋（cí）葹（shī）妒其臭（xiù），茝（chǎi）兰竟被芟（shān）鉏（chú）！花原自怯，岂奈狂飙（biāo）？柳本多愁，何禁骤雨？偶遭蛊（gǔ）虿（chài）之谗，遂抱膏肓（huāng）之疚（jiù）。故而樱唇红褪，韵吐呻吟；杏脸香枯，色陈顑（kǎn）颔（hàn）。诼（zhuó）谣謑（xī）诟（gòu），出自屏帏（wéi）；荆棘蓬榛（zhēn），蔓延户牖（yǒu）。岂招尤则替，实攘诟而终。既忳（tún）幽沉于不尽，复含罔屈于无穷。高标见嫉，闺（guī）帏（wéi）恨比长沙；直烈遭危，巾帼惨于羽野。自蓄辛酸，谁怜夭折？仙云既散，芳趾难寻。洲迷聚窟，何来却死之香？海失灵槎（chá），不获回生之药。<br>
+　　眉黛烟青，昨犹我画；指环玉冷，今倩谁温？鼎炉之剩药犹存，襟泪之余痕尚渍（zì）。镜分鸾（luán）别，愁开麝月之奁（lián）；梳化龙飞，哀折檀（tán）云之齿。委金钿（diàn）于草莽，拾翠盒（è 盍代勺中之丶）于尘埃。楼空鳷（zhī）鹊，徒悬七夕之针；带断鸳鸯，谁续五丝之缕？<br>
+　　况乃金天属节，白帝司时，孤衾（qīn）有梦，空室无人。桐阶月暗，芳魂与倩影同销；蓉帐香残，娇喘共细言皆绝。连天衰草，岂独蒹（jiān）葭（jiā）；匝（zā）地悲声，无非蟋蟀。露苔晚砌，穿帘不度寒砧（zhēn）；雨荔秋垣（yuán），隔院希闻怨笛。芳名未泯（mǐn），檐前鹦鹉犹呼；艳质将亡，槛外海棠预老。捉迷屏后，莲瓣无声；斗草庭前，兰芳枉（wǎng）待。抛残绣线，银笺（jiān）彩缕谁裁？摺（zhé）断冰丝，金斗御香未熨。<br>
+　　昨承严命，既趋车而远涉芳园；今犯慈威，复拄杖而近抛孤柩（jiù）。及闻槥（huì）棺被燹（xiǎn），惭违共穴之盟；石椁（guǒ）成灾，愧迨（dài）同灰之诮（qiào）。<br>
+　　尔乃西风古寺，淹滞青燐（lín），落日荒丘，零星白骨。楸（qiū）榆飒（sà）飒（sà），蓬艾萧萧。隔雾圹（kuàng）以啼猿，绕烟塍（chéng）而泣鬼。自为红绡（xiāo）帐里，公子情深；始信黄土陇（lǒng）中，女儿命薄！汝南泪血，斑斑洒向西风；梓（zǐ）泽馀（yú）衷，默默诉凭冷月。<br>
+　　呜呼！固鬼蜮（yù）之为灾，岂神灵而亦妒。箝诐（bì）奴之口，讨岂从宽？剖（pōu）悍妇之心，忿犹未释！在君之尘缘虽浅，然玉之鄙意岂终。因蓄惓（quán）惓（quán）之思，不禁谆（zhūn）谆（zhūn）之问。<br>
+　　始知上帝垂旌（jīng），花宫待诏（zhào），生侪（chái）兰蕙（huì），死辖芙蓉。听小婢（bì）之言，似涉无稽（jī）；据浊玉之思，则深为有据。何也？昔叶法善摄魂以撰碑，李长吉被诏而为记，事虽殊，其理则一也。故相物以配才，苟非其人，恶乃滥乎其位？始信上帝委托权衡，可谓至洽至协，庶不负其所秉赋也。因希其不昧之灵，或陟（zhì）降（jiàng）于兹（zī），特不揣（chuǎi）鄙俗之词，有污慧听。乃歌而招之曰：<br>
+　　天何如是之苍苍兮，乘玉虬（qiú）以游乎穹（qióng）窿（lóng）耶？<br>
+　　地何如是之茫茫兮，驾瑶（yáo）象以降乎泉壤耶？<br>
+　　望伞盖之陆离兮，抑箕（jī）尾之光耶？<br>
+　　列羽葆（bǎo）而为前导兮，卫危虚于傍耶？<br>
+　　驱丰隆以为比从兮，望舒月以临耶？<br>
+　　听车轨而伊轧兮，御鸾（luán）鹥（yī）以征耶？<br>
+　　闻馥郁而薆（ài）然兮，纫（rèn）蘅杜以为纕（xiāng）耶？<br>
+　　炫裙裾（jū）之烁（shuò）烁（shuò）兮，镂明月以为珰（dāng）耶？<br>
+　　籍葳（wēi）蕤（ruí）而成坛畤（zhì）兮，檠（qíng）莲焰以烛兰膏耶？<br>
+　　文瓟（bó）瓠（hú）以为觯（zhì）斝（jiǎ）兮，漉醽（líng）醁（lù）以浮桂醑（xǔ）耶？<br>
+　　瞻云气而凝盼兮，仿佛有所觇（chān）耶？<br>
+　　俯窈窕而属耳兮，恍惚有所闻耶？<br>
+　　期汗漫而无夭阏（yān）兮，忍捐弃余于尘埃耶？<br>
+　　倩风廉之为余驱车兮，冀联辔（pèi）而携归耶？<br>
+　　余中心为之慨然兮，徒噭（jiào）噭（jiào）而何为耶？<br>
+　　君偃（yǎn）然而长寝（qǐn）兮，岂天运之变于斯耶？<br>
+　　既窀（zhūn）穸（xī）且安稳兮，反其真而复奚（xī）化耶？<br>
+　　余犹桎（zhì）梏（gù）而悬附兮，灵格余以嗟（jiē）来耶？<br>
+　　来兮止兮，君其来耶！<br>
+　　若夫鸿蒙而居，寂静以处，虽临于兹，余亦莫睹。搴（qiān）烟萝而为步幛（zhàng），列枪蒲而森行伍。警柳眼之贪眠，释莲心之味苦。素女约于桂岩，宓（fú）妃迎于兰渚（zhǔ）。弄玉吹笙（shēng），寒簧击敔（yǔ）。征嵩（sōng）岳之妃，启骊（lí）山之姥（mǔ）。龟呈洛浦之灵，兽作咸池之舞。潜赤水兮龙吟，集珠林兮凤翥（zhù）。爰（yuán）格爰（yuán）诚，匪簠（fǔ）匪筥（jǔ）。发轫（rèn）乎霞城，返旌（jīng）乎玄圃。既显微而若通，复氤（yīn）氲（yūn）而倏阻。离合兮烟云，空蒙兮雾雨。尘霾（mái）敛兮星高，溪山丽兮月午。何心意之忡忡，若寤（wù）寐（mèi）之栩栩？余乃欷（xī）歔（xū）怅望，泣涕彷徨。人语兮寂历，天籁兮篔（yún）筜（dāng）。鸟惊散而飞，鱼唼（shà）喋（zhá）以响。志哀兮是祷（dǎo），成礼兮期祥。呜呼哀哉！尚飨（xiǎng）！</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[在网页上使用 jpg、png、gif 和 svg]]></title>
+        <id>https://faded.auspicious.space/post/jpg-png-gif-and-svg-on-the-web-a-beginner-guide/</id>
+        <link href="https://faded.auspicious.space/post/jpg-png-gif-and-svg-on-the-web-a-beginner-guide/">
+        </link>
+        <updated>2020-04-19T11:20:41.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://zcfy.cc/article/jpg-png-and-svg-on-the-web-a-beginner-039-s-guide-cheesecake-labs-3211.html">在网页上使用JPG、PNG和SVG：新手指南 | Cheesecake Labs</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://zcfy.cc/article/jpg-png-and-svg-on-the-web-a-beginner-039-s-guide-cheesecake-labs-3211.html">在网页上使用JPG、PNG和SVG：新手指南 | Cheesecake Labs</a></p>
+</blockquote>
+<!-- more -->
+<p>如今，图像已经成为网络不可或缺的一部分。但情况并非一贯如此。直到 1993 年，Mosaic 浏览器才在网页内容中中加入图像。有些图像格式像 GIF 和 JPEG 当时已经存在，而 PNG 和 SVG 直到 90 年代才出现。图像用途多样，如：显示图片、品牌、插图、图表以及许多其他内容。</p>
+<p>由于多样的使用情况和图片格式，有时选择正确的格式可能会令人困惑。标志应该是 SVG 还是 PNG？截图呢？JPEG 还是 PNG？在不生成过大文件的前提下，文件质量能有多高？了解每个图像格式如何工作还有它们各自的利弊可以帮助回答这些问题。</p>
+<p>在过去几年中，通过数字设计和前端开发，研究和测试不同的工具帮助我澄清了这些问题。在本文中，我将展示一下每种格式如何工作、它们在哪个方面存在优势，以及在网页使用时的压缩与保存方法。</p>
+<h1 id="jpeg">JPEG</h1>
+<p>JEPG 由联合图像专家小组（Joint Photographic Experts Group）于 1992 年创建，并以创建者命名。JPEG 是一种有损光栅图像格式，这意味着每次保存被压缩的 JPEG 时，一些信息将被不可逆转地丢失。</p>
+<p>JPEG 利用人眼感知的缺陷——对亮度比对颜色更敏感——使用了一种压缩算法来丢弃我们不太擅长获取的信息，因此被命名为“有损格式”。应用于给定图像的压缩量将直接与所得文件的质量和大小相关。 JPEG 压缩的技术方面远远不止这些，如果你想更深入，请查看<a href="http://www.ams.org/samplings/feature-column/fcarc-image-compression">这篇文章</a> 作者：大卫·奥斯丁（David Austin）。</p>
+<h2 id="jpeg-的用途">JPEG 的用途</h2>
+<p>因为 JPEG 适用于亮度和色彩压缩，所以在照片，以及其他写实或者带阴影的图像（如绘画和 3D 渲染）上使用效果良好。这就是为什么它是多年来最流行的存储图片的格式。出于同样的原因，JPEG 不适宜用在矢量图片，如徽标，几何图形，截图等方面。<br>
+<img src="https://faded.auspicious.space/post-images/1587295533496.jpg" alt="" loading="lazy"><br>
+照片，以及复杂的或带阴影的图像，如绘画，是使用 JPEG 的很好的例子。</p>
+<h2 id="压缩-jpeg">压缩 JPEG</h2>
+<p>作为有损格式，JPEG 文件的压缩级别与最终图像质量直接相反。在像 Photoshop 这样的工具中保存 JPEG 时，你会看到一个从 0 到 100 的质量设置。Photoshop 设置了一些图像质量范围：</p>
+<ul>
+<li>低 — 10%</li>
+<li>中 — 30%</li>
+<li>高 — 60%</li>
+<li>非常高 — 80%</li>
+<li>最佳 — 100%</li>
+</ul>
+<p><img src="https://faded.auspicious.space/post-images/1587295798797.png" alt="" loading="lazy"><br>
+最佳 100% (61 KB)，非常高 80% (29 KB)。<br>
+<img src="https://faded.auspicious.space/post-images/1587296057016.png" alt="" loading="lazy"><br>
+高 60% (16 KB)，中 30% (7 KB)。<br>
+<img src="https://faded.auspicious.space/post-images/1587296138925.png" alt="" loading="lazy"><br>
+低 10% (6 KB)，最低 0% (3 KB)。</p>
+<p>网络建议使用在 50％ 到 60％ 质量之间的 JPEG，因为它能保证不错的图像质量和较小的文件尺寸。从 JPEG 资源中删除元数据也可以减少文件大小。还有如 <a href="">TinyJPG</a> 的在线工具，以及桌面应用程序如 <a href="https://imageoptim.com/mac">ImageOptim</a> (Mac) 和 <a href="http://luci.criosweb.ro/riot/">RIOT</a> (Windows)都可以用来压缩图片。在 Photoshop 里，可以通过在“导出”中选择“元数据：无”或“存储为 Web 所用格式（旧版）”来完成压缩。模糊图像或图像部分区域也会产生较小的文件可在<a href="https://responsivedesign.is/articles/reducing-image-sizes">此处</a>查看。</p>
+<p>请注意，由于 JPEG 的有损方式，即使以 100％ 的质量保存相同的文件，因为压缩算法会在同一图像上一次又一次地应用，多次之后也会导致图像质量的降低。但这一变化可能不会显示在文件大小的改变上。</p>
+<h1 id="png">PNG</h1>
+<p>可移植网络图形（Portable Network Graphics）也是一种自 1995 年以来就一直存在的光栅图像格式。它与 JPEG 不同，因为它是一种无损格式，并且是目前网络上最常见的无损格式。这意味着由于它的压缩算法，当文件被保存和压缩时，不会丢失任何信息。</p>
+<p>PNG 有很多很酷的特性，如：</p>
+<ul>
+<li>Alpha 透明度——意味着每个像素可以具有不同的透明度；</li>
+<li>8 位文件可以使用基于调色板的颜色模型（也称为索引颜色）——这意味着如果减少颜色数量，文件可能更小；</li>
+<li>依据 <a href="http://www.libpng.org/pub/png/">libPNG</a> 的说法，PNG 压缩效率比 GIF 高 25％；</li>
+<li><a href="https://nuwen.net/png.html">二维隔行扫描</a>——图像会在加载过程中逐步显现，而不是只有当图像完全加载时，才能显示图像。必须谨慎使用此选项，因为它会增加文件大小。</li>
+</ul>
+<p>有关 PNG 更多特性、历史和技术信息的完整列表，请查看 libpng 的<a href="http://www.libpng.org/pub/png/">页面</a>。</p>
+<h2 id="png-的用途">PNG 的用途</h2>
+<p>PNG 对于线条图，徽标，图标和只有几种颜色的图像非常好用。另一方面，用在大量颜色的照片和图像时，将生成巨大的文件。PNG 的另一个好用的地方是透明背景。在这种情况下，即使是复杂的图片仍然可以使用 PNG，因为 JPEG 中不存在透明度功能。<br>
+<img src="https://faded.auspicious.space/post-images/1587297022626.png" alt="" loading="lazy"><br>
+PNG 可以很好地用在线条作品，徽标和图标上。 (漫画作者：<a href="https://xkcd.com/327/">xkcd</a>)</p>
+<h2 id="压缩-png">压缩 PNG</h2>
+<p>因为 PNG 中的压缩算法是无损的，你可以选择性地减少它的颜色，从而通过外部工具减小图片尺寸。 <a href="http://pngquant/">Pngquant</a> 就是一个很好的工具，它可以在保持 Alpha 水平的同时减少文件大小。请注意，这一过程会创建一个 8 位文件，即该文件最多可以有 256 种颜色。可能看起来不多，但是用这么多颜色足以获得很好的效果。<br>
+<img src="https://faded.auspicious.space/post-images/1587297406451.png" alt="" loading="lazy"><br>
+左边的 24 位图像 (149 KB) 和右边 8 位，256 色图像 (54 KB)——缩小了 63.7%</p>
+<p>对于大多数 PNG 使用场景（线图，图形，图标），256色是足够的。因此，可以通过减少调色板中的颜色数量来进一步减少文件大小。 使用 GUI 工具是个不错的选择，如 <a href="https://nukesaq88.github.io/Pngyu/">Pngyu</a> 或 <a href="https://pngmini.com/">ImageAlpha</a>，这些工具允许你预览生成的文件。 下面的例子显示了如何在不会显著影响质量的前提下，将调色板减少到 32 种颜色。在类似的例子中，图像很难被自动化地压缩——因为需要不断预览和测试来达到最佳效果——同时使用最少的颜色和产生最小的文件尺寸。就像 JPEG 一样，也有用于压缩 PNG 的在线工具，如：<a href="https://tinypng.com/">TinyPNG</a>。<br>
+<img src="https://faded.auspicious.space/post-images/1587297636099.png" alt="" loading="lazy"><br>
+在这个示例中，徽标可以从原始的 24 位 PNG（10 KB）减少到 8 位，32 色版本（2 KB，缩减 80％），并且没有丢失任何明显的细节。</p>
+<h1 id="gif">GIF</h1>
+<p>图形交换格式（Graphics Interchange Format）也是一种位图格式，并且比本文中提到的其它格式都出现地更早。它在 1989 年由 Steve Wilhite 创建, 它在 PNG 创建前都是最流行的 8 位图像格式。GIF 与 PNG 具有类似的特性，但有一些缺点：</p>
+<ul>
+<li>仅支持 256 种颜色；</li>
+<li><a href="https://nuwen.net/png.html">一维交错</a>——图像边加载边现实，但不够平滑；</li>
+<li>与 PNG 相比压缩性差；</li>
+<li>“非此即彼”透明度——像素只能是 100％ 透明或 100％ 可见；</li>
+<li>有歧义的发音？</li>
+</ul>
+<h1 id="svg">SVG</h1>
+<p>可伸缩矢量图形（Scalable Vector Graphics）与前面的两个栅格格式不同，顾名思义，它是矢量格式。这意味着它不会存储基于像素的数据，而是协调生成图形的信息。 SVG 矢量使用带有标签的基于 XML 的结构，就像 HTML 一样。由于此标签结构，你可以通过 ID 识别 SVG 元素，并操纵它们。这带来了很多可能性，例如使用 <a href="http://snapsvg.io/demos/#coffee">JavaScript</a> 和 <a href="https://css-tricks.com/animating-svg-css/">CSS</a> 修改和动画化元素或<a href="http://tympanus.net/codrops/2014/08/19/making-svgs-responsive-with-css/">创建响应式图形</a>。</p>
+<p>请看这个例子：<a href="https://codepen.io/jonathansilva/pen/rLABRz/">#1 – 咖啡机 – CSS3制作SVG动画</a> ，作者乔纳森·席尔瓦（Jonathan Silva）(<a href="https://codepen.io/jonathansilva">@jonathansilva</a>) 发表于 <a href="https://codepen.io/">CodePen</a>。</p>
+<p>就像其它矢量格式，SVG 图片能不丢失任何细节或像素化地放大到任何大小。打个比方，同一个图标，可以以多种尺寸使用，并且在任何屏幕分辨率（比如 Retina 显示器）中都将看起来很清晰，而不需要存成多个文件。<br>
+<img src="https://faded.auspicious.space/post-images/1587298874267.png" alt="" loading="lazy"><br>
+矢量图片（右）能够在保持图片的质量的前提下任意放大。</p>
+<h2 id="svg-的用途">SVG 的用途</h2>
+<p>SVG 在线条艺术，标志，图标，插画和数据可视化方面发挥出色。但它不适用于写实图像和有许多细节的复杂图片。在一些情况下，SVG 和 PNG 都能很好地达到同一个目的。对于线条艺术，SVG 通常能生成较小的文件。但是这不是必然的，实际情况会根据矢量图像究竟有多少个锚点，它甚至可能会生成比 PNG 更大的文件。 SVG 真正出色的地方是数据可视化。由于可以使用 JavaScript 来操纵和创建矢量动画，诸如 <a href="https://d3js.org/">D3</a> 之类的库提供了<a href="https://github.com/d3/d3/wiki/Gallery">无限的可能性</a>。<br>
+<img src="https://faded.auspicious.space/post-images/1587299024968.png" alt="" loading="lazy"><br>
+徽标，图标和数据可视化是 SVG 使用的优秀范例。</p>
+<h2 id="压缩-svg">压缩 SVG</h2>
+<p>大多数情况下，在网页上使用工具如 SVGz（GZipped SVG）来压缩 SVG 文件是不必要的。你可以（并且应该）在服务器上应用此 Gzipping，但也是多此一举。能做的应该是通过清除 SVG 文件里矢量图形中不必要的锚点、元素和属性来减少文件大小。锚点绘制了矢量图像，因此，你需要确保已移除的锚点不会影响矢量图形的最终形状。如果您使用 Adobe Illustrator 编辑 SVG，请确保使用 <strong>导出&gt;导出为...</strong> 而不是 <strong>文件&gt;另存为...</strong> 进行保存，因为这样才能生成一个最小化的文件，<a href="https://helpx.adobe.com/illustrator/how-to/export-svg.html">其它优点</a>。在 Sketch 里, 注意不要使用不必要的文件夹，因为它们也会作为额外的标签被 SVG 保存。<br>
+<img src="https://faded.auspicious.space/post-images/1587299183720.png" alt="" loading="lazy"><br>
+清理不必要的节点是缩减 SVG 尺寸的一种途径。</p>
+<p>元素是包含在 SVG 文件内的所有内容，包括开始和结束标签。矢量编辑软件，如 Adobe Illustrator 和 Sketch 可能会到处含有非必要元素和属性的 SVG。SVG 压缩器可用于删除这种多余的信息。<a href="https://compressor.io/">Compressor</a> 和 <a href="https://jakearchibald.github.io/svgomg/">SVGOMG</a> 等在线工具可以完成此工作。如果你是开发人员，而且不习惯清理和压缩 SVG，可以用自动执行工具 <a href="https://github.com/svg/svgo">SVGO</a>，如果你是设计师，请与该项目的开发人员谈谈 SVG 的最小化，以避免进行将这一项可以轻松自动化的工作手动完成。</p>
+<p>在下面的例子里，这个从 Sketch 里导出的图标有 1,364 B。同一个图标在清理和压缩后，就只剩 460 B——缩小了 66%。</p>
+<p>请看这个例子：<a href="https://codepen.io/brunomuler/pen/oBdMZL/">来自 Sketch 的 SVG 作者</a>布鲁诺·穆勒（Bruno Müller）(<a href="https://codepen.io/brunomuler">@brunomuler</a>) on <a href="https://codepen.io/">CodePen</a>。</p>
+<p>对比：<a href="https://codepen.io/brunomuler/pen/BpxPWY/">优化后的 SVG</a>。</p>
+<h1 id="文末思考">文末思考</h1>
+<p>如同任何其他技术一般，图像格式也在不断发展。作为网页设计师和开发人员，我们的主要限制是浏览器支持。几年前，在 IE6 为主流浏览器的时代，PNG 还不能使用 Alpha 透明度。在不久的将来，也许我们会使用新的格式，如 <a href="https://developers.google.com/speed/webp/">Google's Webp</a> 或者其它仍未被创建出来的图片格式。</p>
+<p>了解如何使用和优化每种图片格式将确保更好的用户体验。因为用户将能够更早地预览和接收内容，减少带宽的使用。它还将为设计人员提供了动画和响应式页面的新机会。</p>
+<p>我希望这篇文章有助于澄清一些网络上关于图像格式的诸多不确定性的问题。如果你还有任何问题或建议，请在下方发表评论或与我联系。另外，如果觉得本文对你有帮助，不要忘了分享。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[进程间通信—IPC]]></title>
         <id>https://faded.auspicious.space/post/inter-process-communication/</id>
@@ -1840,774 +2041,6 @@ $ git blame -C FILE
 </code></pre>
 <p>如果你最近访问过的话，你通常可以用 <code>git reflog</code> 来找到 <code>SHA1</code> 哈希值。</p>
 <p>另一种方式是使用 <code>git fsck —lost-found</code>。其中一个 <code>dangling</code> 的提交就是丢失的 <code>HEAD</code>（它只是已删除分支的 <code>HEAD</code>，而 <code>HEAD</code> 被引用为当前的 <code>HEAD</code> 所以它并不处于 <code>dangling</code> 状态）。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Git——4 个阶段的撤销更改]]></title>
-        <id>https://faded.auspicious.space/post/git-four-stages-of-reset/</id>
-        <link href="https://faded.auspicious.space/post/git-four-stages-of-reset/">
-        </link>
-        <updated>2020-04-17T02:20:22.000Z</updated>
-        <summary type="html"><![CDATA[<p>错误修改了代码不要紧，这里教你如何恢复以前的正确代码。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>错误修改了代码不要紧，这里教你如何恢复以前的正确代码。</p>
-<!-- more -->
-<blockquote>
-<p><a href="https://www.fengerzh.com/git-reset/">Git的4个阶段的撤销更改</a></p>
-</blockquote>
-<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587090203607.png" alt="" loading="lazy"></figure>
-<p>虽然 <code>git</code> 诞生距今已有 12 年之久，网上各种关于 <code>git</code> 的介绍文章数不胜数，但是依然有很多人（包括我自己在内）对于它的功能不能完全掌握。以下的介绍只是基于我个人对于 <code>git</code> 的理解，并且可能生编硬造了一些不完全符合 <code>git</code> 说法的词语。目的只是为了让 <code>git</code> 通俗化，使初学者也能大概了解如何快速上手 <code>git</code>。同时，下面所有讨论，我们都假设只使用一个分支，也就是主分支 <code>master</code> 的情况，虽然这种作法并不符合 <code>git</code> 规范，但是现实情况中绝大部分用户是直接在 <code>master</code> 分支上进行工作的，所以在这里我们不去引入更加复杂的各种分支的情况，也不涉及标签 <code>tag</code> 的操作，只讲在最简单的主分支上如何回退。</p>
-<h1 id="基本概念">基本概念</h1>
-<h2 id="3-个步骤">3 个步骤</h2>
-<p><img src="https://faded.auspicious.space/post-images/1587090327591.png" alt="" loading="lazy"><br>
-正常情况下，我们的工作流就是 3 个步骤，对应上图中的 3 个箭头线：</p>
-<pre><code class="language-bash">git add .
-git commit -m &quot;comment&quot;
-git push
-</code></pre>
-<ol>
-<li><code>git add .</code> 把所有文件放入暂存区；</li>
-<li><code>git commit</code> 把所有文件从暂存区提交进本地仓库；</li>
-<li><code>git push</code> 把所有文件从本地仓库推送进远程仓库。</li>
-</ol>
-<h2 id="4-个区">4 个区</h2>
-<p><code>git</code> 之所以令人费解，主要是它相比于 <code>svn</code> 等等传统的版本管理工具，多引入了一个暂存区（Stage）的概念，就因为多了这一个概念，而使很多人疑惑。其实，在初学者来说，每个区具体怎么工作的，我们完全不需要关心，而只要知道有这么 4 个区就够了：</p>
-<ul>
-<li>工作区（Working Area）</li>
-<li>暂存区（Stage）</li>
-<li>本地仓库（Local Repository）</li>
-<li>远程仓库（Remote Repository）</li>
-</ul>
-<h2 id="5-种状态">5 种状态</h2>
-<p>以上 4 个区，进入每一个区成功之后会产生一个状态，再加上最初始的一个状态，一共是 5 种状态。以下我们把这 5 种状态分别命名为：</p>
-<ul>
-<li>未修改（Origin）</li>
-<li>已修改（Modified）</li>
-<li>已暂存（Staged）</li>
-<li>已提交（Committed）</li>
-<li>已推送（Pushed）</li>
-</ul>
-<h1 id="检查修改">检查修改</h1>
-<p>了解了基本概念之后，我们来谈一谈犯错误之后如何撤销的问题。首先，我们要了解如何检查这 3 个步骤当中每一个步骤修改了什么，然后才好判断有没有修改成功。检查修改的二级命令都相同，都是 <code>diff</code>，只是参数有所不同。</p>
-<h2 id="已修改未暂存">已修改，未暂存</h2>
-<pre><code class="language-bash">git diff
-</code></pre>
-<p>首先，我们来看一下，如果我们只是简单地在浏览器里保存了一下文件，但是还没有做 <code>git add .</code> 之前，我们如何检查有哪些修改。我们先随便拿一个文件来做一下实验：<br>
-<img src="https://faded.auspicious.space/post-images/1587090638955.png" alt="" loading="lazy"><br>
-我们在文件开头的第 2 行胡乱加了 4 个数字 <code>1234</code>，存盘，这时文件进入了<strong>已修改</strong>状态，但是还没有进入<strong>暂存区</strong>，我们运行 <code>git diff</code>，结果如下：</p>
-<pre><code class="language-bash">diff --git a/index.md b/index.md
-index 73ff1ba..1066758 100644
---- a/index.md
-+++ b/index.md
-@@ -1,5 +1,5 @@
- ---
--layout: main
-+1234layout: main
- color: black
- ---
-</code></pre>
-<p><code>git diff</code> 的结果告诉我们哪些文件已经做了哪些修改。</p>
-<h2 id="已暂存未提交">已暂存，未提交</h2>
-<pre><code class="language-bash">git diff --cached
-</code></pre>
-<p>现在我们把修改放入<strong>暂存区</strong>看一下。先执行 <code>git add .</code>，然后执行 <code>git diff</code>，你会发现没有任何结果：<br>
-<img src="https://faded.auspicious.space/post-images/1587090841347.png" alt="" loading="lazy"><br>
-这说明 <code>git diff</code> 这个命令只检查我们的<strong>工作区</strong>和<strong>暂存区</strong>之间的差异，如果我们想看到<strong>暂存区</strong>和<strong>本地仓库</strong>之间的差异，就需要加一个参数 <code>git diff --cached</code>：</p>
-<pre><code class="language-bash">diff --git a/index.md b/index.md
-index 73ff1ba..1066758 100644
---- a/index.md
-+++ b/index.md
-@@ -1,5 +1,5 @@
- ---
--layout: main
-+1234layout: main
- color: black
- ---
-</code></pre>
-<p>这时候我们看到的差异是<strong>暂存区</strong>和<strong>本地仓库</strong>之间的差异。</p>
-<h2 id="已提交未推送">已提交，未推送</h2>
-<pre><code class="language-bash">git diff master origin/master
-</code></pre>
-<p>现在，我们把修改从<strong>暂存区</strong>提交到<strong>本地仓库</strong>，再看一下差异。先执行 <code>git commit</code>，然后再执行 <code>git diff --cached</code>，没有差异，执行 <code>git diff master origin/master</code>，可以看到差异：<br>
-<img src="https://faded.auspicious.space/post-images/1587091065745.png" alt="" loading="lazy"><br>
-在这里，<code>master</code> 就是你的本地仓库，而 <code>origin/master</code> 就是你的远程仓库，<code>master</code> 是主分支的意思，因为我们都在主分支上工作，所以这里两边都是 <code>master</code>，而 <code>origin</code> 就代表远程。</p>
-<h1 id="撤销修改">撤销修改</h1>
-<p>了解清楚如何检查各种修改之后，我们开始尝试各种撤销操作。</p>
-<h2 id="恢复已修改未暂存">恢复已修改，未暂存</h2>
-<p>如果我们只是在编辑器里修改了文件，但还没有执行 <code>git add .</code>，这时候我们的文件还在<strong>工作区</strong>，并没有进入<strong>暂存区</strong>，我们可以用：</p>
-<pre><code class="language-bash">git checkout .
-</code></pre>
-<p>或者</p>
-<pre><code class="language-bash">git reset --hard
-</code></pre>
-<p>来进行撤销操作。<br>
-<img src="https://faded.auspicious.space/post-images/1587091296924.png" alt="" loading="lazy"><br>
-可以看到，在执行完 <code>git checkout .</code> 之后，修改已被撤销，<code>git diff</code> 没有任何内容了。</p>
-<table>
-<thead>
-<tr>
-<th>一对反义词 &gt; <code>git add .</code> 的反义词是 <code>git checkout .</code>。做完修改之后，如果你想向前走一步，让修改进入暂存区，就执行 <code>git add .</code>，如果你想向后退一步，撤销刚才的修改，就执行 <code>git checkout .</code>。</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-<h2 id="恢复已暂存未提交">恢复已暂存，未提交</h2>
-<p>你已经执行了 <code>git add .</code>，但还没有执行 <code>git commit -m &quot;comment&quot;</code>。这时候你意识到了错误，想要撤销，你可以执行：</p>
-<pre><code class="language-bash">git reset
-git checkout .
-</code></pre>
-<p>或者</p>
-<pre><code class="language-bash">git reset --hard
-</code></pre>
-<p><code>git reset</code> 只是把修改退回到了 <code>git add .</code> 之前的状态，也就是说文件本身还处于<strong>已修改未暂存</strong>状态，你如果想退回<strong>未修改</strong>状态，还需要执行 <code>git checkout .</code>。</p>
-<p>或许你已经注意到了，以上两个步骤都可以用同一个命令 <code>git reset --hard</code> 来完成。是的，就是这个强大的命令，可以一步到位地把你的修改完全恢复到<strong>未修改</strong>的状态。</p>
-<h2 id="恢复已提交未推送">恢复已提交，未推送</h2>
-<p>你的手太快，你既执行了 <code>git add .</code>，又执行了 <code>git commit</code>，这时候你的代码已经进入了你的<strong>本地仓库</strong>，然而你后悔了，怎么办？不要着急，还有办法。</p>
-<pre><code class="language-bash">git reset --hard origin/master
-</code></pre>
-<p>还是这个 <code>git reset --hard</code> 命令，只不过这次多了一个参数 <code>origin/master</code>，正如我们上面讲过的，<code>origin/master</code> 代表<strong>远程仓库</strong>，既然你已经污染了你的<strong>本地仓库</strong>，那么就从<strong>远程仓库</strong>把代码取回来吧。</p>
-<h2 id="已推送">已推送</h2>
-<p>很不幸，你的手实在是太快了，你既 <code>git add</code> 了，又 <code>git commit</code> 了，并且还 <code>git push</code> 了，这时你的代码已经进入<strong>远程仓库</strong>。如果你想恢复的话，还好，由于你的<strong>本地仓库</strong>和<strong>远程仓库</strong>是等价的，你只需要先恢复<strong>本地仓库</strong>，再强制 <code>push</code> 到<strong>远程仓库</strong>就好了：</p>
-<pre><code class="language-bash">git reset --hard HEAD^
-git push -f
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://faded.auspicious.space/post-images/1587091677820.png" alt="" loading="lazy"></figure>
-<h1 id="总结">总结</h1>
-<p>以上 4 种状态的撤销我们都用到了同一个命令 <code>git reset --hard</code>，前 2 种状态的用法甚至完全一样，所以只要掌握了 <code>git reset --hard</code> 这个命令的用法，从此你再也不用担心提交错误了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[JavaScript——发现闭包的强大威力]]></title>
-        <id>https://faded.auspicious.space/post/javascript-discover-the-power-of-closures/</id>
-        <link href="https://faded.auspicious.space/post/javascript-discover-the-power-of-closures/">
-        </link>
-        <updated>2020-04-15T04:57:02.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://juejin.im/post/5c4e6a90e51d4552266576d2">[译]发现 JavaScript 中闭包的强大威力</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://juejin.im/post/5c4e6a90e51d4552266576d2">[译]发现 JavaScript 中闭包的强大威力</a></p>
-</blockquote>
-<!-- more -->
-<p>闭包是一个可以访问外部作用域的内部函数，即使这个外部作用域已经执行结束。</p>
-<h1 id="1-作用域">1 作用域</h1>
-<p>作用域决定这个变量的生命周期及其可见性。 当我们创建了一个函数或者 <code>{}</code> 块，就会生成一个新的作用域。需要注意的是，通过 <code>var</code> 创建的变量只有函数作用域，而通过 <code>let</code> 和 <code>const</code> 创建的变量既有函数作用域，也有块作用域。</p>
-<h1 id="2-嵌套作用域">2 嵌套作用域</h1>
-<p>在 JavasScript 中函数里面可以嵌套函数，如下：</p>
-<pre><code class="language-javascript">(function autorun(){
-    let x = 1;
-    function log(){ 
-       console.log(x); 
-    }
-    log();
-})();
-</code></pre>
-<p><code>log()</code> 即是一个嵌套在 <code>autorun()</code> 函数里面的函数。在 <code>log()</code> 函数里面可以通过外部函数访问到变量 <code>x</code>。此时，<code>log()</code> 函数就是一个闭包。</p>
-<p>闭包就是内部函数，我们可以通过在一个函数内部或者 <code>{}</code> 块里面定义一个函数来创建闭包。</p>
-<h2 id="21-外部函数作用域">2.1 外部函数作用域</h2>
-<p>内部函数可以访问外部函数中定义的变量，即使外部函数已经执行完毕。如下：</p>
-<pre><code class="language-javascript">(function autorun(){
-    let x = 1;
-    setTimeout(function log(){
-      console.log(x);
-    }, 10000);
-})();
-</code></pre>
-<p>并且，内部函数还可以访问外部函数中定义的形参，如下：</p>
-<pre><code class="language-javascript">(function autorun(p){
-    let x = 1;
-    setTimeout(function log(){
-      console.log(x);//1
-      console.log(p);//10
-    }, 10000);
-})(10);
-</code></pre>
-<h2 id="22-外部块作用域">2.2 外部块作用域</h2>
-<p>内部函数可以访问外部块中定义的变量，即使外部块已执行完毕，如下：</p>
-<pre><code class="language-javascript">{
-    let x = 1;
-    setTimeout(function log(){
-      console.log(x);
-    }, 10000);
-}
-</code></pre>
-<h1 id="3-词法作用域">3 词法作用域</h1>
-<p>词法作用域是指内部函数在定义的时候就决定了其外部作用域。</p>
-<p>看如下代码：</p>
-<pre><code class="language-javascript">(function autorun(){
-    let x = 1;
-    function log(){
-      console.log(x);
-    };
-    
-    function run(fn){
-      let x = 100;
-      fn();
-    }
-    
-    run(log);//1
-})();
-</code></pre>
-<p><code>log()</code> 函数是一个闭包，它在这里访问的是 <code>autorun()</code> 函数中的 <code>x</code> 变量，而不是 <code>run</code> 函数中的变量。</p>
-<p>❗️<strong>闭包的外部作用域是在其定义的时候已决定，而不是执行的时候。</strong></p>
-<p><code>autorun()</code> 的函数作用域即是 <code>log()</code> 函数的词法作用域。</p>
-<h1 id="4-作用域链">4 作用域链</h1>
-<p>每一个作用域都有对其父作用域的引用。当我们使用一个变量的时候，JavaScript 引擎 会通过变量名在当前作用域查找，若没有查找到，会一直沿着作用域链一直向上查找，直到 <code>global</code> 全局作用域。</p>
-<p>示例如下：</p>
-<pre><code class="language-javascript">let x0 = 0;
-(function autorun1(){
- let x1 = 1;
-  
- (function autorun2(){
-   let x2 = 2;
-  
-   (function autorun3(){
-     let x3 = 3;
-      
-     console.log(x0 + &quot; &quot; + x1 + &quot; &quot; + x2 + &quot; &quot; + x3);//0 1 2 3
-    })();
-  })();
-})();
-</code></pre>
-<p>我们可以看到，<code>autorun3()</code> 这个内部函数可以访问其自身局部变量 <code>x3</code> ，也可以访问外部作用域中的 <code>x1</code> 和 <code>x2</code> 变量，以及全局作用域中的 <code>x0</code> 变量。即：闭包可以访问其外部（父）作用域中的定义的所有变量。</p>
-<h2 id="41-外部作用域执行完毕后">4.1 外部作用域执行完毕后</h2>
-<p>当外部作用域执行完毕后，内部函数还存活（仍在其他地方被引用）时，闭包才真正发挥其作用。譬如以下几种情况：</p>
-<ul>
-<li>在异步任务例如 <code>timer</code> 定时器，事件处理，<code>Ajax</code> 请求中被作为回调。</li>
-<li>被外部函数作为返回结果返回，或者返回结果对象中引用该内部函数。</li>
-</ul>
-<p>考虑如下的几个示例：</p>
-<h3 id="411-timer">4.1.1 Timer</h3>
-<pre><code class="language-javascript">(function autorun(){
-    let x = 1;
-    setTimeout(function log(){
-      console.log(x);
-    }, 10000);
-})();
-</code></pre>
-<p>变量 <code>x</code> 将一直存活着直到定时器的回调执行或者 <code>clearTimeout()</code> 被调用。<br>
-如果这里使用的是 <code>setInterval()</code>，那么变量 <code>x</code> 将一直存活到 <code>clearInterval()</code> 被调用。</p>
-<p><em>译者注：原文中说变量 <code>x</code> 一直存活到 <code>setTimeout()</code> 或者 <code>setInterval()</code> 被调用是错误的。</em></p>
-<h3 id="412-event">4.1.2 Event</h3>
-<pre><code class="language-javascript">(function autorun(){
-    let x = 1;
-    $(&quot;#btn&quot;).on(&quot;click&quot;, function log(){
-      console.log(x);
-    });
-})();
-</code></pre>
-<p>当变量 <code>x</code> 在事件处理函数中被使用时，它将一直存活直到该事件处理函数被移除。</p>
-<h3 id="413-ajax">4.1.3 Ajax</h3>
-<pre><code class="language-javascript">(function autorun(){
-    let x = 1;
-    fetch(&quot;http://&quot;).then(function log(){
-      console.log(x);
-    });
-})();
-</code></pre>
-<p>变量 <code>x</code> 将一直存活到接收到后端返回结果，回调函数被执行。</p>
-<p>在已上几个示例中，我们可以看到，<code>log()</code> 函数在父函数执行完毕后还一直存活着，<code>log()</code> 函数就是一个闭包。</p>
-<p>除了 <code>timer</code> 定时器，事件处理，<code>Ajax</code> 请求等比较常见的异步任务，还有其他的一些异步 API 比如 <code>HTML5 Geolocation</code>，<code>WebSockets</code>，<code>requestAnimationFrame()</code> 也将使用到闭包的这一特性。</p>
-<p>变量的生命周期取决于闭包的生命周期。被闭包引用的外部作用域中的变量将一直存活直到闭包函数被销毁。如果一个变量被多个闭包所引用，那么直到所有的闭包被垃圾回收后，该变量才会被销毁。</p>
-<h1 id="5-闭包与循环">5 闭包与循环</h1>
-<p>闭包只存储外部变量的引用，而不会拷贝这些外部变量的值。 查看如下示例：</p>
-<pre><code class="language-javascript">function initEvents(){
-  for(var i=1; i&lt;=3; i++){
-    $(&quot;#btn&quot; + i).click(function showNumber(){
-      alert(i);//4
-    });
-  }
-}
-initEvents();
-</code></pre>
-<p>在这个示例中，我们创建了 3 个闭包，皆引用了同一个变量 <code>i</code>，且这三个闭包都是事件处理函数。由于变量 <code>i</code> 随着循环自增，因此最终输出的都是同样的值。</p>
-<p>修复这个问题最简单的方法是在 <code>for</code> 语句块中使用 <code>let</code> 变量声明，这将在每次循环中为 <code>for</code> 语句块创建一个新的局部变量。如下：</p>
-<pre><code class="language-javascript">function initEvents(){
-  for(let i=1; i&lt;=3; i++){
-    $(&quot;#btn&quot; + i).click(function showNumber(){
-      alert(i); // 1 2 3
-    });
-  }
-}
-initEvents();
-</code></pre>
-<p>但是，如果变量声明在 <code>for</code> 语句块之外的话，即使用了 <code>let</code> 变量声明，所有的闭包还是会引用同一个变量，最终输出的还是同一个值。</p>
-<h1 id="6-闭包与封装性">6 闭包与封装性</h1>
-<p>封装性意味着信息隐藏。</p>
-<h2 id="61-函数与私有状态">6.1 函数与私有状态</h2>
-<p>通过闭包，我们可以创建拥有私有状态的函数，闭包使得状态被封装起来。</p>
-<h2 id="62-工厂模式与私有原型对象">6.2 工厂模式与私有原型对象</h2>
-<p>我们先来看一个通过原型创建对象的常规方式，如下：</p>
-<pre><code class="language-javascript">let todoPrototype = {
-  toString : function() {
-    return this.id + &quot; &quot; + this.userName + &quot;: &quot; + this.title;
-  }
-}
-function Todo(todo){
-  let newTodo = Object.create(todoPrototype);
-  Object.assign(newTodo, todo);
-  return newTodo;
-}
-</code></pre>
-<p>在这个例子中，<code>todoPrototype</code> 原型对象是一个全局对象。</p>
-<p>我们可以通过闭包，只用创建原型对象一次，也能够被所有 <code>Todo</code> 函数调用所公用，并且保证其私有性。示例如下：</p>
-<pre><code class="language-javascript">let Todo = (function createTodoFactory(){
-  let todoPrototype = {
-    toString : function() {
-      return this.id + &quot; &quot; + this.userName + &quot;: &quot; + this.title;
-    }
-  }
-  return function(todo){
-    let newTodo = Object.create(todoPrototype);
-    Object.assign(newTodo, todo);
-    return newTodo;
-  }
-})();
-let todo = Todo({id : 1, title: &quot;This is a title&quot;, userName: &quot;Cristi&quot;, completed: false });
-</code></pre>
-<p>这里，<code>Todo()</code> 就是一个拥有私有状态的函数。</p>
-<h2 id="63-工厂模式与私有构造函数">6.3 工厂模式与私有构造函数</h2>
-<p>查看如下代码：</p>
-<pre><code class="language-javascript">let Todo = (function createTodoFactory(){
- function Todo(spec){
-   Object.assign(this, spec);
- }
- 
- return function(spec){
-   let todo = new Todo(spec);
-   return Object.freeze(todo);
- }
-})();
-</code></pre>
-<p>这里，<code>Todo()</code> 工厂函数就是一个闭包。通过它，不管是否使用 <code>new</code>，我们都可以创建不可变对象，原型对象也只用创建一次，并且它是私有的。</p>
-<pre><code class="language-javascript">let todo = Todo({title : &quot;A description&quot;});
-todo.title = &quot;Another description&quot;; 
-// Cannot assign to read only property 'title' of object
-todo.toString = function() {};
-//Cannot assign to read only property 'toString' of object
-</code></pre>
-<p>而且，在内存快照中，我们可以通过构造函数名来识别这些示例对象。<br>
-<img src="https://faded.auspicious.space/post-images/1586954287441.png" alt="" loading="lazy"></p>
-<h2 id="64-翻译功能与私有-map">6.4 翻译功能与私有 map</h2>
-<p>通过闭包，我们可以创建一个 <code>map</code>，在所有翻译调用中被使用，且是私有的。</p>
-<p>示例如下：</p>
-<pre><code class="language-javascript">let translate = (function(){
-  let translations = {};
-  translations[&quot;yes&quot;] = &quot;oui&quot;;
-  translations[&quot;no&quot;]  = &quot;non&quot;;
-  
-  return function(key){
-    return translations[key];
-  }
-})();
-translate(&quot;yes&quot;); //oui
-</code></pre>
-<h2 id="65-自增生成器函数">6.5 自增生成器函数</h2>
-<p>通过闭包，我们可以创建自增生成器函数。同样，内部状态是私有的。示例如下：</p>
-<pre><code class="language-javascript">function createAGenerate(count, increment) {
-  return function(){
-    count += increment;
-    return count;
-  }
-}
-let generateNextNumber = createAGenerate(0, 1);
-console.log(generateNextNumber()); //1
-console.log(generateNextNumber()); //2
-console.log(generateNextNumber()); //3
-let generateMultipleOfTen = createAGenerate(0, 10);
-console.log(generateMultipleOfTen()); //10
-console.log(generateMultipleOfTen()); //20
-console.log(generateMultipleOfTen()); //30
-</code></pre>
-<p><em>译者注：原文中依次输出0,1,2,0,10,20是有误的，感谢@Round的指正</em></p>
-<h2 id="66-对象与私有状态">6.6 对象与私有状态</h2>
-<p>以上示例中，我们可以创建一个拥有私有状态的函数。同时，我们也可以创建多个拥有同一私有状态的函数。基于此，我们还可以创建一个拥有私有状态的对象。</p>
-<p>示例如下：</p>
-<pre><code class="language-javascript">function TodoStore(){
-  let todos = [];
-  
-  function add(todo){
-    todos.push(todo);
-  }
-  function get(){
-    return todos.filter(isPriorityTodo).map(toTodoViewModel);
-  }
-  
-  function isPriorityTodo(todo){
-     return task.type === &quot;RE&quot; &amp;&amp; !task.completed;
-  }
-  
-  function toTodoViewModel(todo) {
-     return { id : todo.id, title : todo.title };
-  }
-  
-  return Object.freeze({
-    add,
-    get
-  });
-}
-</code></pre>
-<p><code>TodoStore()</code> 函数返回了一个拥有私有状态的对象。在外部，我们无法访问私有的 <code>todos</code> 变量，并且 <code>add</code> 和 <code>get</code> 这两个闭包拥有相同的私有状态。在这里，<code>TodoStore()</code> 是一个工厂函数。</p>
-<h2 id="67-闭包-vs-纯函数">6.7 闭包 vs 纯函数</h2>
-<p>闭包就是那些引用了外部作用域中变量的函数。</p>
-<p>为了更好的理解，我们将内部函数拆成闭包和纯函数两个方面：</p>
-<ul>
-<li>闭包是那些引用了外部作用域中变量的函数。</li>
-<li>纯函数是那些没有引用外部作用域中变量的函数，它们通常返回一个值并且没有副作用。</li>
-</ul>
-<p>在上述例子中，<code>add()</code> 和 <code>get()</code> 函数是闭包，而 <code>isPriorityTodo()</code> 和 <code>toTodoViewModel()</code> 则是纯函数。</p>
-<h1 id="7-闭包在函数式编程中的应用">7 闭包在函数式编程中的应用</h1>
-<p>闭包在函数式编程中也应用广泛。譬如，<code>underscore</code> 源码中 <a href="https://underscorejs.org/#functions">函数相关小节</a> 中的所有函数都利用了闭包这一特性。</p>
-<blockquote>
-<p>A function decorator is a higher-order function that takes one function as an argument and returns another function, and the returned function is a variation of the argument function — <a href="https://leanpub.com/javascript-allonge/read#decorators">Javascript Allongé</a></p>
-</blockquote>
-<p>装饰器函数也使用了闭包的特性。</p>
-<p>我们来看如下 <code>not</code> 这个简单的装饰器函数：</p>
-<pre><code class="language-javascript">function not(fn){
-  return function decorator(...args){
-    return !fn.apply(this, args);
-  }
-}
-</code></pre>
-<p><code>decorator()</code> 函数引用了外部作用域的 <code>fn</code> 变量，因此它是一个闭包。</p>
-<p>如果你想知道更多关于装饰器相关的知识，可以查看<a href="https://www.freecodecamp.org/news/here-are-a-few-function-decorators-you-can-write-from-scratch-488549fe8f86/">这篇文章</a>。</p>
-<h1 id="8-垃圾回收">8 垃圾回收</h1>
-<p>在 JavaScript 中，局部变量会随着函数的执行完毕而被销毁，除非还有指向他们的引用。当闭包本身也被垃圾回收之后，这些闭包中的私有状态随后也会被垃圾回收。通常我们可以通过切断闭包的引用来达到这一目的。</p>
-<p>在这个例子中，我们首先创建了一个 <code>add()</code> 闭包。</p>
-<pre><code class="language-javascript">let add = (function createAddClosure(){
-    let arr = [];
-    return function(obj){
-       arr.push(obj);
-    }
-})();
-</code></pre>
-<p>随后，我们又定义了两个函数：</p>
-<ul>
-<li><code>addALotOfObjects()</code> 往闭包变量 <code>arr</code> 中加入对象。</li>
-<li><code>clearAllObjects()</code> 将闭包函数置为 <code>null</code> 。</li>
-</ul>
-<p>并且两个函数皆作为事件处理函数：</p>
-<pre><code class="language-javascript">function addALotOfObjects(){
-    for(let i=1; i&lt;=10000;i++) {
-       add(new Todo(i));
-    }
-}
-function clearAllObjects(){
-    if(add){
-       add = null;
-    }
-}
-$(&quot;#add&quot;).click(addALotOfObjects);
-$(&quot;#clear&quot;).click(clearAllObjects);
-</code></pre>
-<p>当我点击 <code>Add</code> 按钮时，将往闭包变量 <code>arr</code> 中加入 10000 个 <code>todo</code> 对象，内存快照如下：<br>
-<img src="https://faded.auspicious.space/post-images/1586954839826.png" alt="" loading="lazy"><br>
-当我点击 <code>Clear</code> 按钮时，我们将闭包引用置为 <code>null</code>。随后，闭包变量 <code>arr</code> 将被垃圾回收，内存快照如下：<br>
-<img src="https://faded.auspicious.space/post-images/1586954881968.png" alt="" loading="lazy"></p>
-<h1 id="9-避免全局变量">9 避免全局变量</h1>
-<p>在 JavaScript 中，我们很容易创建出全局变量。任何定义在函数和 <code>{}</code> 块之外的变量都是全局的，定义在全局作用域中的函数也是全局的。</p>
-<p>这里以定义创建不同对象的工厂函数为例。为了避免将所有的工厂函数都放在全局作用域下，最简单的方法就是将他们挂在 <code>app</code> 全局变量下。</p>
-<p>示例如下：</p>
-<pre><code class="language-javascript">let app = Loader();
-app.factory(function DataService(args){ return {}});
-app.factory(function Helper(args){ return {}});
-app.factory(function Mapper(args){ return {}});
-app.factory(function Model(args){});
-</code></pre>
-<p><code>app.factory()</code> 方法还可以将不同的工厂函数归类到不同的模块中。下面这个示例就是将 <code>Timer</code> 工厂函数归类到 <code>tools</code> 模块下。</p>
-<pre><code class="language-javascript">app.factory(&quot;tools&quot;)(function Timer(args){ return {}});
-</code></pre>
-<p>我们可以在 <code>app</code> 对象上暴露一个 <code>start</code> 方法来作为应用的入口点，通过回调函数中 <code>factories</code> 参数来访问这些工厂函数。这里 <code>start()</code> 函数只能被调用一次，如下：</p>
-<pre><code class="language-javascript">app.start(function startApplication(factories){
-  let helper = factories.Helper();
-  
-  let dataService = factories.DataService();
-  let model = factories.Model({
-      dataService : dataService,
-      helper : helper,
-      timer : factories.tools.Timer()
-  });
-});
-</code></pre>
-<blockquote>
-<p>A Composition Root is a (preferably) unique location in an application where modules are composed together—Mark Seemann</p>
-</blockquote>
-<h2 id="91-loader-对象">9.1 loader 对象</h2>
-<p>让我们来将 <code>app</code> 完善为一个 <code>loader</code> 对象，示例如下：</p>
-<pre><code class="language-javascript">function Loader(){
-  let modules = Object.create(null);
-  let started = false;
-  
-  function getNamespaceModule(modulesText){
-    let parent = modules;
-    if(modulesText){
-      let parts = modulesText.split('.');
-      for(let i=0; i&lt;parts.length; i++){
-        let part = parts[i];
-        if (typeof parent[part] === &quot;undefined&quot;) {
-          parent[part] = Object.create(null);
-        }
-        
-        parent = parent[part];
-      }
-    }
-    
-    return parent;
-  }
-  
-  function addFunction(namespace, fn){
-    if(typeof(fn) !== &quot;function&quot;) {
-      throw &quot;Only functions can be added&quot;;
-    }
-       
-    let module = getNamespaceModule(namespace);
-    let fnName = fn.name;    
-    module[fnName] = fn;
-  }
-  
-  function addNamespace(namespace){
-    return function(fn){
-      addFunction(namespace, fn)
-    }
-  }
-  
-  function factory(){
-    if(typeof(arguments[0]) === &quot;string&quot;){
-      return addNamespace(arguments[0]);
-    } else {
-      return addFunction(null, arguments[0]);
-    }
-  }
-  
-  function start(startApplication){
-    if(started){
-      throw &quot;App can be started only once&quot;;
-    }
-     
-    startApplication(Object.freeze(modules));
-    started = true;
-  }
-  
-  return Object.freeze({
-    factory,
-    start
-  });
-};
-let app = Loader();
-</code></pre>
-<p><code>factory()</code> 方法用于添加新的工厂函数到内部变量 <code>modules</code> 中。</p>
-<p><code>start()</code> 方法则会调用回调函数，在回调函数中访问内部变量。</p>
-<p>通过 <code>factory()</code> 定义工厂函数，将 <code>start()</code> 作为整个应用中调用各种工厂函数生成不同对象的唯一入口点，这是如此简洁优雅的方式。</p>
-<p>在这里，<code>factory</code> 和 <code>start</code> 都是闭包。</p>
-<h1 id="10-总结">10 总结</h1>
-<p>闭包是一个可以访问外部作用域中变量的内部函数。</p>
-<p>这些被引用的变量直到闭包被销毁时才会被销毁。</p>
-<p>闭包使得 <code>timer</code> 定时器，事件处理，<code>Ajax</code> 请求等异步任务更加容易。</p>
-<p>可以通过闭包来达到封装性。</p>
-<p>最后，想获得更多关于 JavaScript 函数相关知识，可以查看以下文章：</p>
-<ul>
-<li><a href="https://medium.freecodecamp.org/discover-functional-programming-in-javascript-with-this-thorough-introduction-a2ad9af2d645">Discover Functional Programming in JavaScript with this thorough introduction</a></li>
-<li><a href="https://medium.freecodecamp.org/discover-the-power-of-first-class-functions-fd0d7b599b69">Discover the power of first class functions</a></li>
-<li><a href="https://medium.freecodecamp.org/how-point-free-composition-will-make-you-a-better-functional-programmer-33dcb910303a">How point-free composition will make you a better functional programmer</a></li>
-<li><a href="https://medium.freecodecamp.org/here-are-a-few-function-decorators-you-can-write-from-scratch-488549fe8f86">Here are a few function decorators you can write from scratch</a></li>
-<li><a href="https://medium.freecodecamp.org/make-your-code-easier-to-read-with-functional-programming-94fb8cc69f9d">Make your code easier to read with Functional Programming</a></li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[忘记 jQuery 使用原生接口]]></title>
-        <id>https://faded.auspicious.space/post/how-to-forget-about-jquery-and-start-using-native/</id>
-        <link href="https://faded.auspicious.space/post/how-to-forget-about-jquery-and-start-using-native/">
-        </link>
-        <updated>2020-04-15T04:43:35.000Z</updated>
-        <summary type="html"><![CDATA[<p><a href="https://www.jeffjade.com/2015/11/25/2015-11-31-jQuery-vs-javaScript/">jQuery VS JavaScript原生API</a></p>
-]]></summary>
-        <content type="html"><![CDATA[<p><a href="https://www.jeffjade.com/2015/11/25/2015-11-31-jQuery-vs-javaScript/">jQuery VS JavaScript原生API</a></p>
-<!-- more -->
-<h1 id="1-选择元素">1 选择元素</h1>
-<pre><code class="language-javascript">// jQuery  
-var els = $('.el');  
-//==========================================================//
-// 原生方法  
-var els = document.querySelectorAll('.el');  
-// 函数法  
-var $ = function (el) {  
- return document.querySelectorAll(el);  
-}  
-var els = $('.el');
-</code></pre>
-<h1 id="2-创建元素">2 创建元素</h1>
-<pre><code class="language-javascript">// jQuery  
-var newEl = $('&lt;div/&gt;');  
-//==========================================================//
-// 原生方法  
-var newEl = document.createElement('div');
-</code></pre>
-<h1 id="3-添加-移除-切换类">3 添加 / 移除 / 切换类</h1>
-<pre><code class="language-javascript">// jQuery  
-$('.el').addClass('class');  
-$('.el').removeClass('class');  
-$('.el').toggleClass('class');  
-//==========================================================//
-// 原生方法  
-document.querySelector('.el').classList.add('class');  
-document.querySelector('.el').classList.remove('class');
-document.querySelector('.el').classList.toggle('class');
-</code></pre>
-<p>4 判断是否包含类</p>
-<pre><code class="language-javascript">// jQuery
-$('.el').hasClass('className');
-$('.el').has('.className'); //也可以用来 判断是否包含某个元素
-//==========================================================//
-// 原生方法(1)
-_hasClass(document.querySelector('.el'), className);
-function _hasClass( elements,cName ){
-    return !!elements.className.match( new RegExp( &quot;(\\s|^)&quot; + cName + &quot;(\\s|$)&quot;) );
-};
-// 原生方法(2)
-if(el.classList.contains(&quot;someClass&quot;)){}
-</code></pre>
-<h1 id="5-添加事件监听器">5 添加事件监听器</h1>
-<pre><code class="language-javascript">// jQuery  
-$('.el').on('event', function() {
-});  
-//==========================================================//  
-// 原生方法  
-[].forEach.call(document.querySelectorAll('.el'), function (el) {  
-  el.addEventListener('event', function() {
-  }, false);
-});
-</code></pre>
-<h2 id="原生-dom绑定事件-优化1-参考here">原生－DOM绑定事件－优化1 参考<a href="https://www.cnblogs.com/coffeedeveloper/p/4811850.html">HERE</a></h2>
-<pre><code class="language-javascript">//DOM绑定事件-之自执行
-var BindEvent = (function () {
-  if ('addEventListener' in document) {
-    return function (dom, event, handle, ex) {
-      dom.addEventListener(event, handle, ex || false);
-    }
-  } else if ('attachEvent' in document) {
-    return function (dom, event, handle) {
-      dom.attachEvent('on' + event, handle);
-    }
-  } else {
-    return function (dom, event, handle) {
-      dom['on' + event] = handle;
-    }
-  }
-})();```
-
-## 原生－DOM绑定事件－优化2
-```javascript
-//DOM绑定事件-之惰性加载(调用方去触发BindEvent之时才去做初始化)//
-var BindEvent = function (dom, event, handle, ex) {
-  if ('addEventListener' in document) {
-    BindEvent = function (dom, event, handle, ex) {
-      dom.addEventListener(event, handle, ex || false);
-    }
-  } else if ('attachEvent' in document) {
-trueBindEvent = function (dom, event, handle) {
-      dom.attachEvent('on' + event, handle);
-    }
-  } else {
-    BindEvent = function (dom, event, handle) {
-      dom['on' + event] = handle;
-    }
-  }
-  BindEvent(dom, event, handle, ex);
-};
-</code></pre>
-<h1 id="6-设置-获取属性">6 设置 / 获取属性</h1>
-<pre><code class="language-javascript">// jQuery  
-$('.el').filter(':first').attr('key', 'value');  
-$('.el').filter(':first').attr('key');  
-//==========================================================//
-// 原生方法  
-document.querySelector('.el').setAttribute('key', 'value');  
-document.querySelector('.el').getAttribute('key');
-</code></pre>
-<h1 id="7-附加内容append">7 附加内容（Append）</h1>
-<pre><code class="language-javascript">// jQuery  
-$('.el').append($('&lt;div/&gt;'));  
-//==========================================================//
-// 原生方法  
-document.querySelector('.el').appendChild(document.createElement('div'));
-</code></pre>
-<h1 id="8-克隆元素">8 克隆元素</h1>
-<pre><code class="language-javascript">// jQuery  
-var clonedEl = $('.el').clone();  
-//==========================================================//
-// 原生方法  
-var clonedEl = document.querySelector('.el').cloneNode(true);
-</code></pre>
-<h1 id="9-移除元素">9 移除元素</h1>
-<pre><code class="language-javascript">// jQuery  
-$('.el').remove();  
-//==========================================================//
-// 原生方法  
-remove('.el');  
-function remove(el) {  
-  var toRemove = document.querySelector(el);  
-  toRemove.parentNode.removeChild(toRemove);  
-}
-</code></pre>
-<h1 id="10-获取父元素">10 获取父元素</h1>
-<pre><code class="language-javascript">// jQuery  
-$('.el').parent();  
-//==========================================================//
-// 原生方法  
-document.querySelector('.el').parentNode;
-</code></pre>
-<h1 id="11-上一个-下一个元素">11 上一个 / 下一个元素</h1>
-<pre><code class="language-javascript">// jQuery  
-$('.el').prev();  
-$('.el').next();  
-//==========================================================//
-// 原生方法  
-document.querySelector('.el').previousElementSibling;  
-document.querySelector('.el').nextElementSibling;
-</code></pre>
-<h1 id="12-修改css属性">12 修改CSS属性</h1>
-<p>总是通过 <code>Javascript</code> 修改和检索 <code>CSS</code> 属性，这样会比使用 <code>jQuery CSS</code> 函数更加简单快速，并且没有任何不必要的代码。</p>
-<pre><code class="language-javascript">//----设置CSS属性----
-/* jQuery */
-  $(el).css({
-    background: &quot;#FF0000&quot;,
-&quot;box-shadow&quot;: &quot;1px 1px 5px 5px red&quot;,
-    width: &quot;100px&quot;,
-    height: &quot;100px&quot;,
-    display: &quot;block&quot;
-  });
-//==========================================================//
-/* 原生 */
-var el = document.querySelector(&quot;.main-content&quot;);
-el.style.background = &quot;#FF0000&quot;;
-el.style.width = &quot;100px&quot;;
-el.style.height = &quot;100px&quot;;
-el.style.display = &quot;block&quot;;
-el.style.boxShadow = &quot;1px 1px 5px 5px red&quot;;
-</code></pre>
-<h1 id="13-xhr-或-ajax">13 XHR 或 Ajax</h1>
-<pre><code class="language-javascript">// jQuery  
-$.get('url', function (data) {  
-});  
-$.post('url', {data: data}, function (data) {  
-});  
-//==========================================================//
-// 原生方法  
-// get  
-var xhr = new XMLHttpRequest();  
-xhr.open('GET', url);  
-xhr.onreadystatechange = function (data) {  
-}  
-xhr.send();  
-// post  
-var xhr = new XMLHttpRequest()  
-xhr.open('POST', url);  
-xhr.onreadystatechange = function (data) {  
-}  
-xhr.send({data: data});
-</code></pre>
 ]]></content>
     </entry>
 </feed>
