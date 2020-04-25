@@ -2,13 +2,1185 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://faded.auspicious.space</id>
     <title>Typhoeus</title>
-    <updated>2020-04-24T11:41:09.221Z</updated>
+    <updated>2020-04-25T17:03:03.825Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://faded.auspicious.space"/>
     <link rel="self" href="https://faded.auspicious.space/atom.xml"/>
     <logo>https://faded.auspicious.space/images/avatar.png</logo>
     <icon>https://faded.auspicious.space/favicon.ico</icon>
     <rights>All rights reserved 2020, Typhoeus</rights>
+    <entry>
+        <title type="html"><![CDATA[漫谈《大型网站技术架构》]]></title>
+        <id>https://faded.auspicious.space/post/a-random-talk-on-large-website-technical-architecture/</id>
+        <link href="https://faded.auspicious.space/post/a-random-talk-on-large-website-technical-architecture/">
+        </link>
+        <updated>2020-04-25T04:13:45.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/9cf3ff1ecb88">漫谈《大型网站技术架构》</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/9cf3ff1ecb88">漫谈《大型网站技术架构》</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="一-大型网站的架构演化">一、大型网站的架构演化</h1>
+<h2 id="11-大型网站软件的特点">1.1 大型网站软件的特点</h2>
+<ul>
+<li>高并发、大流量</li>
+<li>高可用：系统7*24小时不间断提供服务</li>
+<li>海量数据</li>
+<li>用户分布广泛</li>
+<li>安全环境恶劣</li>
+<li>需求变更快，发布频繁</li>
+<li>渐进式发展</li>
+</ul>
+<h2 id="12-大型网站架构演化发展历程">1.2 大型网站架构演化发展历程</h2>
+<ul>
+<li><strong>初始阶段的网站架构</strong>：一台服务器，上面同时拥有应用程序，数据库，文件，等所有资源。例如 LAMP 架构。</li>
+<li><strong>应用和数据服务分离</strong>：三台服务器（硬件资源各不相同），分别是应用服务器，文件服务器和数据库服务器。</li>
+<li><strong>使用缓存改善网站性能</strong>：分为两种，缓存在应用服务器上的本地缓存和缓存在专门的分布式缓存服务器的远程缓存。</li>
+<li><strong>使用应用服务器集群改善网站并发处理能力</strong>：通过负载均衡调度服务器来将访问请求分发到应用服务器集群中的任何一台机器。</li>
+<li><strong>数据库读写分离</strong>：数据库采用主从热备，应用服务器在写数据时访问主数据库，主数据库通过主从复制机制将数据更新同步到从数据库。应用服务器使用专门的数据访问模块从而对应用透明。</li>
+<li><strong>使用反向代理和 CDN 加速网站响应</strong>：这两者基本原理都是缓存。反向代理部署在网站的中心机房，CDN 部署在网络提供商的机房。</li>
+<li><strong>使用分布式文件系统和分布式数据库系统</strong>：数据库拆分的最后手段，更常用的是业务分库。</li>
+<li><strong>使用 NoSQL 和搜索引擎</strong>：对可伸缩的分布式有更好的支持。</li>
+<li><strong>业务拆分</strong>：将整个网站业务拆分成不同的应用，每个应用独立部署维护，应用之间通过超链接建立联系/消息队列进行数据分发/访问同一数据存储系统。</li>
+<li><strong>分布式服务</strong>：公共业务提取出来独立部署。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587788408370.png" alt="架构设计_分布式服务" loading="lazy"></figure>
+<h2 id="13-大型网站架构演化的价值观">1.3 大型网站架构演化的价值观</h2>
+<ul>
+<li>大型网站架构的核心价值是随网站所需灵活应对。</li>
+<li>驱动大型网站技术发展的主要力量是网站的业务发展。</li>
+</ul>
+<h2 id="14-网站架构设计误区">1.4 网站架构设计误区</h2>
+<ul>
+<li>一味追随大公司的解决方案。</li>
+<li>为了技术而技术。</li>
+<li>企图用技术解决所有问题。</li>
+</ul>
+<h1 id="二-大型网站架构模式">二、大型网站架构模式</h1>
+<h2 id="21-网站架构模式">2.1 网站架构模式</h2>
+<ul>
+<li>分层<br>
+-分割<br>
+-分布式
+<ul>
+<li>分布式应用和服务</li>
+<li>分布式静态资源</li>
+<li>分布式数据和存储</li>
+<li>分布式计算</li>
+</ul>
+</li>
+<li>集群</li>
+<li>缓存
+<ul>
+<li>CDN</li>
+<li>反向代理</li>
+<li>本地缓存</li>
+<li>分布式缓存</li>
+</ul>
+</li>
+<li>异步
+<ul>
+<li>提供系统可用性</li>
+<li>加快网站响应速度</li>
+<li>消除高并发访问高峰</li>
+</ul>
+</li>
+<li>冗余
+<ul>
+<li>服务器冗余运行</li>
+<li>数据库冗余备份</li>
+</ul>
+</li>
+<li>自动化</li>
+<li>安全
+<ul>
+<li>防止 XSS 攻击</li>
+<li>SQL 注入</li>
+</ul>
+</li>
+</ul>
+<h1 id="三-大型网站核心架构要素">三、大型网站核心架构要素</h1>
+<ul>
+<li>性能</li>
+<li>可用性</li>
+<li>伸缩性：不断地向服务器集群加服务器</li>
+<li>扩张性</li>
+</ul>
+<h1 id="四-瞬时响应网站的高性能架构">四、瞬时响应：网站的高性能架构</h1>
+<h2 id="41-网站性能测试">4.1 网站性能测试</h2>
+<ul>
+<li>不同视角下网站的性能
+<ul>
+<li>用户视角网站性能 响应时间</li>
+<li>开发人员视角的网站性能 响应时间、并发量</li>
+<li>运维人员视角的网站性能 资源</li>
+</ul>
+</li>
+<li>性能测试指标
+<ul>
+<li>响应时间</li>
+<li>并发数</li>
+<li>吞吐量 qps tps hps</li>
+<li>性能计数器</li>
+</ul>
+</li>
+<li>性能测试方法
+<ul>
+<li>性能测试</li>
+<li>负载测试</li>
+<li>压力测试</li>
+<li>稳定性测试</li>
+</ul>
+</li>
+<li>性能测试报告</li>
+<li>性能优化策略
+<ul>
+<li>性能分析</li>
+<li>性能优化</li>
+</ul>
+</li>
+</ul>
+<h2 id="42-web-前端性能优化">4.2 Web 前端性能优化</h2>
+<ul>
+<li>浏览器访问优化
+<ul>
+<li>减少 HTTP 请求</li>
+<li>使用浏览器缓存</li>
+<li>启用压缩</li>
+<li>CSS 放在网页最上面 JS 最下面</li>
+<li>减少 Cookie 传输</li>
+</ul>
+</li>
+<li>CDN 加速。（Content Delivery Network)</li>
+<li>反向代理</li>
+</ul>
+<h2 id="43-应用服务器性能优化">4.3 应用服务器性能优化</h2>
+<ul>
+<li>分布式缓存
+<ul>
+<li>缓存的基本原理</li>
+<li>合理的使用缓存
+<ul>
+<li>频繁修改数据</li>
+<li>没有热点的访问</li>
+<li>数据不一致与脏读</li>
+<li>缓存可用性</li>
+<li>缓存预热</li>
+<li>缓存穿透 缓存不存在，直接访问数据库</li>
+</ul>
+</li>
+<li>分布式缓存架构</li>
+<li>Memcached</li>
+</ul>
+</li>
+<li>异步操作</li>
+<li>使用集群</li>
+<li>代码优化
+<ul>
+<li>多线程</li>
+<li>资源复用</li>
+<li>数据结构</li>
+<li>垃圾回收</li>
+</ul>
+</li>
+</ul>
+<h2 id="44-存储性能优化">4.4 存储性能优化</h2>
+<ul>
+<li>机械硬盘 vs. 固态硬盘</li>
+<li>B+ 树 vs. LSM 树</li>
+<li>RAID vs. HDFS</li>
+</ul>
+<h1 id="五-万无一失网站的高可用架构">五、万无一失：网站的高可用架构</h1>
+<h2 id="51-网站可用性的度量和考核">5.1 网站可用性的度量和考核</h2>
+<ul>
+<li>网站可行性度量</li>
+<li>网站可用性考核</li>
+</ul>
+<h2 id="52-高可用的网站架构">5.2 高可用的网站架构</h2>
+<h2 id="53-高可用的应用">5.3 高可用的应用</h2>
+<ul>
+<li>通过负载均衡进行无状态服务的失效转移</li>
+<li>应用服务器集群的 Session 管理
+<ul>
+<li>Session复制</li>
+<li>Session绑定</li>
+<li>利用 Cookie 记录 Session</li>
+<li>Session服务器</li>
+</ul>
+</li>
+</ul>
+<h2 id="54-高可用的应用">5.4 高可用的应用</h2>
+<ul>
+<li>分级管理</li>
+<li>超时设置</li>
+<li>异步调用</li>
+<li>服务降级 随机拒绝访问（twitter)</li>
+<li>幂等性设计</li>
+</ul>
+<h2 id="55-高可用的数据">5.5 高可用的数据</h2>
+<ul>
+<li>CAP 原理
+<ul>
+<li>数据持久性</li>
+<li>数据可访问性</li>
+<li>数据一致性
+<ul>
+<li>数据强一致性</li>
+<li>数据用户一致性</li>
+<li>数据最终一致性</li>
+</ul>
+</li>
+<li>数据备份</li>
+<li>失效转移
+<ul>
+<li>失效确认</li>
+<li>访问转移</li>
+<li>数据恢复</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="56-高可用软件质量保障">5.6 高可用软件质量保障</h2>
+<ul>
+<li>网站发布</li>
+<li>自动化测试</li>
+<li>预发布验证</li>
+<li>代码控制
+<ul>
+<li>主干开发，分支发布</li>
+<li>分支开发，主干发布</li>
+</ul>
+</li>
+<li>自动化发布</li>
+<li>灰度发布</li>
+</ul>
+<h2 id="57-网站运行监控">5.7 网站运行监控</h2>
+<ul>
+<li>监控数据采集
+<ul>
+<li>用户行为日志收集</li>
+<li>服务器性能检测</li>
+<li>运行数据报告</li>
+</ul>
+</li>
+<li>监控管理
+<ul>
+<li>系统报警</li>
+<li>失效转移</li>
+<li>自动优雅降级</li>
+</ul>
+</li>
+</ul>
+<h1 id="六-永无止尽网站的伸缩性架构">六、永无止尽：网站的伸缩性架构</h1>
+<h2 id="61-网站伸缩性设计">6.1 网站伸缩性设计</h2>
+<ul>
+<li>不同功能进行物理分离实现伸缩</li>
+<li>单一功能通过集群实现伸缩</li>
+</ul>
+<h2 id="62-应用服务器集群伸缩设计">6.2 应用服务器集群伸缩设计</h2>
+<ul>
+<li>HTTP 重定向负载均衡</li>
+<li>DNS 域名解析负载均衡</li>
+<li>反向代理负载均衡</li>
+<li>IP 负载均衡</li>
+<li>数据链路层负载均衡</li>
+<li>负载均衡算法
+<ul>
+<li>轮询</li>
+<li>加权轮询</li>
+<li>随机</li>
+<li>最少链接</li>
+<li>原地址散列</li>
+</ul>
+</li>
+</ul>
+<h2 id="63-分布式缓存集群的伸缩性设计">6.3 分布式缓存集群的伸缩性设计</h2>
+<ul>
+<li>Memcached 分布式缓存集群的访问模型</li>
+<li>Memcached 分布式缓存集群的伸缩性挑战</li>
+<li>分布式缓存的一致性 hash 算法</li>
+</ul>
+<h2 id="64-数据存储服务器集群的伸缩性设计">6.4 数据存储服务器集群的伸缩性设计</h2>
+<ul>
+<li>关系数据库集群的伸缩性设计</li>
+<li>NoSQL 数据库的伸缩性设计</li>
+</ul>
+<h1 id="七-随机应变网站的可扩展性架构">七、随机应变：网站的可扩展性架构</h1>
+<h2 id="71-构建可扩展性的网站架构">7.1 构建可扩展性的网站架构</h2>
+<h2 id="72-利用分布式消息队列降低系统耦合性">7.2 利用分布式消息队列降低系统耦合性</h2>
+<ul>
+<li>事件驱动架构</li>
+<li>分布式消息队列</li>
+</ul>
+<h2 id="73-利用分布式服务打造可复用的业务平台">7.3 利用分布式服务打造可复用的业务平台</h2>
+<ul>
+<li>Web Service 与企业级分布式服务</li>
+<li>大型网站分布式服务的需求与特点
+<ul>
+<li>负载均衡</li>
+<li>失效转移</li>
+<li>高效的远程通信</li>
+<li>整合异构系统</li>
+<li>对应用最少侵入</li>
+<li>版本控制</li>
+<li>实时监控</li>
+</ul>
+</li>
+<li>分布式服务框架设计</li>
+</ul>
+<h2 id="74-可扩展的数据结构">7.4 可扩展的数据结构</h2>
+<h2 id="75-利用开放平台建设网站生态圈">7.5 利用开放平台建设网站生态圈</h2>
+<ul>
+<li>API 接口</li>
+<li>协议转移</li>
+<li>安全</li>
+<li>审计</li>
+<li>路由</li>
+<li>流程</li>
+</ul>
+<h1 id="八-固若金汤网站的安全架构">八、固若金汤：网站的安全架构</h1>
+<h2 id="81-道高一尺魔高一丈的网站应用攻击与防御">8.1 道高一尺魔高一丈的网站应用攻击与防御</h2>
+<ul>
+<li>xss攻击
+<ul>
+<li>消毒</li>
+<li>HTTP Only</li>
+</ul>
+</li>
+<li>注入攻击
+<ul>
+<li>开源</li>
+<li>错误回显</li>
+<li>盲注</li>
+<li>消毒</li>
+<li>参数绑定</li>
+</ul>
+</li>
+<li>CSRF 攻击
+<ul>
+<li>表单token</li>
+<li>验证码</li>
+<li>Referer Check</li>
+</ul>
+</li>
+<li>其他攻击和漏洞
+<ul>
+<li>Error Code</li>
+<li>HTML 注释</li>
+<li>文件上传</li>
+<li>路径遍历</li>
+</ul>
+</li>
+<li>Web 应用防火墙</li>
+<li>网站安全漏洞扫描</li>
+</ul>
+<h2 id="82-信息加密技术及密钥安全管理">8.2 信息加密技术及密钥安全管理</h2>
+<ul>
+<li>单向散列加密</li>
+<li>对称加密</li>
+<li>非对称加密</li>
+<li>密钥安全管理</li>
+</ul>
+<h2 id="83-信息过滤与反垃圾">8.3 信息过滤与反垃圾</h2>
+<ul>
+<li>文本匹配</li>
+<li>分类算法</li>
+<li>黑名单</li>
+</ul>
+<h2 id="84-电子商务风险控制">8.4 电子商务风险控制</h2>
+<ul>
+<li>风险
+<ul>
+<li>账号风险</li>
+<li>买家风险</li>
+<li>卖家风险</li>
+<li>交易风险</li>
+</ul>
+</li>
+<li>风控
+<ul>
+<li>规则引擎</li>
+<li>统计模型</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[UML—简介]]></title>
+        <id>https://faded.auspicious.space/post/uml-introduction/</id>
+        <link href="https://faded.auspicious.space/post/uml-introduction/">
+        </link>
+        <updated>2020-04-25T02:48:03.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/7e7a03de6d21">uml学习</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/7e7a03de6d21">uml学习</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="概念">概念</h1>
+<ol>
+<li><strong>类（Class）</strong>：使用三层矩形框表示。
+<ul>
+<li>第一层显示类的名称，如果是抽象类，则就用斜体显示。</li>
+<li>第二层是字段和属性。</li>
+<li>第三层是类的方法。<br>
+注意前面的符号，<code>+</code> 表示 <code>public</code>，<code>-</code> 表示 <code>private</code>，<code>#</code> 表示 <code>protected</code>。</li>
+</ul>
+</li>
+<li><strong>接口</strong>：使用两层矩形框表示，与类图的区别主要是顶端有 <code>&lt;&gt;</code> 显示 。
+<ul>
+<li>第一行是接口名称。</li>
+<li>第二行是接口方法。</li>
+</ul>
+</li>
+<li><strong>继承类（extends）</strong>：用空心三角形 + 实线来表示。</li>
+<li><strong>实现接口（implements）</strong>：用空心三角形 + 虚线来表示。</li>
+<li><strong>关联（Association）</strong>：用实线箭头来表示，例如：燕子与气候。</li>
+<li><strong>聚合（Aggregation）</strong>：用空心的菱形 + 实线箭头来表示。<br>
+聚合：表示一种弱的‘拥有’关系，体现的是 A 对象可以包含 B 对象，但 B 对象不是 A 对象的一部分，例如：公司和员工。</li>
+<li><strong>组合（Composition）</strong>：用实心的菱形 + 实线箭头来表示。<br>
+组合：部分和整体的关系，并且生命周期是相同的。例如：人与手。</li>
+<li><strong>依赖（Dependency）</strong>：用虚线箭头来表示，例如：动物与氧气。</li>
+<li><strong>基数</strong> ：连线两端的数字表明这一端的类可以有几个实例，比如：一个鸟应该有两只翅膀。如果一个类可能有无数个实例，则就用‘n’来表示。关联、聚合、组合是有基数的。</li>
+</ol>
+<h1 id="类之间的关系">类之间的关系</h1>
+<p>UML 把类之间的关系分为以下 5 种：</p>
+<ul>
+<li><strong>关联</strong>：类 A 与类 B 的实例之间存在特定的对应关系；</li>
+<li><strong>依赖</strong>：类 A 访问类 B 提供的服务；</li>
+<li><strong>聚集</strong>：类 A 为整体类，类 B 为局部类，类 A 的对象由类 B 的对象组合而成；</li>
+<li><strong>泛化</strong>：类 A 继承类 B；</li>
+<li><strong>实现</strong>：类 A 实现了 B 接口</li>
+</ul>
+<h2 id="关联association">关联（Association）</h2>
+<p>关联指的是类之间的特定对应关系，在 UML 中用带实线的箭头表示。按照类之间的数量对比，关联可以分为以下三种：</p>
+<ul>
+<li>一对一关联；</li>
+<li>一对多关联；</li>
+<li>多对多关联。</li>
+</ul>
+<p>注意：关联还要以分为<strong>单向关联</strong>和<strong>双向关联</strong>。</p>
+<h2 id="依赖dependency">依赖（Dependency）</h2>
+<p>依赖指的是类之间的调用关系，在 UML 中用带虚线的箭头表示。如果类 A 访问类 B 的属性或者方法，  或者类 A 负责实例化类 B，那么可以说类 A 依赖类 B。和关联关系不同，无须在类 A 中定义类 B 类型的属性。</p>
+<h2 id="聚集aggregation">聚集（Aggregation）</h2>
+<p>聚集指的是整体与部分之间的关系，在 UML 中用带实线的菱形箭头表示。</p>
+<p>聚集关系还可以分为两种类型：</p>
+<ul>
+<li>被聚集的子系统允许被拆卸和替换，这是普通聚集关系。</li>
+<li>被聚集的子系统不允许被拆卸和替换，这种聚集称为强聚集关系，或者组成关系。</li>
+</ul>
+<p>注：强聚集（组成）可用带实线的实心菱形箭头表示。</p>
+<h2 id="泛化generalization">泛化（Generalization）</h2>
+<p>泛化指的是类之间的继承关系，在 UML 中用带实线的三角形箭头表示。</p>
+<h2 id="实现realization">实现（Realization）</h2>
+<p>实现指的是类与接口之间的关系，在 UML 中用带虚线的三角形箭头表示。</p>
+<ol>
+<li><img src="https://faded.auspicious.space/post-images/1587783886562.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587783928940.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587783950528.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587783975197.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587783994785.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587784018076.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587784045445.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587784066892.png" alt="" loading="lazy"></li>
+<li><img src="https://faded.auspicious.space/post-images/1587784111857.png" alt="" loading="lazy"></li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[现代 IM 系统中消息推送和存储架构的实现]]></title>
+        <id>https://faded.auspicious.space/post/implementation-of-message-push-and-storage-architecture-in-modern-im-system/</id>
+        <link href="https://faded.auspicious.space/post/implementation-of-message-push-and-storage-architecture-in-modern-im-system/">
+        </link>
+        <updated>2020-04-25T01:44:47.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/6a5e7611435d">现代IM系统中消息推送和存储架构的实现</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/6a5e7611435d">现代IM系统中消息推送和存储架构的实现</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="前言">前言</h1>
+<p>IM 全称是“Instant Messaging”，中文名是即时通讯。在这个高度信息化的移动互联网时代，生活中 IM 类产品已经成为必备品，比较有名的如钉钉、微信、QQ 等以 IM 为核心功能的产品。当然目前微信已经成长为一个生态型产品，但其核心功能还是 IM。还有一些非以 IM 系统为核心的应用，最典型的如一些在线游戏、社交应用，IM 也是其重要的功能模块。可以说，带有社交属性的应用，IM 功能一定是必不可少的。</p>
+<p>IM 系统在互联网初期即存在，其基础技术架构在这十几年的发展中更新迭代多次，从早期的 CS、P2P 架构，到现在后台已经演变为一个复杂的分布式系统，涉及移动端、网络、安全和存储等技术的方方面面。其支撑的规模也从早期的少量日活，到现在微信这个巨头最新公布的达到 9 亿的日活的体量。</p>
+<p>IM 系统中最核心的部分是消息系统，消息系统中最核心的功能是消息的同步和存储：</p>
+<ul>
+<li><strong>消息的同步</strong>：将消息完整的、快速的从发送方传递到接收方，就是消息的同步。消息同步系统最重要的衡量指标就是消息传递的实时性、完整性以及能支撑的消息规模。从功能上来说，一般至少要支持在线和离线推送，高级的 IM 系统还支持“<strong>多端同步</strong>”。</li>
+<li><strong>消息的存储</strong>：消息存储即消息的持久化保存，这里不是指消息在客户端本地的保存，而是指云端的保存，功能上对应的就是“<strong>消息漫游</strong>”。“<strong>消息漫游</strong>”的好处是可以实现账号在任意端登陆查看所有历史消息，这也是高级 IM 系统特有的功能之一。</li>
+</ul>
+<p>本篇文章内容主要涉及 IM 系统中的消息系统架构，会介绍一种基于 TableStore 构建的消息同步以及存储系统的架构实现，能够支持消息系统中的高级特性“<strong>多端同步</strong>”以及“<strong>消息漫游</strong>”。在性能和规模上，能够做到全量消息云端存储，百万 TPS 以及毫秒级延迟的消息同步能力。</p>
+<h1 id="架构设计">架构设计</h1>
+<p>本章主要会介绍基于 TableStore 的现代 IM 消息系统的架构设计，在详细介绍架构设计之前，会先介绍一种 Timeline 逻辑模型，来抽象和简化对 IM 消息同步和存储模型的理解。理解了 Timeline 模型后，会介绍如何基于此模型对消息的同步以及存储进行建模。基于 Timeline 模型，在实现消息同步和存储时还会有各方面的技术权衡，例如如何对消息同步常见的读扩散和写扩散两种模型进行对比和选择，以及针对 Timeline 模型的特征如何来选择底层数据库。</p>
+<h2 id="传统架构-vs-现代架构">传统架构 vs 现代架构</h2>
+<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587779925317.png" alt="消息系统传统架构与现代架构的简单对比" loading="lazy"></figure>
+<p>传统架构下，消息是先同步后存储。对于在线的用户，消息会直接实时同步到在线的接收方，消息同步成功后，并不会进行持久化。而对于离线的用户或者消息无法实时同步成功时，消息会持久化到离线库，当接收方重新连接后，会从离线库拉取所有未读消息。当离线库中的消息成功同步到接收方后，消息会从离线库中删除。传统的消息系统，服务端的主要工作是维护发送方和接收方的连接状态，并提供在线消息同步和离线消息缓存的能力，保证消息一定能够从发送方传递到接收方。服务端不会对消息进行持久化，所以也无法支持消息漫游。</p>
+<p>现代架构下，消息是先存储后同步。先存储后同步的好处是，如果接收方确认接收到了消息，那这条消息一定是已经在云端保存了。并且消息会有两个库来保存，一个是消息存储库，用于全量保存所有会话的消息，主要用于支持消息漫游。另一个是消息同步库，主要用于接收方的多端同步。消息从发送方发出后，经过服务端转发，服务端会先将消息保存到消息存储库，后保存到消息同步库。完成消息的持久化保存后，对于在线的接收方，会直接选择在线推送。但在线推送并不是一个必须路径，只是一个更优的消息传递路径。对于在线推送失败或者离线的接收方，会有另外一个统一的消息同步方式。接收方会主动的向服务端拉取所有未同步消息，但接收方何时来同步以及会在哪些端来同步消息对服务端来说是未知的，所以要求服务端必须保存所有需要同步到接收方的消息，这是消息同步库的主要作用。对于新的同步设备，会有消息漫游的需求，这是消息存储库的主要作用，在消息存储库中，可以拉取任意会话的全量历史消息。</p>
+<p>以上是传统架构和现代架构的一个简单的对比，现代架构上整个消息的同步和存储流程，并没有变复杂太多，但是其能实现多端同步以及消息漫游。现代架构中最核心的就是两个消息库“<strong>消息同步库</strong>”和“<strong>消息存储库</strong>”，是消息同步和存储最核心的基础。而本篇文章接下来的部分，都是围绕这两个库的设计和实现来展开。</p>
+<h2 id="timeline-模型">Timeline 模型</h2>
+<p>在分析“<strong>消息同步库</strong>”和“<strong>消息存储库</strong>”的设计和实现之前，在本章会先介绍一个逻辑模型——Timeline。Timeline 模型会帮助我们简化对消息同步和存储模型的理解，而消息库的设计和实现也是围绕 Timeline 的特性和需求来展开。</p>
+<figure data-type="image" tabindex="2"><img src="https://faded.auspicious.space/post-images/1587781148322.png" alt="" loading="lazy"></figure>
+<p>如图是 Timeline 模型的一个抽象表述，Timeline 可以简单理解为是一个消息队列，但这个消息队列有如下特性：</p>
+<ul>
+<li>每个消息拥有一个顺序 ID（SeqId），在队列后面的消息的 SeqId 一定比前面的消息的 SeqId 大，也就是保证 SeqId 一定是增长的，但是不要求严格递增。</li>
+<li>新的消息永远在尾部添加，保证新的消息的 SeqId 永远比已经存在队列中的消息都大。</li>
+<li>可根据 SeqId 随机定位到具体的某条消息进行读取，也可以任意读取某个给定范围内的所有消息。</li>
+</ul>
+<p>有了这些特性后，消息的同步可以拿 Timeline 来很简单的实现。图中的例子中，消息发送方是 A，消息接收方是 B，同时 B 存在多个接收端，分别是 B1、B2 和 B3。A 向 B 发送消息，消息需要同步到 B 的多个端，待同步的消息通过一个 Timeline 来进行交换。A 向 B 发送的所有消息，都会保存在这个 Timeline 中，B 的每个接收端都是独立的从这个 Timeline 中拉取消息。每个接收端同步完毕后，都会在本地记录下最新同步到的消息的 SeqId，即最新的一个位点，作为下次消息同步的起始位点。服务端不会保存各个端的同步状态，各个端均可以在任意时间从任意点开始拉取消息。</p>
+<p>消息漫游也是基于 Timeline，和消息同步唯一的区别是，消息漫游要求服务端能够对 Timeline 内的所有数据进行持久化。</p>
+<p>基于 Timeline，从逻辑模型上能够很简单的理解在服务端如何去实现消息同步和存储，并支持多端同步和消息漫游这些高级功能。落地到实现的难点主要在如何将逻辑模型映射到物理模型，Timeline 的实现对数据库会有哪些要求？我们应该选择何种数据库去实现？这些是接下来会讨论到的问题。</p>
+<h2 id="消息存储模型">消息存储模型</h2>
+<p><img src="https://faded.auspicious.space/post-images/1587781324683.png" alt="" loading="lazy"><br>
+如图是基于 Timeline 的消息存储模型，消息存储要求每个会话都对应一个独立的 Timeline。如图例子所示，A 与 B/C/D/E/F 均发生了会话，每个会话对应一个独立的 Timeline，每个 Timeline 内存有这个会话中的所有消息，服务端会对每个 Timeline 进行持久化。服务端能够对所有会话 Timeline 中的全量消息进行持久化，也就拥有了消息漫游的能力。</p>
+<h2 id="消息同步模型">消息同步模型</h2>
+<p>消息同步模型会比消息存储模型稍复杂一些，消息的同步一般有读扩散和写扩散两种不同的方式，分别对应不同的 Timeline 物理模型。<br>
+<img src="https://faded.auspicious.space/post-images/1587781412550.png" alt="" loading="lazy"></p>
+<p>如图是读扩散和写扩散两种不同同步模式下对应的不同的 Timeline 模型，按图中的示例，A 作为消息接收者，其与 B/C/D/E/F 发生了会话，每个会话中的新的消息都需要同步到 A 的某个端，看下读扩散和写扩散两种模式下消息如何做同步。</p>
+<h3 id="读扩散">读扩散</h3>
+<p>消息存储模型中，每个会话的 Timeline 中保存了这个会话的全量消息。读扩散的消息同步模式下，每个会话中产生的新的消息，只需要写一次到其用于存储的 Timeline 中，接收端从这个 Timeline 中拉取新的消息。优点是消息只需要写一次，相比写扩散的模式，能够大大降低消息写入次数，特别是在群消息这种场景下。但其缺点也比较明显，接收端去同步消息的逻辑会相对复杂和低效。接收端需要对每个会话都拉取一次才能获取全部消息，读被大大的放大，并且会产生很多无效的读，因为并不是每个会话都会有新消息产生。</p>
+<h3 id="写扩散">写扩散</h3>
+<p>写扩散的消息同步模式，需要有一个额外的 Timeline 来专门用于消息同步，通常是每个接收端都会拥有一个独立的同步 Timeline，用于存放需要向这个接收端同步的所有消息。每个会话中的消息，会产生多次写，除了写入用于消息存储的会话 Timeline，还需要写入需要同步到的接收端的同步 Timeline。在个人与个人的会话中，消息会被额外写两次，除了写入这个会话的存储 Timeline，还需要写入参与这个会话的两个接收者的同步 Timeline。而在群这个场景下，写入会被更加的放大，如果这个群拥有 N 个参与者，那每条消息都需要额外的写 N 次。写扩散同步模式的优点是，在接收端消息同步逻辑会非常简单，只需要从其同步 Timeline 中读取一次即可，大大降低了消息同步所需的读的压力。其缺点就是消息写入会被放大，特别是针对群这种场景。</p>
+<p>在 IM 这种应用场景下，通常会选择写扩散这种消息同步模式。IM 场景下，一条消息只会产生一次，但是会被读取多次，是典型的读多写少的场景，消息的读写比例大概是 10:1。若使用读扩散同步模式，整个系统的读写比例会被放大到 100:1。一个优化的好的系统，必须从设计上去平衡这种读写压力，避免读或写任意一维触碰到天花板。所以 IM 系统这类场景下，通常会应用写扩散这种同步模式，来平衡读和写，将 100:1 的读写比例平衡到 30:30。当然写扩散这种同步模式，还需要处理一些极端场景，例如万人大群。针对这种极端写扩散的场景，会退化到使用读扩散。一个简单的 IM 系统，通常会在产品层面限制这种大群的存在，而对于一个高级的 IM 系统，会采用读写扩散混合的同步模式，来满足这类产品的需求。</p>
+<h2 id="消息库设计">消息库设计</h2>
+<p>基于 Timeline 模型，以及 Timeline 模型在消息存储和消息同步的应用，我们看下消息同步库和消息存储库的设计。<br>
+<img src="https://faded.auspicious.space/post-images/1587781931258.png" alt="" loading="lazy"><br>
+如图是基于Timeline的消息库设计。</p>
+<h3 id="消息同步库">消息同步库</h3>
+<p>消息同步库用于存储所有用于消息同步的 Timeline，每个 Timeline 对应一个接收端，主要用作写扩散模式的消息同步。这个库不需要永久保留所有需要同步的消息，因为消息在同步到所有端后其生命周期就可以结束，就可以被回收。但是如前面所介绍的，一个实现简单的多端同步消息系统，在服务端不会保存有所有端的同步状态，而是依赖端自己主动来做同步。所以服务端不知道消息何时可以回收，通常的做法是为这个库里的消息设定一个固定的生命周期，例如一周或者一个月，生命周期结束可被淘汰。</p>
+<h3 id="消息存储库">消息存储库</h3>
+<p>消息存储库用于存储所有会话的 Timeline，每个 Timeline 包含了一个会话中的所有消息。这个库主要用于消息漫游时拉取某个会话的所有历史消息，也用于读扩散模式的消息同步。</p>
+<p>消息同步库和消息存储库，对数据库有不同的要求，如何对数据库做选型，在下面会讨论。</p>
+<h2 id="数据库选型">数据库选型</h2>
+<p>消息系统最核心的两个库是消息同步库和消息存储库，两个库对数据库有不同的要求：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">消息同步库</th>
+<th style="text-align:center">消息存储库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>数据模型</strong></td>
+<td style="text-align:center">Timeline 模型</td>
+<td style="text-align:center">Timeline 模型</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>写能力</strong></td>
+<td style="text-align:center">高并发写，十万级 TPS</td>
+<td style="text-align:center">高并发写，少量读，万级 TPS</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>读能力</strong></td>
+<td style="text-align:center">高并发范围读，十万级 TPS</td>
+<td style="text-align:center">少量范围读，千级 TPS</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>存储规模</strong></td>
+<td style="text-align:center">保存一段时间内的同步消息，TB 级，保留千万级的 Timeline 规模</td>
+<td style="text-align:center">保存全量消息，百 TB 级，保留亿级的 Timeline 规模</td>
+</tr>
+</tbody>
+</table>
+<p>总结下来，对数据库的要求有如下几点：</p>
+<ul>
+<li>表结构设计能够满足 Timeline 模型的功能要求：不要求关系模型，能够实现队列模型，并能够支持生成自增的 SeqId。</li>
+<li>能够支持高并发写和范围读，规模在十万级TPS。</li>
+<li>能够保存海量数据，百TB级。</li>
+<li>能够为数据定义生命周期。</li>
+</ul>
+<p>阿里云表格存储（TableStore）是基于 LSM 存储引擎的分布式 NoSQL 数据库，支持百万 TPS 高并发读写，PB 级数据存储，数据支持 TTL，能够很好的满足以上需求，并且支持自增列，能够非常完美的设计和实现 Timeline 的物理模型。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Meta 标签设置]]></title>
+        <id>https://faded.auspicious.space/post/meta-tag-configuration/</id>
+        <link href="https://faded.auspicious.space/post/meta-tag-configuration/">
+        </link>
+        <updated>2020-04-25T01:37:05.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/602e0a469255">meta标签设置</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/602e0a469255">meta标签设置</a></p>
+</blockquote>
+<!-- more -->
+<p>meta 标签常用设置：</p>
+<pre><code class="language-html">&lt;!-- 根据浏览器的屏幕大小自适应的展现合适的效果 --&gt;
+&lt;meta name=&quot;applicable-device&quot; content=&quot;pc,mobile&quot; /&gt;
+
+&lt;!-- 移动端 浏览器中页面将以原始大小显示，不允许缩放 --&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no&quot; /&gt;
+
+&lt;!--自动选择更好的浏览器--&gt;
+&lt;meta name=&quot;renderer&quot; content=&quot;webkit&quot;&gt;
+//告诉浏览器这个网址应该用哪个内核渲染，那么浏览器就会在读取到这个标签后，立即切换对应的内核
+
+&lt;!-- 优先使用 IE 最新版本和 Chrome --&gt;
+&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot; /&gt;
+//它必须显示在网页中除 title 元素和其他 meta 元素以外的所有其他元素之前。如果不是的话，它不起作用
+
+&lt;!-- 描述文档类型 content表示文档类型，这里为text/html，如果JS就是text/javascript，charset表示页面字符集 --&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+
+&lt;!-- iphone会把一串数字识别为电话号码，点击的时候会提示是否呼叫，屏蔽这功能则把telephone设置为no --&gt;
+&lt;meta content=&quot;telephone=no&quot; name=&quot;format-detection&quot; /&gt;
+
+&lt;!-- iphone的私有标签，默认值为default（白色），可以定为black（黑色）和black-translucent（灰色半透明） --&gt;
+&lt;meta content=&quot;black&quot; name=&quot;apple-mobile-web-app-status-bar-style&quot;&gt;
+
+&lt;!-- iphone设备的是有标签 允许全屏模式浏览，隐藏浏览器导航栏 --&gt;
+&lt;meta content=&quot;yes&quot; name=&quot;apple-mobile-web-app-capable&quot; /&gt;
+
+&lt;!-- 全屏显示 --&gt;
+&lt;meta content=&quot;yes&quot; name=&quot;apple-touch-fullscreen&quot; /&gt;
+
+&lt;!-- UC强制全屏 --&gt;
+&lt;meta name=&quot;full-screen&quot; content=&quot;yes&quot;&gt;
+
+&lt;!-- QQ强制全屏 --&gt;
+&lt;meta name=&quot;x5-fullscreen&quot; content=&quot;true&quot;&gt;
+
+&lt;!-- 屏蔽百度转码 --&gt;
+&lt;meta http-equiv=&quot;Cache-Control&quot; content=&quot;no-transform&quot; /&gt;
+&lt;meta http-equiv=&quot;Cache-Control&quot; content=&quot;no-siteapp&quot; /&gt;
+
+&lt;!-- 定义网页简短描述 --&gt;
+&lt;meta name=&quot;description&quot; content=&quot;Cochemist&quot;&gt;
+
+&lt;!-- 定义网页关键词 --&gt;
+&lt;meta name=&quot;keywords&quot; content=&quot;生物化学&quot;&gt; 
+
+&lt;!-- 定义网页的作者 --&gt;
+&lt;meta name=&quot;author&quot; content=&quot;sun_Annie&quot;&gt;
+
+&lt;!-- 避免HTML页面缓存 --&gt;
+&lt;meta http-equiv=&quot;pragma&quot; content=&quot;no-cache&quot; /&gt;
+&lt;meta http-equiv=&quot;cache-control&quot; content=&quot;no-cache&quot;&gt;
+&lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot;&gt;
+
+&lt;!-- 定义网页的缓存过期时间 --&gt;
+&lt;meta http-equiv=&quot;expires&quot; content=&quot;Sunday 26 October 2016 00:00 GMT&quot;&gt;
+//由于这是一个过去的日期，所以这个网页只要一打开，就会直接到网站服务器重新下载页面内容，而不是从cache调用。这是一种防止网页被cache缓存的措施。
+
+</code></pre>
+<h1 id="概要">概要</h1>
+<blockquote>
+<p>标签提供关于 HTML 文档的元数据。元数据不会显示在页面上，但是对于机器是可读的。它可用于浏览器（如何显示内容或重新加载页面），搜索引擎（关键词），或其他 web 服务。 —— W3School</p>
+</blockquote>
+<h2 id="必要属性">必要属性</h2>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>content</td>
+<td>some text</td>
+<td>定义与http-equiv或name属性相关的元信息</td>
+</tr>
+</tbody>
+</table>
+<h2 id="可选属性">可选属性</h2>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>http-equiv</td>
+<td>content-type / expire / refresh / set-cookie</td>
+<td>把 content 属性关联到 HTTP 头部。</td>
+</tr>
+<tr>
+<td>name</td>
+<td>author / description / keywords / generator / revised / others</td>
+<td>把 content 属性关联到一个名称。</td>
+</tr>
+<tr>
+<td>content</td>
+<td>some text</td>
+<td>定义用于翻译 content 属性值的格式。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="seo">SEO</h1>
+<p><a href="http://msdn.microsoft.com/zh-cn/library/ff724016">搜索引擎优化</a></p>
+<h2 id="页面关键词">页面关键词</h2>
+<p>每个网页应具有描述该网页内容的一组唯一的关键字。<br>
+使用人们可能会搜索，并准确描述网页上所提供信息的描述性和代表性关键字及短语。标记内容太短，则搜索引擎可能不会认为这些内容相关。另外标记不应超过 874 个字符。</p>
+<pre><code class="language-html">&lt;meta name=&quot;keywords&quot; content=&quot;your tags&quot; /&gt;
+</code></pre>
+<h2 id="页面描述">页面描述</h2>
+<p>每个网页都应有一个不超过 150 个字符且能准确反映网页内容的描述标签。</p>
+<pre><code class="language-html">&lt;meta name=&quot;description&quot; content=&quot;150 words&quot; /&gt;
+</code></pre>
+<h2 id="搜索引擎索引方式">搜索引擎索引方式</h2>
+<p><code>robot terms</code> 是一组使用逗号 <code>,</code> 分割的值，通常有如下几种取值：<code>none</code>，<code>noindex</code>，<code>nofollow</code>，<code>all</code>，<code>index</code> 和 <code>follow</code>。确保正确使用 <code>nofollow</code> 和 <code>noindex</code> 属性值。</p>
+<pre><code class="language-html">&lt;meta name=&quot;robots&quot; content=&quot;index,follow&quot; /&gt;
+&lt;!--
+    all：文件将被检索，且页面上的链接可以被查询；
+    none：文件将不被检索，且页面上的链接不可以被查询；
+    index：文件将被检索；
+    follow：页面上的链接可以被查询；
+    noindex：文件将不被检索；
+    nofollow：页面上的链接不可以被查询。
+ --&gt;
+</code></pre>
+<h2 id="页面重定向和刷新">页面重定向和刷新</h2>
+<p><code>content</code> 内的数字代表时间（秒），既多少时间后刷新。如果加 <code>url</code>，则会重定向到指定网页（搜索引擎能够自动检测，也很容易被引擎视作误导而受到惩罚）。</p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;0;url=&quot; /&gt;
+</code></pre>
+<h2 id="其他">其他</h2>
+<pre><code class="language-html">&lt;meta name=&quot;author&quot; content=&quot;author name&quot; /&gt; &lt;!-- 定义网页作者 --&gt;
+&lt;meta name=&quot;google&quot; content=&quot;index,follow&quot; /&gt;
+&lt;meta name=&quot;googlebot&quot; content=&quot;index,follow&quot; /&gt;
+&lt;meta name=&quot;verify&quot; content=&quot;index,follow&quot; /&gt;
+</code></pre>
+<h1 id="移动设备">移动设备</h1>
+<h2 id="viewport">viewport</h2>
+<p>能优化移动浏览器的显示。如果不是响应式网站，不要使用 <code>initial-scale</code> 或者禁用缩放。<br>
+大部分 4.7-5 寸设备的 <code>viewport</code> 宽设为 360px；5.5 寸设备设为 400px；iPhone6 设为 375px；iPone6 Plus 设为414px。</p>
+<pre><code class="language-html">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no&quot;/&gt;
+&lt;!-- `width=device-width` 会导致 iPhone 5 添加到主屏后以 WebApp 全屏模式打开页面时出现黑边  --&gt;
+</code></pre>
+<ol>
+<li><code>width</code>：宽度（数值 / <code>device-width</code>）（范围从 200 到 10,000，默认为 980 像素）；</li>
+<li><code>height</code>：高度（数值 / <code>device-height</code>）（范围从 223 到 10,000）；</li>
+<li><code>initial-scale</code>：初始的缩放比例 （范围从 &gt;0 到 10）；</li>
+<li><code>minimum-scale</code>：允许用户缩放到的最小比例；</li>
+<li><code>maximum-scale</code>：允许用户缩放到的最大比例；</li>
+<li><code>user-scalable</code>：用户是否可以手动缩 (<code>no</code>, <code>yes</code>)；</li>
+<li><code>minimal-ui</code>：可以在页面加载时最小化上下状态栏。（已弃用）</li>
+</ol>
+<p>注意，很多人使用 <code>initial-scale=1</code> 到非响应式网站上，这会让网站以 100% 宽度渲染，用户需要手动移动页面或者缩放。如果和 <code>initial-scale=1</code> 同时使用 <code>user-scalable=no</code> 或 <code>maximum-scale=1</code>，则用户将不能放大/缩小网页来看到全部的内容。</p>
+<h2 id="webapp-全屏模式">WebApp 全屏模式</h2>
+<p>伪装 App，离线应用。</p>
+<pre><code class="language-html">&lt;meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot; /&gt; &lt;!-- 启用 WebApp 全屏模式 --&gt;
+</code></pre>
+<h2 id="隐藏状态栏设置状态栏颜色">隐藏状态栏/设置状态栏颜色</h2>
+<p>只有在开启 WebApp 全屏模式时才生效。<code>content</code> 的值为 <code>default | black | black-translucent</code>。</p>
+<pre><code class="language-html">&lt;meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black-translucent&quot; /&gt;
+</code></pre>
+<h2 id="添加到主屏后的标题">添加到主屏后的标题</h2>
+<pre><code class="language-html">&lt;meta name=&quot;apple-mobile-web-app-title&quot; content=&quot;标题&quot;&gt;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587787337510.png" alt="" loading="lazy"></figure>
+<h2 id="忽略数字自动识别为电话号码">忽略数字自动识别为电话号码</h2>
+<pre><code class="language-html">&lt;meta content=&quot;telephone=no&quot; name=&quot;format-detection&quot; /&gt; 
+</code></pre>
+<h2 id="忽略识别邮箱">忽略识别邮箱</h2>
+<pre><code class="language-html">&lt;meta content=&quot;email=no&quot; name=&quot;format-detection&quot; /&gt;
+</code></pre>
+<h2 id="添加智能-app-广告条-smart-app-banner">添加智能 App 广告条 Smart App Banner</h2>
+<p>告诉浏览器这个网站对应的 App，并在页面上显示下载 banner（如下图）。<a href="https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/PromotingAppswithAppBanners/PromotingAppswithAppBanners.html">Promoting Apps with Smart App Banners</a></p>
+<pre><code class="language-html">&lt;meta name=&quot;apple-itunes-app&quot; content=&quot;app-id=myAppStoreID, affiliate-data=myAffiliateData, app-argument=myURL&quot;&gt; 
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://faded.auspicious.space/post-images/1587787470047.jpg" alt="" loading="lazy"></figure>
+<h2 id="其他-2">其他</h2>
+<p><a href="http://fex.baidu.com/blog/2014/10/html-head-tags/">HTML head 头标签</a></p>
+<pre><code class="language-html">&lt;!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 --&gt;
+&lt;meta name=&quot;HandheldFriendly&quot; content=&quot;true&quot;&gt;
+&lt;!-- 微软的老式浏览器 --&gt;
+&lt;meta name=&quot;MobileOptimized&quot; content=&quot;320&quot;&gt;
+&lt;!-- uc强制竖屏 --&gt;
+&lt;meta name=&quot;screen-orientation&quot; content=&quot;portrait&quot;&gt;
+&lt;!-- QQ强制竖屏 --&gt;
+&lt;meta name=&quot;x5-orientation&quot; content=&quot;portrait&quot;&gt;
+&lt;!-- UC强制全屏 --&gt;
+&lt;meta name=&quot;full-screen&quot; content=&quot;yes&quot;&gt;
+&lt;!-- QQ强制全屏 --&gt;
+&lt;meta name=&quot;x5-fullscreen&quot; content=&quot;true&quot;&gt;
+&lt;!-- UC应用模式 --&gt;
+&lt;meta name=&quot;browsermode&quot; content=&quot;application&quot;&gt;
+&lt;!-- QQ应用模式 --&gt;
+&lt;meta name=&quot;x5-page-mode&quot; content=&quot;app&quot;&gt;
+&lt;!-- windows phone 点击无高光 --&gt;
+&lt;meta name=&quot;msapplication-tap-highlight&quot; content=&quot;no&quot;&gt;
+</code></pre>
+<h1 id="网页相关">网页相关</h1>
+<h2 id="申明编码">申明编码</h2>
+<pre><code class="language-html">&lt;meta charset='utf-8' /&gt;
+</code></pre>
+<h2 id="优先使用-ie-最新版本和-chrome">优先使用 IE 最新版本和 Chrome</h2>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot; /&gt;
+&lt;!-- 关于X-UA-Compatible --&gt;
+&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=6&quot; &gt;&lt;!-- 使用IE6 --&gt;
+&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=7&quot; &gt;&lt;!-- 使用IE7 --&gt;
+&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=8&quot; &gt;&lt;!-- 使用IE8 --&gt;
+</code></pre>
+<h2 id="浏览器内核控制">浏览器内核控制</h2>
+<p>国内浏览器很多都是双内核（Webkit和Trident），Webkit内核高速浏览，IE 内核兼容网页和旧版网站。而添加 <code>meta</code> 标签的网站可以控制浏览器选择何种内核渲染。<a href="http://se.360.cn/v6/help/meta.html">浏览器内核控制标签meta说明</a></p>
+<pre><code class="language-html">&lt;meta name=&quot;renderer&quot; content=&quot;webkit|ie-comp|ie-stand&quot;&gt;
+</code></pre>
+<p>国内双核浏览器默认内核模式如下：</p>
+<ol>
+<li>搜狗高速浏览器、QQ 浏览器：IE 内核（兼容模式）；</li>
+<li>360 极速浏览器、遨游浏览器：Webkit 内核（极速模式）。</li>
+</ol>
+<h2 id="禁止浏览器从本地计算机的缓存中访问页面内容">禁止浏览器从本地计算机的缓存中访问页面内容</h2>
+<p>这样设定，访问者将无法脱机浏览。</p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;Pragma&quot; content=&quot;no-cache&quot;&gt;
+</code></pre>
+<h2 id="windows-8">Windows 8</h2>
+<pre><code class="language-html">&lt;meta name=&quot;msapplication-TileColor&quot; content=&quot;#000&quot;/&gt; &lt;!-- Windows 8 磁贴颜色 --&gt;
+&lt;meta name=&quot;msapplication-TileImage&quot; content=&quot;icon.png&quot;/&gt; &lt;!-- Windows 8 磁贴图标 --&gt;
+</code></pre>
+<h2 id="站点适配">站点适配</h2>
+<p>主要用于 PC-手机页的对应关系。</p>
+<pre><code class="language-html">&lt;meta name=&quot;mobile-agent&quot;content=&quot;format=[wml|xhtml|html5]; url=url&quot;/&gt;
+&lt;!--
+[wml|xhtml|html5]根据手机页的协议语言，选择其中一种；
+url=&quot;url&quot; 后者代表当前PC页所对应的手机页URL，两者必须是一一对应关系。
+ --&gt;
+</code></pre>
+<h2 id="转码申明">转码申明</h2>
+<p>用百度打开网页可能会对其进行转码（比如贴广告），避免转码可添加如下 <code>meta</code></p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;Cache-Control&quot; content=&quot;no-siteapp&quot;/&gt;
+</code></pre>
+<h1 id="其他参考文档">其他参考文档</h1>
+<ul>
+<li><a href="http://code.lancepollard.com/complete-list-of-html-meta-tags/">COMPLETE LIST OF HTML META TAGS</a></li>
+<li><a href="http://www.w3.org/TR/html5/document-metadata.html#the-meta-element">W3C META TAGS</a></li>
+<li><a href="http://www.html-5.com/metatags/">METATAGES in HTML5</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta">MDN META TAGS</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[药品前后缀]]></title>
+        <id>https://faded.auspicious.space/post/prefix-and-suffix-of-drug/</id>
+        <link href="https://faded.auspicious.space/post/prefix-and-suffix-of-drug/">
+        </link>
+        <updated>2020-04-25T01:13:01.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.toutiao.com/i6381409325444760065/">药品名称中的那些“百家姓”</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.toutiao.com/i6381409325444760065/">药品名称中的那些“百家姓”</a></p>
+</blockquote>
+<!-- more -->
+<p><strong>看到一个药品名字中含有这些前缀/后缀，就应该知道它的基本作用是什么</strong>，以防吃药时犯低级错误哦。</p>
+<p>一般情况下，前缀或后缀相同的药品，就是同一类药物，具有同一类药效。例如：</p>
+<ul>
+<li><strong>头孢××</strong>。头孢类药物是很常用的抗菌药物，俗称为<strong>抗生素</strong>，例如<strong>头孢拉定</strong>、<strong>头孢呋辛</strong>、<strong>头孢羟氨苄</strong>、<strong>头孢曲松</strong>、<strong>头孢克洛</strong>、<strong>头孢吡肟</strong>等。他们是用来治疗感染性炎症的，比如<strong>上呼吸道感染</strong>、<strong>下呼吸道感染</strong>、<strong>皮肤软组织感染</strong>、<strong>泌尿道感染</strong>、<strong>耳鼻部感染</strong>、<strong>腹腔感染</strong>等等，需要知道的是，不同头孢的治疗侧重点不同，需要根据感染的类型选用。</li>
+<li><strong>××沙星</strong>。沙星类药物也是很常用的<strong>抗生素</strong>之一，例如<strong>环丙沙星</strong>、<strong>氧氟沙星</strong>、<strong>左氧氟沙星</strong>、<strong>莫西沙星</strong>等。他们也是用来治疗感染性炎症的，广泛用于<strong>呼吸系统感染</strong>、<strong>泌尿系统感染</strong>、<strong>皮肤软组织感染</strong>、<strong>肠道感染</strong>等。近年来，国家食药总局多次提醒大家关注这一类药物的不良反应，包括关节病变、致周围神经病变作用、中枢神经系统毒性等。同时，18岁以下患者禁用此类药物。</li>
+<li><strong>××拉唑</strong>。拉唑类药物是很常用的<strong>抑制胃酸</strong>药，例如<strong>奥美拉唑</strong>、<strong>埃索美拉唑</strong>、<strong>兰索拉唑</strong>、<strong>半托拉唑</strong>、<strong>雷贝拉唑</strong>等。他们是用来治疗<strong>胃溃疡</strong>、<strong>十二指肠溃疡</strong>、<strong>反流性食管炎</strong>等消化道疾病的。需要注意的是，由于这一类药物影响胃酸分泌，同时与其他很多药物共用代谢酶，所以相互作用会比较多，同时使用这一类药物和其他药物的患者，最好审查一下相互作用哦。</li>
+<li><strong>××他汀</strong>。他汀类药物是很常用的<strong>降脂药</strong>，主要用于<strong>高胆固醇血症</strong>和<strong>冠心病</strong>等，例如<strong>阿托伐他汀</strong>、<strong>瑞舒伐他汀</strong>、<strong>辛伐他汀</strong>、<strong>洛伐他汀</strong>、<strong>匹伐他汀</strong>、<strong>氟伐他汀</strong>等。不同他汀类药物的降脂强度不同，不可随意换用。另外，长期用药患者需要注意监测转氨酶和肌酸激酶。</li>
+<li><strong>××普利</strong>。普利类药物是很常用的<strong>降压药</strong>之一，学名称作<strong>血管紧张素转化酶抑制剂</strong>，是治疗<strong>高血压</strong>的一线药物之一，例如<strong>卡托普利</strong>、<strong>贝那普利</strong>、<strong>依那普利</strong>、<strong>福辛普利</strong>、<strong>培哚普利</strong>、<strong>雷米普利</strong>、<strong>赖诺普利</strong>等。使用普利类降压药时，需要注意其<strong>干咳的副作用</strong>。</li>
+<li><strong>××地平</strong>。地平类药物也是很常用的<strong>降压药</strong>，学名称为<strong>钙离子通道拮抗剂</strong>，也是治疗<strong>高血压</strong>的一线药物，例如<strong>硝苯地平</strong>、<strong>氨氯地平</strong>、<strong>尼群地平</strong>、<strong>拉西地平</strong>、<strong>尼卡地平</strong>等。其中，硝苯地平是最常用的<strong>降血压</strong>和<strong>缓解心绞痛</strong>的的药物之一，为了减少服药次数增加疗效稳定性，目前有多种缓控释制剂供选择。</li>
+</ul>
+<p>但是，任何事情都有例外，<strong>有些药品名称“看起来是一家”，实际上却“不是一家”</strong>。例如：</p>
+<ul>
+<li><strong>××霉素</strong>。药品名称中含有“霉素”两个字的药很多，但是他们并不都是一类的。例如，青霉素和苄星青霉素属于青霉素类抗菌药，庆大霉素、妥布霉素属于氨基糖苷类抗菌药，红霉素、阿奇霉素、克拉霉素属于大环内酯类抗菌药，万古霉素属于糖肽类抗菌药，链霉素、利福霉素常用于抗结核病类药，阿霉素、柔红霉素、丝裂霉素属于细胞毒药物（抗癌药）等。这些药物的药效和作用范围都不相同。</li>
+<li><strong>×格列×</strong>。名称中含有“格列”两个字的药也很多，例如降糖药里面的磺脲类降糖药格列美脲、格列喹酮，α-糖苷酶抑制剂伏格列波糖，胰岛素增敏药罗格列酮、吡格列酮等。这些药物虽然都是糖尿病患者的口服降糖药，但是具体作用机制和药物类别并不一样，适用人群和用法也不一样。</li>
+<li><strong>×莫司×</strong>。名称中含有“莫司”两个字的药也很多，但是药效作用各不相同，有免疫调节剂他克莫司、西罗莫司，有细胞毒药物司莫司汀、卡莫司汀、洛莫司汀、福莫司汀等，还有降血脂药阿昔莫司。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[程序员经典语录]]></title>
+        <id>https://faded.auspicious.space/post/classic-quotes-of-programmer/</id>
+        <link href="https://faded.auspicious.space/post/classic-quotes-of-programmer/">
+        </link>
+        <updated>2020-04-25T00:52:40.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/7901115f61ec">程序员经典语录</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/7901115f61ec">程序员经典语录</a></p>
+</blockquote>
+<!-- more -->
+<ol>
+<li>
+<p>A good programmer is someone who always looks both ways before crossing a one-way street. (Doug Linder)<br>
+好的程序员即使在过单行道时也总是会环顾两边。</p>
+</li>
+<li>
+<p>Don't worry if it doesn't work right. If everything did, you'd be out of a job. (Mosher's Law of Software Engineering)<br>
+不要担心它能否正常工作。如果一切正常，那么你就会失去工作。</p>
+</li>
+<li>
+<p>The trouble with programmers is that you can never tell what a programmer is doing until it's too late. (Seymour Cray)<br>
+程序员的烦恼是，你永远无法知道一个程序员在做什么，直到为时已晚。</p>
+</li>
+<li>
+<p>Most of you are familiar with the virtues of a programmer. There are three, of course: laziness, impatience, and hubris. (Larry Wall)<br>
+程序员的美德：懒惰，没有耐心以及老子天下第一。</p>
+</li>
+<li>
+<p>Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live. (Martin Golding)<br>
+写代码的时候总是想象维护你代码的家伙是一个知道你住在哪里的暴力精神病患者。</p>
+</li>
+<li>
+<p>One man's crappy software is another man's full time job. (Jessica Gaston)<br>
+一个人写的烂软件将会给另一个人带来一份全职工作。</p>
+</li>
+<li>
+<p>If builders built buildings the way programmers wrote programs, then the first woodpecker that came along wound destroy civilization. (Gerald Weinberg)<br>
+如果建筑工人用程序员写程序的方式建造建筑物，那么来的第一只啄木鸟（找bug）就将摧毁文明。</p>
+</li>
+<li>
+<p>The most likely way for the world to be destroyed, most experts agree, is by accident.  That's where we come in; we're computer professionals. We cause accidents. (Nathaniel Borenstein)<br>
+大多数专家认为，世界被破坏的最有可能的方式是，是因为偶然。那就是我们所要进入的领域：我们是计算机专家。我们制造偶然。</p>
+</li>
+<li>
+<p>It's a curious thing about our industry: not only do we not learn from our mistakes, we also don't learn from our successes. (Keith  Braithwaite)<br>
+这是我们这个行业的一件咄咄怪事：我们不仅不从错误中学习，我们也不从成功中学习。</p>
+</li>
+<li>
+<p>Once a new technology starts rolling, if you're not part of the steamroller, you're part of the road. (Stewart Brand)<br>
+一旦一种新技术开始滚动碾压道路，如果你不能成为压路机的一部分，那么你就只能成为道路的一部分。</p>
+</li>
+<li>
+<p>If at first you don't succeed, call it version 1.0 (unknown)<br>
+如果第一次你没有成功，那么称之为1.0版，继续加油。</p>
+</li>
+<li>
+<p>All programmers are playwrights and all computers are lousy actors. (Anonymous Hack Actor)<br>
+所有的程序员都剧作家，而所有计算机都是糟糕的演员。</p>
+</li>
+<li>
+<p>The sooner you get behind in your work, the more time you have to catch up. (Anonymous Scheduler)<br>
+工作拉下得越早，赶上去所需要的时间越多。</p>
+</li>
+<li>
+<p>When a programming language is created that allows programmers to program in simple English, it will be discovered that programmers cannot speak English. (Anonymous Linguist)<br>
+当创建一种编程语言允许程序员使用简单英语编程的时候，那么新问题又来了，你会发现程序员不说英语。</p>
+</li>
+<li>
+<p>Why do we never have time to do it right, but always have time to do it over? (Anonymous)<br>
+为什么我们总是没有时间把事情做对，却有时间做完它？</p>
+</li>
+<li>
+<p>Any fool can write code that a computer can understand. Good programmers write code that humans can understand.<br>
+傻瓜写计算机能理解的代码。优秀的程序员写人类能读懂的代码。</p>
+</li>
+<li>
+<p>Any code of your own that you haven't looked at for six or more months might as well have been written by someone else. (Eagleson's law)<br>
+自己的代码六个月或更久不见，还不如别人写的代码。</p>
+</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[10 种常见的软件架构模式]]></title>
+        <id>https://faded.auspicious.space/post/10-common-software-architectural-patterns-in-a-nutshell/</id>
+        <link href="https://faded.auspicious.space/post/10-common-software-architectural-patterns-in-a-nutshell/">
+        </link>
+        <updated>2020-04-24T11:47:47.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/8377ce217b65">10种常见的软件架构模式</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://www.jianshu.com/p/8377ce217b65">10种常见的软件架构模式</a></p>
+</blockquote>
+<!-- more -->
+<p>有没有想过要设计多大的企业规模系统？在主要的软件开发开始之前，我们必须选择一个合适的体系结构，它将为我们提供所需的功能和质量属性。因此，在将它们应用到我们的设计之前，我们应该了解不同的体系结构。</p>
+<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587729095513.png" alt="" loading="lazy"></figure>
+<h1>什么是架构模式？</h1>
+根据维基百科中的定义：
+<blockquote>
+<p>架构模式是一个通用的、可重用的解决方案，用于在给定上下文中的软件体系结构中经常出现的问题。架构模式与软件设计模式类似，但具有更广泛的范围。</p>
+</blockquote>
+<p>在本文中，将简要地解释以下 10 种常见的体系架构模式，以及它们的用法、优缺点。</p>
+<ol>
+<li><a href="#%E4%B8%80-%E5%88%86%E5%B1%82%E6%A8%A1%E5%BC%8F">分层模式</a></li>
+<li><a href="#%E4%BA%8C-%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A8%A1%E5%BC%8F">客户端-服务器模式</a></li>
+<li><a href="#%E4%B8%89-%E4%B8%BB%E4%BB%8E%E8%AE%BE%E5%A4%87%E6%A8%A1%E5%BC%8F">主从设备模式</a></li>
+<li><a href="#%E5%9B%9B-%E7%AE%A1%E9%81%93-%E8%BF%87%E6%BB%A4%E5%99%A8%E6%A8%A1%E5%BC%8F">管道-过滤器模式</a></li>
+<li><a href="#%E4%BA%94-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F">代理模式</a></li>
+<li><a href="#%E5%85%AD-%E7%82%B9%E5%AF%B9%E7%82%B9%E6%A8%A1%E5%BC%8F">点对点模式</a></li>
+<li><a href="#%E4%B8%83-%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%BC%8F">事件总线模式</a></li>
+<li><a href="#%E5%85%AB-%E6%A8%A1%E5%9E%8B-%E8%A7%86%E5%9B%BE-%E6%8E%A7%E5%88%B6%E5%99%A8%E6%A8%A1%E5%BC%8F">模型-视图-控制器模式</a></li>
+<li><a href="#%E4%B9%9D-%E9%BB%91%E6%9D%BF%E6%A8%A1%E5%BC%8F">黑板模式</a></li>
+<li><a href="#%E5%8D%81-%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F">解释器模式</a></li>
+</ol>
+<h1 id="一-分层模式">一、分层模式</h1>
+<p>这种模式也称为多层体系架构模式。它可以用来构造可以分解为子任务组的程序，每个子任务都处于一个特定的抽象级别。每个层都为下一个提供更高层次服务。</p>
+<p>一般信息系统中最常见的是如下所列的 4 层。</p>
+<ul>
+<li>表示层（也称为 UI 层）；</li>
+<li>应用层（也称为服务层）；</li>
+<li>业务逻辑层（也称为领域层）；</li>
+<li>数据访问层（也称为持久化层）。</li>
+</ul>
+<p>使用场景：</p>
+<ul>
+<li>一般的桌面应用程序；</li>
+<li>电子商务 Web 应用程序。</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://faded.auspicious.space/post-images/1587729515629.png" alt="Layered pattern" loading="lazy"></figure>
+<h1 id="二-客户端-服务器模式">二、客户端-服务器模式</h1>
+<p>这种模式由两部分组成：一个服务器和多个客户端。服务器组件将为多个客户端组件提供服务。客户端从服务器请求服务，服务器为这些客户端提供相关服务。此外，服务器持续侦听客户机请求。</p>
+<p>使用场景：</p>
+<ul>
+<li>电子邮件，文件共享和银行等在线应用程序。</li>
+</ul>
+<figure data-type="image" tabindex="3"><img src="https://faded.auspicious.space/post-images/1587729648043.png" alt="Client-server pattern " loading="lazy"></figure>
+<h1 id="三-主从设备模式">三、主从设备模式</h1>
+<p>这种模式由两方组成：主设备和从设备。主设备组件在相同的从设备组件中分配工作，并计算最终结果，这些结果是由从设备返回的结果。</p>
+<p>使用场景：</p>
+<ul>
+<li>在数据库复制中，主数据库被认为是权威的来源，并且要与之同步；</li>
+<li>在计算机系统中与总线连接的外围设备（主和从驱动器）。</li>
+</ul>
+<figure data-type="image" tabindex="4"><img src="https://faded.auspicious.space/post-images/1587729762626.png" alt="Master-slave pattern" loading="lazy"></figure>
+<h1 id="四-管道-过滤器模式">四、管道-过滤器模式</h1>
+<p>此模式可用于构造生成和处理数据流的系统。每个处理步骤都封装在一个过滤器组件内。要处理的数据是通过管道传递的。这些管道可以用于缓冲或用于同步。</p>
+<p>使用场景：</p>
+<ul>
+<li>编译器。连续的过滤器执行词法分析、解析、语义分析和代码生成；</li>
+<li>生物信息学的工作流。</li>
+</ul>
+<figure data-type="image" tabindex="5"><img src="https://faded.auspicious.space/post-images/1587729828986.png" alt="Pipe-filter pattern" loading="lazy"></figure>
+<h1 id="五-代理模式">五、代理模式</h1>
+<p>此模式用于构造具有解耦组件的分布式系统。这些组件可以通过远程服务调用彼此交互。代理组件负责组件之间的通信协调。</p>
+<p>服务器将其功能（服务和特征）发布给代理。客户端从代理请求服务，然后代理将客户端重定向到其注册中心的适当服务。</p>
+<p>使用场景：</p>
+<ul>
+<li>消息代理软件，如 Apache ActiveMQ，Apache Kafka，RabbitMQ 和 JBoss Messaging。</li>
+</ul>
+<figure data-type="image" tabindex="6"><img src="https://faded.auspicious.space/post-images/1587729911790.png" alt="Broker pattern" loading="lazy"></figure>
+<h1 id="六-点对点模式">六、点对点模式</h1>
+<p>在这种模式中，单个组件被称为对等点。对等点可以作为客户端，从其他对等点请求服务，作为服务器，为其他对等点提供服务。对等点可以充当客户端或服务器或两者的角色，并且可以随时间动态地更改其角色。</p>
+<p>使用场景：</p>
+<ul>
+<li>像 Gnutella 和 G2 这样的文件共享网络；</li>
+<li>多媒体协议，如 P2PTV 和 PDTP；</li>
+<li>像 Spotify 这样的专有多媒体应用程序。</li>
+</ul>
+<figure data-type="image" tabindex="7"><img src="https://faded.auspicious.space/post-images/1587730026205.png" alt="Peer-to-peer pattern" loading="lazy"></figure>
+<h1 id="七-事件总线模式">七、事件总线模式</h1>
+<p>这种模式主要是处理事件，包括 4 个主要组件：事件源、事件监听器、通道和事件总线。消息源将消息发布到事件总线上的特定通道上。侦听器订阅特定的通道。侦听器会被通知消息，这些消息被发布到它们之前订阅的一个通道上。</p>
+<p>使用场景：</p>
+<ul>
+<li>安卓开发；</li>
+<li>通知服务。</li>
+</ul>
+<figure data-type="image" tabindex="8"><img src="https://faded.auspicious.space/post-images/1587730115823.png" alt="Event-bus pattern" loading="lazy"></figure>
+<h1 id="八-模型-视图-控制器模式">八、模型-视图-控制器模式</h1>
+<p>这种模式，也称为 MVC 模式，把一个交互式应用程序划分为 3 个部分，</p>
+<ul>
+<li><strong>模型</strong>：包含核心功能和数据；</li>
+<li><strong>视图</strong>：将信息显示给用户（可以定义多个视图）；</li>
+<li><strong>控制器</strong>：处理用户输入的信息。</li>
+</ul>
+<p>这样做是为了将信息的内部表示与信息的呈现方式分离开来，并接受用户的请求。它分离了组件，并允许有效的代码重用。</p>
+<p>使用场景：</p>
+<ul>
+<li>在主要编程语言中互联网应用程序的体系架构；</li>
+<li>像 Django 和 Rails 这样的 Web 框架。</li>
+</ul>
+<figure data-type="image" tabindex="9"><img src="https://faded.auspicious.space/post-images/1587730246020.png" alt="Model-view-controller pattern" loading="lazy"></figure>
+<h1 id="九-黑板模式">九、黑板模式</h1>
+<p>这种模式对于没有确定解决方案策略的问题是有用的。黑板模式由 3 个主要组成部分组成。</p>
+<ul>
+<li><strong>黑板</strong>——包含来自解决方案空间的对象的结构化全局内存；</li>
+<li><strong>知识源</strong>——专门的模块和它们自己的表示；</li>
+<li><strong>控制组件</strong>——选择、配置和执行模块；</li>
+</ul>
+<p>所有的组件都可以访问黑板。组件可以生成添加到黑板上的新数据对象。组件在黑板上查找特定类型的数据，并通过与现有知识源的模式匹配来查找这些数据。</p>
+<p>使用场景：</p>
+<ul>
+<li>语音识别；</li>
+<li>车辆识别和跟踪；</li>
+<li>蛋白质结构识别；</li>
+<li>声纳信号的解释。</li>
+</ul>
+<figure data-type="image" tabindex="10"><img src="https://faded.auspicious.space/post-images/1587730341022.png" alt="Blackboard pattern" loading="lazy"></figure>
+<h1 id="十-解释器模式">十、解释器模式</h1>
+<p>这个模式用于设计一个解释用专用语言编写的程序的组件。它主要指定如何评估程序的行数，即以特定的语言编写的句子或表达式。其基本思想是为每种语言的符号都有一个分类。</p>
+<p>使用场景：</p>
+<ul>
+<li>数据库查询语言，比如 SQL；</li>
+<li>用于描述通信协议的语言。</li>
+</ul>
+<figure data-type="image" tabindex="11"><img src="https://faded.auspicious.space/post-images/1587730400554.png" alt="Interpreter pattern" loading="lazy"></figure>
+<h1 id="体系架构模式的比较">体系架构模式的比较</h1>
+<p>下面给出的表格总结了每种体系架构模式的优缺点。</p>
+<table>
+<thead>
+<tr>
+<th style="width:20%">名称</th>
+<th style="width:40%">优点</th>
+<th style="width:40%">缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分层模式</td>
+<td>一个较低的层可以被不同的层所使用。层使标准化更容易，因为我们可以清楚地定义级别。可以在层内进行更改，而不会影响其他层。</td>
+<td>不是普遍适用的。在某些情况下，某些层可能会被跳过。</td>
+</tr>
+<tr>
+<td>客户端-服务器模式</td>
+<td>很好地建立一组服务，用户可以请求他们的服务。</td>
+<td>请求通常在服务器上的单独线程中处理。由于不同的客户端具有不同的表示，进程间通信会导致额外开销。</td>
+</tr>
+<tr>
+<td>主从设备模式</td>
+<td>准确性——将服务的执行委托给不同的从设备，具有不同的实现。</td>
+<td>从设备是孤立的：没有共享的状态。主-从通信中的延迟可能是一个问题，例如在实时系统中。这种模式只能应用于可以分解的问题。</td>
+</tr>
+<tr>
+<td>管道-过滤器模式</td>
+<td>展示并发处理。当输入和输出由流组成时，过滤器在接收数据时开始计算。轻松添加过滤器，系统可以轻松扩展。过滤器可重复使用。 可以通过重新组合一组给定的过滤器来构建不同的管道。</td>
+<td>效率受到最慢的过滤过程的限制。从一个过滤器移动到另一个过滤器时的数据转换开销。</td>
+</tr>
+<tr>
+<td>代理模式</td>
+<td>允许动态更改、添加、删除和重新定位对象，这使开发人员的发布变得透明。</td>
+<td>要求对服务描述进行标准化。</td>
+</tr>
+<tr>
+<td>点对点模式</td>
+<td>支持分散式计算。对任何给定节点的故障处理具有强大的健壮性。在资源和计算能力方面具有很高的可扩展性。</td>
+<td>服务质量没有保证，因为节点是自愿合作的。安全是很难得到保证的。性能取决于节点的数量。</td>
+</tr>
+<tr>
+<td>事件总线模式</td>
+<td>新的发布者、订阅者和连接可以很容易地添加。对高度分布式的应用程序有效。</td>
+<td>可伸缩性可能是一个问题，因为所有消息都是通过同一事件总线进行的。</td>
+</tr>
+<tr>
+<td>模型-视图-控制器模式</td>
+<td>可以轻松地拥有同一个模型的多个视图，这些视图可以在运行时连接和断开。</td>
+<td>增加复杂性。可能导致许多不必要的用户操作更新。</td>
+</tr>
+<tr>
+<td>黑板模式</td>
+<td>很容易添加新的应用程序。扩展数据空间的结构很简单。</td>
+<td>修改数据空间的结构非常困难，因为所有应用程序都受到了影响。可能需要同步和访问控制。</td>
+</tr>
+<tr>
+<td>解释器模式</td>
+<td>高度动态的行为是可行的。对终端用户编程性提供好处。提高灵活性，因为替换一个解释程序很容易。</td>
+<td>由于解释语言通常比编译后的语言慢，因此性能可能是一个问题。</td>
+</tr>
+</tbody>
+</table>]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[window 对象知识总结]]></title>
         <id>https://faded.auspicious.space/post/window-object-summary/</id>
@@ -976,1733 +2148,6 @@ event.stopPropagation(); // 阻止事件的传播
 </ol>
 <p>在四次挥手中，假设最后的 <code>ACK</code> 丢失了，被动关闭方会重发 <code>FIN</code>。主动关闭端必须维护状态，来允许被动关闭方重发最后的 <code>ACK</code>；如果它没有维护这个状态，将会对重发 <code>FIN</code> 返回 <code>RST</code>，被动关闭方会认为这是个错误。如果 TCP 正在执行彻底终止数据流的两个方向所需的所有工作（即全双工关闭），则必须正确处理这四个段中任何一个的丢失。所以执行主动关闭的一方必须在结束时保持 <code>TIME_WAIT</code> 状态：因为它可能必须重传最后的 <code>ACK</code>。</p>
 <p>现在来聊维持 <code>TIME_WAIT</code> 状态的第二个原因。假设在主机 12.106.32.254 的 1500 端口和 206.168.112.219 的 21 端口之间有一个 TCP 连接。此连接关闭后，在相通的地址和端口建立了另外一个连接。由于 IP 地址和端口相同，所以后一种连接被称为先前连接的“化身”。TCP 必须防止连接中的旧副本在稍后再次出现，并被误解为属于同一连接的新“化身”。为此，TCP 将不会启动当前处于 <code>TIME_WAIT</code> 状态的连接的新“化身”。由于 <code>TIME_WAIT</code> 状态的持续时间时两倍的 MSL，因此 TCP 允许一个方向的数据在 MSL 秒内丢失，也允许回复在一个 MSL 秒内丢失。通过强制执行此规则，可以保证当一个 TCP 连接成功建立时，来自先前连接的所有旧的副本在网络中已过期。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[更好的 SQL 模式的 10 条规则]]></title>
-        <id>https://faded.auspicious.space/post/10-rules-for-a-better-sql-schema/</id>
-        <link href="https://faded.auspicious.space/post/10-rules-for-a-better-sql-schema/">
-        </link>
-        <updated>2020-04-24T03:52:10.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="http://labazhou.net/2015/06/10-rules-for-a-better-sql-schema/">更好的 SQL 模式的 10 条规则</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="http://labazhou.net/2015/06/10-rules-for-a-better-sql-schema/">更好的 SQL 模式的 10 条规则</a></p>
-</blockquote>
-<!-- more -->
-<p>在创建新表和数据仓库时，要做很多决定。一些在当时似乎无关紧要的地方，却让你和用户在数据库的生命期内感到痛苦。</p>
-<p>我们和成千上万的人们以及他们的数据库一道工作，经历了长期的读写查询，我们差不多看到了每种情况。下面是创建免去痛苦模式的 10 条规则。</p>
-<h1 id="只使用小写字母-数字和下划线">只使用小写字母、数字和下划线</h1>
-<p>不要在数据库、模式、表或列名中使用点（dot）、空格、或连接号<a href="#%E6%B3%A81">【注1】</a>。点用于标示对象，通常以 <code>database.schema.table.column</code> 的方式。</p>
-<p>对象名称中包含点将引起混淆。类似地，在对象名字里使用空格将迫使你在查询语句中添加不必要的引号：</p>
-<pre><code class="language-sql">SELECT &quot;user name&quot; FROM events;
-
--- vs
-
-SELECT user_name FROM events;
-</code></pre>
-<p>如果在表或列名里有大写字母，查询语句将难以书写。如果所有字母都是小写的，人们将不必记住 <code>users</code> 表是 <code>Users</code> 还是 <code>users</code>。</p>
-<p>当你最终修改数据库或把你的表复制到仓库时，你不需要记住哪个表是大小写敏感的。</p>
-<h1 id="使用简单的-自说明的列名">使用简单的、自说明的列名</h1>
-<p>如果 <code>users</code> 表需要 <code>packages</code> 表的外键，就把键命名为 <code>package_id</code>。避免使用简短、晦涩的名字，比如 <code>pkg_fk</code>；其他人不知道它代表什么。自说明的名字让其他人更容易理解模式，随着团队规模的增加，这对于维护效率至关重要。</p>
-<p>不要为多态的数据使用有歧义的名字。如果你发现自己创建了形如 <code>item_type</code> 或 <code>item_value</code> 的列，那么你最好使用带有具体名字的、更多的列，比如 <code>photo_count</code>、<code>view_cout</code>、<code>transaction_price</code>。</p>
-<p>这样，列的内容就可以常从模式中获悉，而不用依赖于当前行的其它值。</p>
-<pre><code class="language-sql">SELECT SUM(item_value) AS photo_count
-FROM items
-WHERE item_type = 'Photo Count';
-
--- vs
-
-SELECT SUM(photo_count) FROM items;
-</code></pre>
-<p>不要把包含表的名字做为列名的前缀。通常，让用户表包含形如 <code>user_birthday</code>、<code>user_created_at</code>、<code>user_name</code> 的列，没有多少帮助。</p>
-<p>避免使用 <code>column</code>、<code>tag</code> 和 <code>user</code> 之类的保留字做为列名。你将不得不在查询中使用额外的引号，不这么做将让你对错误信息感到困惑。如果保留字出现在列名应该出现的地方，数据库会极大地错误理解查询。</p>
-<h1 id="使用简单的-自说明的表名">使用简单的、自说明的表名</h1>
-<p>如果表名由多个单词组成，就使用下划线隔开这些单词。<code>package_deliveries</code> 要比 <code>packagedeliveries</code> 更容易阅读。</p>
-<p>如有可能，使用一个单词而不是两个单词：<code>deliveries</code> 更易于读。</p>
-<pre><code class="language-sql">SELECT * FROM packagedeliveries;
-
--- vs
-
-SELECT * FROM deliveries;
-</code></pre>
-<p>不要给表加前缀来暗示模式。如果你需要把表分组为范围，就把这些表放入一个模式。<code>store_items</code>、<code>store_transactions</code>、<code>store_coupons</code> 之类的表名，和加了前缀的列名一样，通常不值得额外敲键盘。</p>
-<p>我们推荐表名使用复数（例如 <code>packages</code>），连接表（<code>join table</code>）名字的两个单词都用复数（例如 <code>packages_users</code>）。单数的表名更有可能偶尔与保留字相撞，并且在查询语句中通常有着较低的可读性。</p>
-<h1 id="主键为整数">主键为整数</h1>
-<p>即使你在用 <code>UUID</code>，它也没有意义（比如对于连接表来说），添加标准的 <code>id</code> 列、自增整数序列。这种 <code>key</code> 使得某些查询更加容易，比如仅仅选取一组数据的第一行。</p>
-<p>如果导入的任务需要复制数据，这种 key 将成为救命稻草，因为你能够删除特定行：</p>
-<pre><code class="language-sql">DELETE FROM my_table
-WHERE id IN (SELECT ...) AS duplicated_ids;
-</code></pre>
-<p>避免多列主键。它们在尽量编写有效查询时难以推断，且难以修改。要使用整数主键、多列 <code>unique</code> 约束、一些单列索引代替。</p>
-<h1 id="与外键保持一致">与外键保持一致</h1>
-<p>有很多关于主键和外键的命名风格。我们推荐，最受欢迎的是，任何表 <code>foo</code>，都要拥有一个名叫 <code>id</code> 的主键，所有的主键命名为 <code>foo_id</code>。</p>
-<p>另一种受欢迎的风格使用全局唯一键名，表 <code>foo</code> 有个名叫 <code>foo_id</code> 的主键，所有外键也叫 <code>foo_id</code>。如果你使用缩写（<code>users</code> 表的主键用 <code>uid</code>），会引起混淆或命名冲突，故不要缩写。</p>
-<p>无论你选择什么风格，就保持下去。不要在有的地方使用 <code>uid</code>，在另外地方使用 <code>user_id</code> 或 <code>users_fk</code>。</p>
-<pre><code class="language-sql">SELECT *
-FROM packages
-  JOIN users ON users.user_id = packages.uid;
-
--- vs
-
-SELECT *
-FROM packages
-  JOIN users ON users.id = packages.user_id;
-
--- or
-
-SELECT *
-FROM packages
-  JOIN users USING (user_id);
-</code></pre>
-<p>还要留意不能明显匹配表的外键。名叫 <code>owner_id</code> 的列名或许是 <code>users</code> 表的外键，或许不是。把列名取为 <code>user_id</code>，如有必要，取为 <code>owner_user_id</code>。</p>
-<h1 id="把时间存储为-datetime">把时间存储为 Datetime</h1>
-<p>不要把日期保持为 Unix 时间戳或字符串：而是把它们转化为 <code>datetime</code>。虽然 SQL 的 <code>date</code> 数学函数不是最好的，但是你自己处理时间戳甚至更难。使用 SQL <code>date</code> 函数要求每次查询都把时间戳转化为 <code>datetime</code>：</p>
-<pre><code class="language-sql">SELECT DATE(FROM_unixtime(created_at))
-FROM packages;
-
--- vs
-
-SELECT DATE(created_at)
-FROM packages;
-</code></pre>
-<p>不要在单独的列里存储年、月、日。这使得每一条时间序列<a href="#%E6%B3%A82">【注2】</a>查询非常难以编写，将阻碍大多数刚入门的 SQL 用户使用表格中的日期信息。</p>
-<pre><code class="language-sql">SELECT DATE(created_year || '-' 
-  || created_month || '-' 
-  || created_day);
-
--- vs
-
-SELECT DATE(created_at);
-</code></pre>
-<h1 id="utc一直都是-utc">UTC，一直都是 UTC</h1>
-<p>使用某种时区而非 UTC 将引起永无止境的问题。优秀的工具（包括 Periscope）具备所有你需要的、将数据从 UTC 转换成当前时区的功能。在 Periscope 里，添加 <code>:pst</code> 就轻松地将 UTC 转换成 Pacific Time：</p>
-<pre><code class="language-sql">SELECT [created_at:pst], email_address
-FROM users;
-</code></pre>
-<p>数据库的时区应该是 UTC，所有的 <code>datetime</code> 列应该是去除了时区的类型（没有时区的时间戳）。</p>
-<p>如果你的数据库的时区不是 UTC，或者你的数据库既有 UTC、又有非 UTC 的 <code>datetime</code>，那么时间序列的分析难度将大为增加。</p>
-<h1 id="单一的真实数据来源">单一的真实数据来源</h1>
-<p>对于一条数据，应该有且只有一个真实来源<a href="#%E6%B3%A83">【注3】</a>。视图和汇总应该打上标签。这样，数据的使用人员将明白，在他们使用的数据和真实数据之间存在差异。</p>
-<pre><code class="language-sql">SELECT *
-FROM daily_usage_rollup;
-</code></pre>
-<p>留下废弃的 <code>user_id</code>、<code>user_id_old</code>、<code>user_id_v2</code> 之类的列，将变成混淆的、永无止境的源头。在日常维护中，要确信 <code>drop</code> 掉了已被抛弃的表、和弃用的列。</p>
-<h1 id="更喜欢没有-json-列的表">更喜欢没有 JSON 列的表</h1>
-<p>你肯定不想要非常宽的表。如果有很多列，且它们有的按顺序命名（比如 <code>answer1</code>、<code>answer2</code>、<code>answer3</code>），今后你就会痛苦。</p>
-<p>把这种表拆分成没有重复列的模式，这种模式的形态将特别容易查询。例如，获取 <code>survey</code> 表的、完成的答案的数目：</p>
-<pre><code class="language-sql">SELECT
-  SUM(
-    (CASE WHEN answer1 IS NOT NULL
-      THEN 1 ELSE 0 END) +
-    (CASE WHEN answer2 IS NOT NULL
-      THEN 1 ELSE 0 END) +
-    (CASE WHEN answer3 IS NOT NULL
-      THEN 1 ELSE 0 END)
-  ) AS num_answers
-FROM surveys
-WHERE id = 123;
-
--- vs
-
-SELECT COUNT(response)
-FROM answers
-WHERE survey_id = 123;
-</code></pre>
-<p>对于分析查询，从 JSON 列提取数据，能够极大地降低查询效率。虽然在生产环境有很多理由使用 JSON 列，但那不是针对分析的。强势地把 JSON 列转换为更简单的数据类型，让分析更加容易、更加快捷。</p>
-<h1 id="不要过度规范化">不要过度规范化</h1>
-<p>日期、邮编和国家，不需要让它们自己的表带有主键查询。如果你带了，每次查询将包含有少量的相同连接。这会给数据库创建大量重复的 SQL，以及大量额外工作。</p>
-<pre><code class="language-sql">SELECT
-  dates.d,
-  COUNT(1)
-FROM users
-  JOIN dates ON users.created_date_id = dates.id
-GROUP BY 1;
-
--- vs
-
-SELECT
-  DATE(created_at),
-  COUNT(1)
-FROM users
-GROUP BY 1;
-</code></pre>
-<p>表是有着它们大量自己的数据的第一类对象。其它数据都应该是更加重要的对象上的、另外的列。</p>
-<h2 id="注1">注1</h2>
-<p>连接号（－，〜），表示连接、起止、流程的符号。“两个相关的名词构成一个意义单位，中间用连接号。”、“相关的时间、地点或数目之间用连接号，表示起止。”、“相关的字母、阿拉伯数字等之间，用连接号，表示产品型号。”、“几个相关的项目表示递进式发展，中间用连接号。”<a href="http://zh.wikipedia.org/wiki/%E8%BF%9E%E6%8E%A5%E5%8F%B7">http://zh.wikipedia.org/wiki/连接号</a> 请注意：连接号和连字号是不同的：<a href="http://zh.wikipedia.org/wiki/%E8%BF%9E%E5%AD%97%E5%8F%B7">http://zh.wikipedia.org/wiki/连接号</a></p>
-<h2 id="注2">注2</h2>
-<p>时间序列是用时间排序的一组随机变量，国内生产毛额（GDP）、消费者物价指数（CPI）、台湾加权股价指数、利率、汇率等等都是时间序列。 时间序列的时间间隔可以是分秒（如高频金融数据），可以是日、周、月、季度、年、甚至更大的时间单位。<a href="http://zh.wikipedia.org/wiki/%E6%99%82%E9%96%93%E5%BA%8F%E5%88%97(%E7%B6%93%E6%BF%9F%E5%AD%B8)">http://zh.wikipedia.org/wiki/時間序列(經濟學)</a></p>
-<h2 id="注3">注3</h2>
-<p>In Information Systems design and theory Single Source Of Truth (SSOT) refers to the practice of structuring information models and associated schemata such that every data element is stored exactly once (e.g., in no more than a single row of a single table). <a href="http://en.wikipedia.org/wiki/Single_Source_of_Truth">http://en.wikipedia.org/wiki/Single_Source_of_Truth</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[跨页面通信的各种姿势]]></title>
-        <id>https://faded.auspicious.space/post/ways-to-cross-page-communication/</id>
-        <link href="https://faded.auspicious.space/post/ways-to-cross-page-communication/">
-        </link>
-        <updated>2020-04-23T11:38:52.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/363c3316d594">跨页面通信的各种姿势</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/363c3316d594">跨页面通信的各种姿势</a></p>
-</blockquote>
-<!-- more -->
-<p>将跨页面通讯类比计算机进程间的通讯，其实方法无外乎那么几种，而 Web 领域可以实现的技术方案主要是类似于以下两种原理：</p>
-<ul>
-<li>获取句柄，定向通讯。</li>
-<li>共享内存，结合轮询或者事件通知来完成业务逻辑。</li>
-</ul>
-<p>由于第二种原理更利于解耦业务逻辑，具体的实现方案比较多样。以下是具体的实现方案，简单介绍下，权当科普：</p>
-<h1 id="获取句柄">获取句柄</h1>
-<h2 id="具体方案">具体方案</h2>
-<p>父页面通过 <code>window.open(url, name)</code> 方式打开的子页面可以获取句柄，然后通过 <code>postMessage</code> 完成通讯需求。</p>
-<pre><code class="language-javascript">// parent.html
-const childPage = window.open('child.html', 'child')
-
-childPage.onload = () =&gt; {
-    childPage.postMessage('hello', location.origin)
-}
-
-// child.html
-window.onmessage = evt =&gt; {
-    // evt.data
-}
-</code></pre>
-<h2 id="tips">Tips</h2>
-<ol>
-<li>当指定 <code>window.open</code> 的第二个 <code>name</code> 参数时，再次调用 <code>window.open('****', 'child')</code>会使之前已经打开的同 <code>name</code> 子页面刷新；</li>
-<li>由于安全策略，异步请求之后再调用 <code>window.open</code> 会被浏览器阻止，不过可以通过句柄设置子页面的url即可实现类似效果。</li>
-</ol>
-<pre><code class="language-javascript">// 首先先开一个空白页
-const tab = window.open('about:blank')
-
-// 请求完成之后设置空白页的url
-fetch(/* ajax */).then(() =&gt; {
-    tab.location.href = '****'
-})
-</code></pre>
-<h2 id="优劣">优劣</h2>
-<p>缺点是只能与自己打开的页面完成通讯，应用面相对较窄；但优点是在跨域场景中依然可以使用该方案。</p>
-<h1 id="localstorage">LocalStorage</h1>
-<h2 id="具体方案-2">具体方案</h2>
-<p>设置共享区域的 <code>storage</code>，<code>storage</code> 会触发 <code>storage</code> 事件。</p>
-<pre><code class="language-javascript">// A.html
-localStorage.setItem('message', 'hello')
-
-// B.html
-window.onstorage = evt =&gt; {
-  // evt.key, evt.oldValue, evt.newValue
-}
-</code></pre>
-<h2 id="tips-2">Tips</h2>
-<ol>
-<li>触发写入操作的页面下的 <code>storage listener</code> 不会被触发；</li>
-<li><code>storage</code> 事件只有在发生改变的时候才会触发，即重复设置相同值不会触发 <code>listener</code>；</li>
-<li><code>safari</code> 隐身模式下无法设置 <code>localStorage</code> 值。</li>
-</ol>
-<h2 id="优劣-2">优劣</h2>
-<p>API 简单直观，兼容性好，除了跨域场景下需要配合其他方案，无其他缺点。</p>
-<h1 id="broadcastchannel">BroadcastChannel</h1>
-<h2 id="具体方案-3">具体方案</h2>
-<p>和 <code>localStorage</code> 方案基本一致，额外需要初始化。</p>
-<pre><code class="language-javascript">// A.html
-const channel = new BroadcastChannel('tabs')
-channel.onmessage = evt =&gt; {
-    // evt.data
-}
-
-// B.html
-const channel = new BroadcastChannel('tabs')
-channel.postMessage('hello')
-</code></pre>
-<h2 id="优劣-3">优劣</h2>
-<p>和 <code>localStorage</code> 方案没特别区别，都是同域、API 简单，<code>BroadcastChannel</code> 方案兼容性差些（Chrome &gt; 58），但比 <code>localStorage</code> 方案生命周期短（不会持久化），相对干净些。</p>
-<h1 id="sharedworker">SharedWorker</h1>
-<h2 id="具体方案-4">具体方案</h2>
-<p>SharedWorker 本身并不是为了解决通讯需求的，它的设计初衷应该是类似总控，将一些通用逻辑放在SharedWorker 中处理。不过因为也能实现通讯，所以一并写下：</p>
-<pre><code class="language-javascript">// A.html
-var sharedworker = new SharedWorker('worker.js')
-sharedworker.port.start()
-sharedworker.port.onmessage = evt =&gt; {
-    // evt.data
-}
-
-// B.html
-var sharedworker = new SharedWorker('worker.js')
-sharedworker.port.start()
-sharedworker.port.postMessage('hello')
-
-// worker.js
-const ports = []
-onconnect = e =&gt; {
-    const port = e.ports[0]
-    ports.push(port)
-    port.onmessage = evt =&gt; {
-        ports.filter(v =&gt; v!== port) // 此处为了贴近其他方案的实现，剔除自己
-        .forEach(p =&gt; p.postMessage(evt.data))
-    }
-}
-</code></pre>
-<h2 id="优劣-4">优劣</h2>
-<p>相较于其他方案没有优势，此外，API 复杂而且调试不方便。</p>
-<h1 id="cookie">Cookie</h1>
-<h2 id="具体方案-5">具体方案</h2>
-<p>一个古老的方案，有点 <code>localStorage</code> 的降级兼容版，我也是整理本文的时候才发现的，思路就是往 <code>document.cookie</code> 写入值，由于 <code>cookie</code> 的改变没有事件通知，所以只能采取轮询脏检查来实现业务逻辑。</p>
-<p>方案比较丑陋，势必被淘汰的方案，贴一下原版思路地址，我就不写 demo 了。<br>
-<a href="https://stackoverflow.com/questions/4079280/javascript-communication-between-browser-tabs-windows/4079423">communication between browser windows (and tabs too) using cookies</a></p>
-<h2 id="优劣-5">优劣</h2>
-<p>相较于其他方案没有存在优势的地方，只能同域使用，而且污染 <code>cookie</code> 以后还额外增加 <code>AJAX</code> 的请求头内容。</p>
-<h1 id="server">Server</h1>
-<p>之前的方案都是前端自行实现，势必受到浏览器限制，比如无法做到跨浏览器的消息通讯，比如大部分方案都无法实现跨域通讯（需要增加额外的 <code>postMessage</code> 逻辑才能实现）。通过借助服务端，还有很多增强方案，也一并说下。</p>
-<h2 id="乞丐版">乞丐版</h2>
-<p>后端无开发量，前端定期保存，在 tab 被激活时重新获取保存的数据，可以通过校验 <code>hash</code> 之类的标记位来提升检查性能。</p>
-<pre><code class="language-javascript">window.onvisibilitychange = () =&gt; {
-    if (document.visibilityState === 'visible') {
-        // AJAX
-    }
-}
-</code></pre>
-<h2 id="server-sent-events-websocket">Server-sent Events / Websocket</h2>
-<p>项目规模小型的时候可以采取这类方案，后端自行维护连接，以及后续的推送行为。</p>
-<h3 id="sse">SSE</h3>
-<pre><code class="language-javascript">// 前端
-const es = new EventSource('/notification')
-
-es.onmessage = evt =&gt; {
-    // evt.data
-}
-es.addEventListener('close', () =&gt; {
-    es.close()
-}, false)
-
-
-// 后端，express为例
-const clients = []
-
-app.get('/notification', (req, res) =&gt; {
-    res.setHeader('Content-Type', 'text/event-stream')
-    clients.push(res)
-    req.on('aborted', () =&gt; {
-        // 清理clients
-    })
-})
-app.get('/update', (req, res) =&gt; {
-    // 广播客户端新的数据
-    clients.forEach(client =&gt; {
-        client.write('data:hello\n\n')
-        setTimeout(() =&gt; {
-            client.write('event:close\ndata:close\n\n')
-        }, 500)
-    })
-    res.status(200).end()
-})
-</code></pre>
-<h3 id="websocket">WebSocket</h3>
-<p><code>socket.io</code>、<code>sockjs</code> 例子比较多，略</p>
-<h2 id="消息队列">消息队列</h2>
-<p>项目规模大型时，需要消息队列集群长时间维护长链接，在需要的时候进行广播。</p>
-<p>提供该类服务的云服务商很多，或者寻找一些开源方案自建。</p>
-<p>例如 <code>MQTT</code> 协议方案（阿里云就有提供），<code>Web</code> 客户端本质上也是 WebSocket，需要集群同时支持<code>ws</code> 和 <code>mqtt</code> 协议，示例如下：</p>
-<pre><code class="language-javascript">// 前端
-// 客户端使用开源的Paho
-// port会和mqtt协议通道不同
-const client = new Paho.MQTT.Client(host, port, 'clientId')
-
-client.onMessageArrived = message =&gt; {
-    // message. payloadString
-}
-client.connect({
-    onSuccess: () =&gt; {
-        client.subscribe('notification')
-    }
-})
-// 抑或，借助flash（虽然快要被淘汰了）进行mqtt协议连接并订阅相应的频道，flash再通过回调抛出消息
-
-// 后端
-// 根据服务商提供的Api接口调用频道广播接口
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[TCP 详解]]></title>
-        <id>https://faded.auspicious.space/post/tcp-full-introduction/</id>
-        <link href="https://faded.auspicious.space/post/tcp-full-introduction/">
-        </link>
-        <updated>2020-04-23T05:01:44.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/65605622234b">计算机网络：这是一份全面 &amp; 详细 的TCP协议攻略</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/65605622234b">计算机网络：这是一份全面 &amp; 详细 的TCP协议攻略</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="1-定义">1 定义</h1>
-<p>Transmission Control Protocol，即<strong>传输控制协议</strong>。</p>
-<ul>
-<li>属于<strong>传输层</strong>通信协议；</li>
-<li>基于 <code>TCP</code> 的应用层协议有 <code>HTTP</code>、<code>SMTP</code>、<code>FTP</code>、<code>Telnet</code> 和 <code>POP3</code>。</li>
-</ul>
-<h1 id="2-特点">2 特点</h1>
-<ul>
-<li>面向连接</li>
-<li>面向字节流</li>
-<li>全双工通信</li>
-<li>可靠</li>
-</ul>
-<p>具体介绍如下：</p>
-<table>
-<thead>
-<tr>
-<th>特点</th>
-<th>具体描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>面向连接</td>
-<td>使用 TCP 传输数据前，必须先建立 TCP 连接；传输完成后再释放连接（就像打电话：先拨号建立连接，打完后挂机释放连接）</td>
-</tr>
-<tr>
-<td>全双工通信</td>
-<td>建立 TCP 连接后，通信双方都能发送数据</td>
-</tr>
-<tr>
-<td>可靠</td>
-<td>通过 TCP 连接传送的数据：不丢失、无差错、不重复并且按需到达</td>
-</tr>
-<tr>
-<td>面向字节流</td>
-<td>数据以流的形式进行传输<br>- 流：流入/流出进程的字符序列 <br>- TCP 一次传输的报文长度有限制，若太大则需分块、分次传输<br>- 但由于 TCP 连接的可靠性，接收方可按顺序接受数据块并重新组成分块之前的数据流<br>- 所以 TCP 看起来就像直接互相传输字节流一样，即面向字节流</td>
-</tr>
-</tbody>
-</table>
-<h1 id="3-优缺点">3 优缺点</h1>
-<ul>
-<li>优点：数据传输可靠。</li>
-<li>缺点：效率慢（因需建立连接、发送确认包等）。</li>
-</ul>
-<h1 id="4-应用场景对应的应用层协议">4 应用场景（对应的应用层协议）</h1>
-<p>要求通信数据可靠时，即<strong>数据要准确无误地传递给对方</strong>.</p>
-<p>如：传输文件：<code>HTTP</code>、<code>HTTPS</code>、<code>FTP</code> 等协议；传输邮件：<code>POP</code>、<code>SMTP</code> 等协议。</p>
-<ul>
-<li>万维网：<code>HTTP</code> 协议</li>
-<li>文件传输：<code>FTP</code> 协议</li>
-<li>电子邮件：<code>SMTP</code> 协议</li>
-<li>远程终端接入：<code>TELNET</code> 协议</li>
-</ul>
-<h1 id="5-报文段格式">5 报文段格式</h1>
-<ul>
-<li><code>TCP</code> 虽面向字节流，但传送的 <strong>数据单元 = 报文段</strong>；</li>
-<li><strong>报文段 = 首部 + 数据</strong> 2部分；</li>
-<li><code>TCP</code> 的全部功能体现在它首部中各字段的作用，故下面主要讲解 <code>TCP</code> 报文段的首部。</li>
-</ul>
-<p>首部前 20 个字符固定、后面有 4n 个字节是根据需而增加的选项，故<strong>TCP 首部最小长度 = 20字节</strong>。<br>
-<img src="https://faded.auspicious.space/post-images/1587619052036.png" alt="TCP头部示意图" loading="lazy"></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">字段</th>
-<th>作用</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">序号<br>（报文段序号）</td>
-<td>本报文段所发送数据的第 1 个字节的序号</td>
-<td>4 字节</td>
-</tr>
-<tr>
-<td style="text-align:center">确认号<br>（ACK）</td>
-<td>期望收到对方下一个报文段的第一个数据字节的序号</td>
-<td>- 4 字节<br>- 若确认号 = N，则表明到序号 N-1 为止的所有数据都已正确收到</td>
-</tr>
-<tr>
-<td style="text-align:center">SYN<br>（同步位）</td>
-<td>连接建立时用于同步序号</td>
-<td>- SYN = 1、ACK = 0，表明这是一个连接请求报文段<br>- SYN = 1、ACK = 1，表明这是一个连接请求响应报文段</td>
-</tr>
-<tr>
-<td style="text-align:center">FIN<br>（终止控制位）</td>
-<td>释放连接</td>
-<td>FIN = 1时，表明此报文段的发送方已发送数据完毕并要求释放连接</td>
-</tr>
-</tbody>
-</table>
-<h1 id="6-建立连接过程">6 建立连接过程</h1>
-<p>TCP 建立连接需<strong>三次握手</strong>，具体介绍如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587619540346.png" alt="TCP三次握手" loading="lazy"></p>
-<p>建立 TCP 连接前：</p>
-<ul>
-<li>TCP 客户端、服务器都处于关闭状态（CLOSED）；</li>
-<li>直到客户端主动打开连接，服务器才被动打开连接处于监听状态（LISTEN），等待接收客户端的请求。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>过程</th>
-<th>具体描述</th>
-<th>报文段信息</th>
-<th>状态</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>第一次握手</td>
-<td>客户端向服务器发送一个连接请求的报文段</td>
-<td>- <strong>同步标志位</strong>设为1：SYN = 1<br>- 随机选择一个起始序号：seq = x<br>- 不携带数据<br><strong>（因为SYN位被设置为1的报文段不能携带数据，但要消耗一个序号）</strong></td>
-<td>客户端进入<strong>同步已发送</strong>状态（SYN_SEND）（等待服务器的确认）</td>
-</tr>
-<tr>
-<td>第二次握手</td>
-<td>服务器收到请求连接报文段后，若同意建立连接，则向客户端发回连接确认的报文段（为该 TCP 连接分配 TCP 缓存、变量）</td>
-<td>- <strong>同步标志位</strong>设为1：SYN=1<br>- <strong>确认标志位</strong>设为1：ACK=1<br>- 随机选择一个起始序号：seq=y<br>- <strong>确认号字段</strong>设为：ack=x+1<br>- 不携带数据<br>（原因同上：但要消耗一个序号）</td>
-<td>服务器进入<strong>同步已接收</strong>状态（SYN_RCVD）</td>
-</tr>
-<tr>
-<td>第三次握手</td>
-<td>客户端收到确认报文段后，向服务器再次发出连接确认报文段<br>（为该 TCP 连接分配 TCP 缓存、变量）</td>
-<td>- <strong>确认标记位</strong>设为1：ACK=1<br>- 序号：seq=x+1<br>- <strong>确认号字段</strong>设为：ack=y+1<br>- 可携带数据<br>（因SYN无设为1，若不携带数据则不消耗序号）</td>
-<td>客户端、服务器都进入<strong>已创建</strong>（ESTABLISHED）（可开始发送数据）</td>
-</tr>
-</tbody>
-</table>
-<p>成功进行 <code>TCP</code> 的三次握手后，就建立起一条 <code>TCP</code> 连接，即可传送应用层数据</p>
-<p>注：</p>
-<ul>
-<li>因 TCP 提供的是全双工通信，故通信双方的应用进程在任何时候都能发送数据；</li>
-<li>三次握手期间，任何 1 次未收到对面的回复，则都会重发。</li>
-</ul>
-<h2 id="特别说明为什么tcp建立连接需三次握手">特别说明：为什么TCP建立连接需三次握手？</h2>
-<h3 id="结论">结论</h3>
-<p>防止服务器端因接收了早已失效的连接请求报文，从而一直等待客户端请求，最终导致形成死锁、浪费资源。</p>
-<h3 id="具体描述">具体描述</h3>
-<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587620906872.jpg" alt="" loading="lazy"></figure>
-<p>SYN 洪泛攻击：</p>
-<ul>
-<li>从上可看出：服务端的 TCP 资源分配时刻 = 完成第二次握手时；而客户端的 TCP 资源分配时刻 = 完成第三次握手时；</li>
-<li>这就使得服务器易于受到 SYN 洪泛攻击，即同时多个客户端发起连接请求，从而需进行多个请求的 TCP 连接资源分配。</li>
-</ul>
-<h1 id="7-释放连接过程">7 释放连接过程</h1>
-<p>在通信结束后，双方都可以释放连接，共需<strong>四次挥手</strong>，具体如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587620992044.png" alt="" loading="lazy"></p>
-<p>释放 TCP 连接前：</p>
-<ul>
-<li>TCP 客户端、服务器都处于<strong>已创建</strong>状态（ESTABLISHED）；</li>
-<li>直到：客户端主动关闭 TCP 连接。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>过程</th>
-<th>具体描述</th>
-<th>报文段信息</th>
-<th>状态</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>第一次挥手</td>
-<td>客户端向服务器发送一个连接释放的报文段<br>（停止再发送数据）</td>
-<td>- <strong>终止控制位</strong>设为1：FIN=1<br>- <strong>报文段序号</strong>设为前面传送数据最后一个字节的序号加1：seq=u<br>- 可携带数据<br>（FIN=1的报文即使不携带数据也消耗一个序号）</td>
-<td>客户端进入<strong>终止等待1</strong>状态（FIN-WAIT-1）<br>（等待服务器的确认）</td>
-</tr>
-<tr>
-<td>第二次挥手</td>
-<td>服务器收到连接释放报文段后，则向客户端发回连接释放确认的报文段</td>
-<td>- <strong>确认标记位</strong>设为1：ACK=1<br>- <strong>报文段序号</strong>设为前面传送数据最后一个字节的序号加1：seq=v<br>- <strong>确认号字段</strong>设为：ack=u+1</td>
-<td>- 服务器进入<strong>关闭等待</strong>状态（CLOSE-WAIT）<br>- 客户端收到服务器的确认后，进入<strong>终止等待2</strong>状态（FIN-WAIT-2），等待服务器发出释放连接请求<br>- 至此，客户端→服务器的 TCP 连接已断开<br>- 即 TCP 连接处于半关闭状态<br>- 即<strong>客户端→服务器</strong>断开，但<strong>服务器→客户端</strong>未断开</td>
-</tr>
-<tr>
-<td>第三次挥手</td>
-<td>若服务器已无要向客户端发送数据，则发出释放连接的报文段</td>
-<td>- <strong>终止控制位</strong>设为1：FIN=1<br>- <strong>确认标记位</strong>设为1：ACK=1<br>- 报文段序号：seq=w<br><strong>重复上次已发送的确认号字段</strong>设为：ack=u+1<br>可携带数据<br>（FIN=1的报文即使不携带数据也消耗一个序号）</td>
-<td>服务器端进入<strong>最后确认状态</strong>（LAST-ACK）</td>
-</tr>
-<tr>
-<td>第四次握手</td>
-<td>客户端收到连接释放报文段后，则向服务器发回连接释放确认的报文段</td>
-<td>- <strong>确认标记位</strong>设为1：ACK=1<br><strong>报文段序号</strong>：seq=u+1<br>- <strong>确认号字段</strong>设为：ack=w+1<br>- 可携带数据<br>（FIN=1的报文即使不携带数据也消耗一个序号）</td>
-<td>- 客户端进入<strong>时间等待</strong>状态（TIME-WAIT）</td>
-</tr>
-</tbody>
-</table>
-<h2 id="特别说明为什么-tcp-释放连接需四次挥手">特别说明：为什么 TCP 释放连接需四次挥手？</h2>
-<h3 id="结论-2">结论</h3>
-<p>为了保证通信双方都能通知对方 <strong>需释放</strong> &amp; <strong>断开连接</strong>，即释放连接后，都无法接收 / 发送消息给对方。</p>
-<h3 id="具体描述-2">具体描述</h3>
-<figure data-type="image" tabindex="2"><img src="https://faded.auspicious.space/post-images/1587623329615.jpg" alt="" loading="lazy"></figure>
-<h2 id="延伸疑问">延伸疑问</h2>
-<p>为什么客户端关闭连接前要等待 <code>2 MSL</code> 时间？即 <code>TIME - WAIT</code> 状态的作用是什么？（<code>MSL</code> = 最长报文段寿命（Maximum Segment Lifetime））</p>
-<p>原因1：为了保证客户端发送的最后一个连接释放确认报文能到达服务器，从而使得服务器能正常释放连接。<br>
-<img src="https://faded.auspicious.space/post-images/1587623476470.jpg" alt="" loading="lazy"></p>
-<p>原因2：防止<strong>上文提到的早已失效的连接请求报文</strong>出现在本连接中。<br>
-客户端发送了最后一个连接释放请求确认报文后，再经过 <code>2 MSL</code> 时间，则可使本连接持续时间内所产生的所有报文段都从网络中消失。即在下一个新的连接中就不会出现早已失效的连接请求报文</p>
-<h1 id="8-无差错传输">8 无差错传输</h1>
-<p>对比于 UDP，TCP 的传输是可靠的、无差错的。那么为什么 TCP 的传输为什么是可靠的、无差错的呢？下面，我将详细讲解 TCP 协议的无差错传输。</p>
-<h2 id="81-含义">8.1 含义</h2>
-<ul>
-<li>无差错：即<strong>传输信道不出差错</strong>；</li>
-<li>发送 &amp; 接收效率匹配：即<strong>无论发送方以多快的速度发送数据，接收方总来得及处理收到的数据</strong>。</li>
-</ul>
-<h2 id="82-基础滑动窗口协议">8.2 基础：滑动窗口协议</h2>
-<p>先理解2个基础概念：发送窗口、接收窗口</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>定义</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>发送窗口</td>
-<td>在任意时刻，发送方维持的一组连续的、允许发送帧的帧序号<br>（发送窗口的大小：还没有收到对方确认信息的情况下发送方最多还可以发送多少个数据帧）</td>
-<td>对发送方进行流量控制</td>
-</tr>
-<tr>
-<td>接收窗口</td>
-<td>任意时刻，接收方维持的一组连续的、允许接收帧的帧序号</td>
-<td>- 控制可接收哪些数据帧和不可接收哪些数据帧<br>- 接收方只有当收到的数据帧的序号落入接收窗口内采允许将该数据帧收下；否则一律丢弃</td>
-</tr>
-</tbody>
-</table>
-<h3 id="工作原理">工作原理</h3>
-<p>对于发送端：</p>
-<ul>
-<li>每收到一个确认帧，发送窗口就向前滑动一个帧的距离；</li>
-<li>当发送窗口内无可发送的帧时（即窗口内的帧全部是已发送但未收到确认的帧），发送方就会停止发送，直到收到接收方发送的确认帧使窗口移动，窗口内有可以发送的帧，之后才开始继续发送。</li>
-</ul>
-<p>具体如下图：<br>
-<img src="https://faded.auspicious.space/post-images/1587624480034.png" alt="" loading="lazy"></p>
-<p>对于接收端：<br>
-当收到数据帧后，将窗口向前移动一个位置，并发回确认帧，若收到的数据帧落在接收窗口之外，则一律丢弃。<br>
-<img src="https://faded.auspicious.space/post-images/1587624516925.png" alt="" loading="lazy"></p>
-<h3 id="滑动窗口协议的重要特性">滑动窗口协议的重要特性</h3>
-<p>只有接收窗口向前滑动、接收方发送了确认帧时，发送窗口才有可能（只有发送方收到确认帧才是一定）向前滑动。<br>
-停止-等待协议、后退 N 帧协议和选择重传协议只是在发送窗口大小和接收窗口大小上有所差别：</p>
-<ul>
-<li>停止等待协议：发送窗口大小=1，接收窗口大小=1；即<strong>单帧滑动窗口</strong>等于<strong>停止-等待协议</strong>。</li>
-<li>后退 N 帧协议：发送窗口大小&gt;1，接收窗口大小=1。</li>
-<li>选择重传协议：发送窗口大小&gt;1，接收窗口大小&gt;1。</li>
-</ul>
-<p>当接收窗口的大小为 1 时，可保证帧有序接收。数据链路层的滑动窗口协议中，窗口的大小在传输过程中是固定的（注意要与 TCP 的滑动窗口协议区别）。</p>
-<h2 id="83-实现无差错传输的解决方案">8.3 实现无差错传输的解决方案</h2>
-<p>核心思想：采用一些可靠传输协议，使得</p>
-<ul>
-<li>出现差错时，让发送方重传差错数据：即<strong>出错重传</strong>；</li>
-<li>当接收方来不及接收收到的数据时，可通知发送方降低发送数据的效率：即<strong>速度匹配</strong>。</li>
-</ul>
-<p>针对上述俩个问题，分别采用的解决方案是：<strong>自动重传协议</strong>和<strong>流量控制</strong>和<strong>拥塞控制协议</strong>。</p>
-<h3 id="自动重传请求协议arq针对出错重传">自动重传请求协议ARQ（针对出错重传）</h3>
-<p>定义：即 Auto Repeat reQuest，具体介绍如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587624754556.png" alt="" loading="lazy"></p>
-<p>类型：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>原理</th>
-<th>特点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>停等式 ARQ<br>（Stop-and-Wait）</td>
-<td>（单帧滑动窗口）停止-等待协议+超时重传</td>
-<td>发送窗口大小=1、接收窗口大小=1</td>
-</tr>
-<tr>
-<td>后退 N 帧 ARQ<br>（Go-Back-N）</td>
-<td>多帧滑动窗口+累计确认+后退N帧+超时重传</td>
-<td>发送窗口大小&gt;1、接收窗口大小=1</td>
-</tr>
-<tr>
-<td>选择重传 ARQ<br>（Selective Repeat）</td>
-<td>多帧滑动窗口+累计确认+后退N帧+超时重传</td>
-<td>发送窗口大小&gt;1、接收窗口大小&gt;1</td>
-</tr>
-</tbody>
-</table>
-<p>下面，将主要讲解上述 3 类协议：</p>
-<h4 id="停等式arqstop-and-wait">停等式ARQ（Stop-and-Wait）</h4>
-<p>原理：（单帧滑动窗口）停止 - 等待协议 + 超时重传，即 ：发送窗口大小=1、接收窗口大小=1</p>
-<p>停止 - 等待协议的协议原理如下：</p>
-<ul>
-<li>发送方每发送一帧，要等到接收方的应答信号后才能发送下一帧</li>
-<li>接收方每接收一帧，都要反馈一个应答信号，表示可接下一帧</li>
-<li>若接收方不反馈应答信号，则发送方必须一直等待</li>
-</ul>
-<h4 id="后退-n-帧协议">后退 N 帧协议</h4>
-<p>也称：连续 ARQ 协议</p>
-<p>原理：多帧滑动窗口 + 累计确认 + 后退N帧 + 超时重传，即 ：发送窗口大小&gt;1、接收窗口大小=1</p>
-<p>具体描述：</p>
-<ul>
-<li>发送方：采用多帧滑动窗口的原理，可连续发送多个数据帧而不需等待对方确认。</li>
-<li>接收方：采用累计确认和后退 N 帧的原理，只允许按顺序接收帧。具体原理如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587638862413.png" alt="" loading="lazy"></li>
-</ul>
-<p><strong>示例讲解</strong>：<br>
-本示例 = <strong>源站</strong>向<strong>目的站</strong>发送数据帧。具体示例如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587638924078.png" alt="" loading="lazy"></p>
-<h4 id="选择重传-arqselective-repeat">选择重传 ARQ（Selective Repeat）</h4>
-<p>原理：多帧滑动窗口 + 累计确认 + 后退N帧 + 超时重传，即 ：发送窗口大小&gt;1、接收窗口大小&gt;1。类似于类型 2（后退 N 帧协议），此处仅仅是接收窗口大小的区别，故此处不作过多描述。</p>
-<p>特点：</p>
-<ul>
-<li>优：因连续发送数据帧而提高了信道的利用率；</li>
-<li>缺：重传时又必须把原来已经传送正确的数据帧进行重传（仅因为这些数据帧前面有一个数据帧出了错），将导致传送效率降低。</li>
-</ul>
-<p>由此可见，若信道传输质量很差，导致误码率较大时，后退 N 帧协议不一定优于停止-等待协议</p>
-<h3 id="流量控制-拥塞控制针对-速度匹配">流量控制 &amp; 拥塞控制（针对 速度匹配）</h3>
-<h4 id="流量控制">流量控制</h4>
-<p>简介：<br>
-<img src="https://faded.auspicious.space/post-images/1587639026600.png" alt="" loading="lazy"></p>
-<p>实例：<br>
-<img src="https://faded.auspicious.space/post-images/1587639056772.png" alt="" loading="lazy"></p>
-<p>特别注意：死锁问题<br>
-<img src="https://faded.auspicious.space/post-images/1587639083197.png" alt="" loading="lazy"></p>
-<h3 id="拥塞控制">拥塞控制</h3>
-<p>定义：防止过多的数据注入到网络中，使得网络中的路由器和链路不致于过载。<br>
-拥塞：对网络中的资源需求 &gt; 该资源所能提供的部分</p>
-<p>与 “流量控制”的区别：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>范围</th>
-<th>面向对象</th>
-<th>实际措施</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>拥塞控制</td>
-<td>全局性</td>
-<td>整个通信网络<br>（含所有主机和路由器）</td>
-<td>防止过多数据注入网络</td>
-</tr>
-<tr>
-<td>流量控制</td>
-<td>点对点、端到端</td>
-<td>发送端</td>
-<td>降低发送端的发送速率</td>
-</tr>
-</tbody>
-</table>
-<p>具体解决方案：<br>
-共分为 2 个解决方案：慢开始和拥塞避免、快重传和快恢复。其中，涉及 4 种算法，即慢开始、拥塞避免、快重传和快恢复。</p>
-<p>具体介绍如下：</p>
-<h4 id="慢开始-拥塞避免">慢开始 &amp; 拥塞避免</h4>
-<p>储备知识：拥塞窗口、慢开始算法、拥塞避免算法</p>
-<h5 id="拥塞窗口">拥塞窗口</h5>
-<p>发送方维持一个状态变量：拥塞窗口（cwnd， congestion window），具体介绍如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587639388518.png" alt="" loading="lazy"></p>
-<h5 id="慢开始算法">慢开始算法</h5>
-<p>原理：当主机开始发送数据时，由小到大逐渐增大 拥塞窗口数值（即发送窗口数值），从而由小到大逐渐增大发送报文段。</p>
-<p>目的：开始传输时，试探网络的拥塞情况。</p>
-<p>具体措施：</p>
-<table>
-<thead>
-<tr>
-<th>步骤</th>
-<th>具体描述</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1. 开始发送报文段时</td>
-<td>把拥塞窗口（cwnd）设置为一个最大报文段（MSS）的数值</td>
-<td>设置得如此小的目的：试探一下网络的拥塞情况</td>
-</tr>
-<tr>
-<td>2. 每收到一个对新的报文段的确认后</td>
-<td>把拥塞窗口增加至多一个 MSS 的数值</td>
-<td>逐步增大发送方的拥塞窗口 cwnd，以便分组注入到网络的速率更加合理</td>
-</tr>
-<tr>
-<td>3. 每经过一个传输轮次</td>
-<td>拥塞窗口（cwnd）就加倍</td>
-<td>- 一个传输轮次：把拥塞窗口（cwnd）所允许发送的报文段都连续发送出去，并收到了对已发送的最后一个字节的确认<br>- 一个传输轮次所经历的时间=往返时间 RTT</td>
-</tr>
-</tbody>
-</table>
-<p>示意图：<br>
-<img src="https://faded.auspicious.space/post-images/1587639761640.png" alt="" loading="lazy"></p>
-<p>特别注意：<br>
-慢开始的“慢”指：一开始发送报文段时拥塞窗口（cwnd）设置得较小（为1），使得发送方在开始时只发送一个报文段（目的是试探一下网络的拥塞情况），并不是指拥塞窗口（cwnd）的增长速率慢。</p>
-<h5 id="拥塞避免算法">拥塞避免算法</h5>
-<p>原理：使得拥塞窗口（cwnd）按线性规律 缓慢增长：每经过一个往返时间RTT，发送方的拥塞窗口（cwnd）加1。</p>
-<ul>
-<li>拥塞避免并不可避免拥塞，只是将拥塞窗口按现行规律缓慢增长，使得网络比较不容易出现拥塞</li>
-<li>相比慢开始算法的加倍，拥塞窗口增长速率缓慢得多。</li>
-</ul>
-<p>示意图：<br>
-<img src="https://faded.auspicious.space/post-images/1587639860706.png" alt="" loading="lazy"></p>
-<p>解决方案描述（慢开始和拥塞避免）</p>
-<p>为了防止拥塞窗口（cwnd）增长过大而引起网络拥塞，采用慢开始和拥塞避免 2 种算法，具体规则如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587639940544.png" alt="" loading="lazy"></p>
-<p>实例说明：<br>
-<img src="https://faded.auspicious.space/post-images/1587639965895.png" alt="" loading="lazy"></p>
-<h4 id="快重传和快恢复">快重传和快恢复</h4>
-<p>快重传和快恢复的解决方案是对慢开始和拥塞避免算法的改进。<br>
-储备知识：快重传算法、快恢复算法。</p>
-<h5 id="快重传算法">快重传算法</h5>
-<p>原理：</p>
-<ul>
-<li>接收方：每收到一个失序的报文段后 就立即发出重复确认（为的是使发送方及早知道有报文段没有到达对方），而不要等到自己发送数据时才进行捎带确认。</li>
-<li>发送方只要一连收到 3 个重复确认就立即重传对方尚未收到的报文段，而不必继续等待设置的重传计时器到期。</li>
-</ul>
-<p>作用：<br>
-由于发送方尽早重传未被确认的报文段，因此采用快重传后可以使整个网络吞吐量提高约 20%。</p>
-<p>示意图：<br>
-<img src="https://faded.auspicious.space/post-images/1587640191690.png" alt="" loading="lazy"></p>
-<h5 id="快恢复">快恢复</h5>
-<p>当发送方连续收到 3 个重复确认后，就：</p>
-<ol>
-<li>执行<strong>乘法减小</strong>算法：把慢开始门限（ssthresh）设置为出现拥塞时发送方窗口值的一半 = 拥塞窗口的一半；</li>
-<li>将拥塞窗口（cwnd）值设置为慢开始门限 ssthresh 减半后的数值 = 拥塞窗口的一半；</li>
-<li>执行<strong>加法增大</strong>算法：执行拥塞避免算法，使拥塞窗口缓慢地线性增大。</li>
-</ol>
-<p>注：</p>
-<ul>
-<li>由于跳过了拥塞窗口（cwnd）从1起始的慢开始过程，所以称为：快恢复；</li>
-<li>此处网络不会发生网络拥塞，因若拥塞，则不会收到多个重复确认报文。</li>
-</ul>
-<p>解决方案描述（快重传 &amp; 快恢复）<br>
-原理：为了优化慢开始和拥塞避免的解决方案，在上述方案中加入快重传和快恢复 两种算法，具体规则如下：<br>
-<img src="https://faded.auspicious.space/post-images/1587640379712.png" alt="" loading="lazy"></p>
-<p>示意图：<br>
-<img src="https://faded.auspicious.space/post-images/1587640408055.png" alt="" loading="lazy"></p>
-<p>至此，关于 <code>TCP</code> 无差错传输的知识讲解完毕。</p>
-<h1 id="9-与-udp-协议的区别">9 与 UDP 协议的区别</h1>
-<table>
-    <thead>
-    <tr>
-        <th rowspan="2">类型</th>
-        <th colspan="3">特点</th>
-        <th colspan="2">性能</th>
-        <th rowspan="2">应用场景</th>
-        <th rowspan="2">首部字节</th>
-    </tr>
-    <tr>
-        <th>是否面向连接</th>
-        <th>传输可靠性</th>
-        <th>传输形式</th>
-        <th>传输效率</th>
-        <th>所需资源</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>TCP</td>
-        <td>面向连接</td>
-        <td>可靠</td>
-        <td>字节流</td>
-        <td>慢</td>
-        <td>多</td>
-        <td>要求通信数据可靠<br>（如文件传输、邮件传输）</td>
-        <td>20-60</td>
-    </tr>
-    <tr>
-        <td>UDP</td>
-        <td>无连接</td>
-        <td>不可靠</td>
-        <td>数据报文段</td>
-        <td>快</td>
-        <td>少</td>
-        <td>要求通信速度高<br>（如域名转换）</td>
-        <td>8 个字节<br>（有 4 个字段组成）</td>
-    </tr>
-    </tbody>
-</table>]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[HTML5 file API 加 Canvas 实现图片前端 JS 压缩并上传]]></title>
-        <id>https://faded.auspicious.space/post/html5-canvas-image-compress-upload/</id>
-        <link href="https://faded.auspicious.space/post/html5-canvas-image-compress-upload/">
-        </link>
-        <updated>2020-04-22T16:23:00.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.zhangxinxu.com/wordpress/2017/07/html5-canvas-image-compress-upload/">HTML5 file API加canvas实现图片前端JS压缩并上传</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.zhangxinxu.com/wordpress/2017/07/html5-canvas-image-compress-upload/">HTML5 file API加canvas实现图片前端JS压缩并上传</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="图片上传前端压缩的现实意义">图片上传前端压缩的现实意义</h1>
-<p>对于大尺寸图片的上传，在前端进行压缩除了省流量外，最大的意义是极大的提高了用户体验。</p>
-<p>这种体验包括两方面：</p>
-<ul>
-<li>由于上传图片尺寸比较小，因此上传速度会比较快，交互会更加流畅，同时大大降低了网络异常导致上传失败风险。</li>
-<li>最最重要的体验改进点：省略了图片的再加工成本。很多网站的图片上传功能都会对图片的大小进行限制，尤其是头像上传，限制 5M 或者 2M 以内是非常常见的。然后现在的数码设备拍摄功能都非常出众，一张原始图片超过 2M 几乎是标配，此时如果用户想把手机或相机中的某个得意图片上传作为自己的头像，就会遇到因为图片大小限制而不能上传的窘境，不得不对图片进行再处理，而这种体验其实非常不好的。如果可以在前端进行压缩，则理论上对图片尺寸的限制是没有必要的。</li>
-</ul>
-<h1 id="html5-file-api加canvas实现图片前端js压缩">HTML5 file API加canvas实现图片前端JS压缩</h1>
-<p>要想使用 JS 实现图片的压缩效果，原理其实很简单，核心 API 就是使用 <code>canvas</code> 的 <code>drawImage()</code> 方法。</p>
-<p><code>canvas</code> 的 <code>drawImage()</code> 方法 API 如下：</p>
-<pre><code class="language-javascript">context.drawImage(img, dx, dy);
-context.drawImage(img, dx, dy, dWidth, dHeight);
-context.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-</code></pre>
-<p>后面最复杂的语法虽然看上去有 9 大参数，但不用慌，实际上可以看出就 3 个参数：</p>
-<ul>
-<li><code>img</code>：就是图片对象，可以是页面上获取的 <code>DOM</code> 对象，也可以是虚拟 <code>DOM</code> 中的图片对象。</li>
-<li><code>dx, dy, dWidth, dHeight</code>：表示在 <code>canvas</code> 画布上规划处一片区域用来放置图片，<code>dx</code>，<code>dy</code> 为 <code>canvas</code> 元素的左上角坐标，<code>dWidth</code>，<code>dHeight</code> 指 <code>canvas</code> 元素上用在显示图片的区域大小。如果没有指定 <code>sx</code>，<code>sy</code>，<code>sWidth</code>，<code>sHeight</code> 这 4 个参数，则图片会被拉伸或缩放在这片区域内。</li>
-<li><code>sx, sy, swidth, sheight</code>：这 4 个坐标是针对图片元素的，表示图片在 <code>canvas</code> 画布上显示的大小和位置。<code>sx</code>，<code>sy</code> 表示图片上 <code>sx</code>，<code>sy</code> 这个坐标作为左上角，然后往右下角的 <code>swidth</code>，<code>sheight</code> 尺寸范围图片作为最终在 <code>canvas</code> 上显示的图片内容。</li>
-</ul>
-<p><code>drawImage()</code> 方法有一个非常怪异的地方，大家一定要注意，那就是 5 参数和 9 参数里面参数位置是不一样的，这个和一般的 API 有所不同。一般 API 可选参数是放在后面。但是，这里的 <code>drawImage()</code> 9 个参数时候，可选参数 <code>sx</code>，<code>sy</code>，<code>swidth</code>，<code>sheight</code> 是在前面的。如果不注意这一点，有些表现会让你无法理解。</p>
-<p>下图为 MDN 上原理示意：<br>
-<img src="https://faded.auspicious.space/post-images/1587573128824.jpg" alt="" loading="lazy"></p>
-<p>对于本文的图片压缩，需要用的是 5 个参数语法。举个例子，一张图片（假设图片对象是 <code>img</code>）的原始尺寸是 <code>4000*3000</code>，现在需要把尺寸限制为 <code>400*300</code> 大小，很简单，原理如下代码示意：</p>
-<pre><code class="language-javascript">var canvas = document.createElement('canvas');
-var context = canvas.getContext('2d');
-canvas.width = 400;
-canvas.height = 300;
-// 核心JS就这个
-context.drawImage(img,0,0,400,300);
-</code></pre>
-<p>把一张大的图片，直接画在一张小小的画布上。此时大图片就天然变成了小图片，压缩就这么实现了，是不是简单的有点超乎想象。</p>
-<p>当然，若要落地于实际开发，我们还需要做些其他的工作，就是要解决图片来源和图片去向的问题。</p>
-<h2 id="如何把系统中图片呈现在浏览器中">如何把系统中图片呈现在浏览器中</h2>
-<p>HTML5 file API 可以让图片在上传之前直接在浏览器中显示，通常使用 <code>FileReader</code> 方法，代码示意如下：</p>
-<pre><code class="language-javascript">var reader = new FileReader(), img = new Image();
-// 读文件成功的回调
-reader.onload = function(e) {
-  // e.target.result就是图片的base64地址信息
-  img.src = e.target.result;
-};
-eleFile.addEventListener('change', function (event) {
-    reader.readAsDataURL(event.target.files[0]);
-});
-</code></pre>
-<p>于是，包含图片信息的 <code>context.drawImage()</code> 方法中的 <code>img</code> 图片就有了。</p>
-<h2 id="如何把-canvas-画布转换成-img-图像">如何把 canvas 画布转换成 img 图像</h2>
-<p><code>canvas</code> 天然提供了 2 个转图片的方法，一个是：</p>
-<h3 id="canvastodataurl">canvas.toDataURL()</h3>
-<p>语法如下：</p>
-<pre><code class="language-javascript">canvas.toDataURL(mimeType, qualityArgument);
-</code></pre>
-<p>可以把图片转换成 <code>base64</code> 格式信息，纯字符的图片表示法。</p>
-<p>其中：<br>
-<code>mimeType</code> 表示 <code>canvas</code> 导出来的 <code>base64</code> 图片的类型，默认是 png 格式，也即是默认值是 '<code>image/png</code>'，我们也可以指定为 jpg 格式 '<code>image/jpeg</code>' 或者 <code>webp</code> 等格式。<code>file</code> 对象中的 <code>file.type</code> 就是文件的 <code>mimeType</code> 类型，在转换时候正好可以直接拿来用（如果有 <code>file</code> 对象）。<br>
-<code>qualityArgument</code> 表示导出的图片质量，只要导出为 <code>jpg</code> 和 <code>webp</code> 格式的时候此参数才有效果，默认值是 0.92，是一个比较合理的图片质量输出参数，通常情况下，我们无需再设定。</p>
-<h3 id="canvastoblob">canvas.toBlob()</h3>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob">语法</a>如下：</p>
-<pre><code class="language-javascript">canvas.toBlob(callback, mimeType, qualityArgument)
-</code></pre>
-<p>可以把 <code>canvas</code> 转换成 <code>Blob</code> 文件，通常用在文件上传中，因为是二进制的，对后端更加友好。</p>
-<p>和 <code>toDataURL()</code> 方法相比，<code>toBlob()</code> 方法是异步的，因此多了个 <code>callback</code> 参数，这个 <code>callback</code> 回调方法默认的第一个参数就是转换好的 <code>blob</code> 文件信息，本文 <code>demo</code> 的文件上传就是将 <code>canvas</code> 图片转换成二进制的 <code>blob</code> 文件，然后再 <code>ajax</code> 上传的，代码如下：</p>
-<pre><code class="language-javascript">// canvas转为blob并上传
-canvas.toBlob(function (blob) {
-  // 图片ajax上传
-  var xhr = new XMLHttpRequest();
-  // 开始上传
-  xhr.open(&quot;POST&quot;, 'upload.php', true);
-  xhr.send(blob);    
-});
-</code></pre>
-<p>于是，经过“图片→<code>canvas</code> 压缩→图片”三步曲，我们完成了图片前端压缩并上传的功能。</p>
-<p>更加完整的核心代码请参见<a href="http://www.zhangxinxu.com/study/201707/js-compress-image-before-upload.html">demo页面</a>的左侧，如果对其他交互代码也敢兴趣，请参考页面源代码。</p>
-<h1 id="结束语">结束语</h1>
-<p>就在几个月前刚写过一篇文章“<a href="http://www.zhangxinxu.com/wordpress/?p=6165">使用canvas在前端实现图片水印合成</a>”，实际上所使用的技术和套路和本文是如出一辙的，也是“图片→ <code>canvas</code> 水印→图片”三步曲，区别在于水印合成是连续执行两次 <code>context.drawImage()</code> 方法，一次是原图一次水印图片，以及最后转换成图片的时候什么是 <code>toDataURL()</code> 方法，其他代码逻辑和原理都是一样的。</p>
-<p>由此及彼，利用同样的原理和代码逻辑，我们还可以实现其它很多以前前端不太好实现的功能，比方说图片的真剪裁效果，所谓“真剪裁”指不是使用个 <code>overflow:hidden</code> 或者 <code>clip</code> 这些 CSS属性的“伪剪裁”，而是真正意义上就这么大区域图片信息。甚至配合一些前端算法，我们可以直接在前端进行人脸识别，图片自动美化等一系列功能再上传等等。</p>
-<p>原理都是一样的，都是利用 <code>canvas</code> 作为中间媒介进行处理。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[PNG 的故事：获取图片信息和像素内容]]></title>
-        <id>https://faded.auspicious.space/post/the-story-of-png-get-images-and-pixel-content/</id>
-        <link href="https://faded.auspicious.space/post/the-story-of-png-get-images-and-pixel-content/">
-        </link>
-        <updated>2020-04-22T15:43:29.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="http://www.alloyteam.com/2017/03/the-story-of-png-get-images-and-pixel-content/">PNG 的故事：获取图片信息和像素内容</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="http://www.alloyteam.com/2017/03/the-story-of-png-get-images-and-pixel-content/">PNG 的故事：获取图片信息和像素内容</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="前言">前言</h1>
-<p>现在时富媒体时代，图片的重要性对于数十亿互联网用户来说不言而喻，图片本身就是像素点阵的合集，但是为了如何更快更好的存储图片而诞生了各种各样的图片格式：jpeg、png、gif、webp 等，而这次我们要拿来开刀的，就是 png。</p>
-<h1 id="简介">简介</h1>
-<p>首先，png 是什么鬼？我们来看看 wiki 上的一句话简介：</p>
-<blockquote>
-<p>Portable Network Graphics (PNG) is a raster graphics file format that supports lossless data compression.</p>
-</blockquote>
-<p>也就是说，png 是一种使用无损压缩的图片格式，而大家熟知的另外一种图片格式——jpeg 则是采用有损压缩的方式。用通俗易懂的方式来讲，当原图片数据被编码成 png 格式后，是可以完全还原成原本的图片数据的，而编码成 jpeg 则会损耗一部分图片数据，这是因为两者的编码方式和定位不同。jpeg 着重于人眼的观感，保留更多的亮度信息，去掉一些不影响观感的色度信息，因此是有损耗的压缩。png 则保留原始所有的颜色信息，并且支持透明／alpha 通道，然后采用无损压缩进行编码。因此对于 jpeg 来说，通常适合颜色更丰富、可以在人眼识别不了的情况下尽可能去掉冗余颜色数据的图片，比如照片之类的图片；而 png 适合需要保留原始图片信息、需要支持透明度的图片。</p>
-<p>以下，我们来尝试获取 png 编码的图片数据：</p>
-<h1 id="结构">结构</h1>
-<p>图片是属于 2 进制文件，因此在拿到 png 图片并想对其进行解析的话，就得以二进制的方式进行读取操作。png 图片包含两部分：文件头和数据块。</p>
-<h2 id="文件头">文件头</h2>
-<p>png 的文件头就是 png 图片的前 8 个字节，其值为 <code>[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]</code>，人们常常把这个头称之为 “魔数”。玩过 Linux 的同学估计知道，可以使用 <code>file</code> 命令类判断一个文件是属于格式类型，就算我们把这个文件类型的后缀改得乱七八糟也可以识别出来，用的就是判断 “魔数” 这个方法。有兴趣的同学还可以使用 <code>String.fromCharCode</code> 将这个 “魔数” 转成字符串看看，就知道为什么 png 会取这个值作为文件头了。</p>
-<p>用代码来判断也很简单：</p>
-<pre><code class="language-javascript">// 读取指定长度字节
-function readBytes(buffer, begin, length) {
-    return Array.prototype.slice.call(buffer, begin, begin + length);
-}
- 
-let header = readBytes(pngBuffer, 0, 8); // [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]
-</code></pre>
-<h2 id="数据块">数据块</h2>
-<p>去掉了 png 图片等前 8 个字节，剩下的就是存放 png 数据的数据块，我们通常称之为 <code>chunk</code>。</p>
-<p>顾名思义，数据块就是一段数据，我们按照一定规则对 png 图片（这里指的是去掉了头的 png 图片数据，下同）进行切分，其中一段数据就是一个数据块。每个数据块的长度是不定的，我们需要通过一定的方法去提取出来，不过我们要先知道有哪些类型的数据块才好判断。</p>
-<h2 id="数据块类型">数据块类型</h2>
-<p>数据块类型有很多种，但是其中大部分我们都不需要用到，因为里面没有存储我们需要用到的数据。我们需要关注的数据块只有以下四种：</p>
-<ul>
-<li><code>IHDR</code>：存放图片信息。</li>
-<li><code>PLTE</code>：存放索引颜色。</li>
-<li><code>IDAT</code>：存放图片数据。</li>
-<li><code>IEND</code>：图片数据结束标志。</li>
-</ul>
-<p>只要解析这四种数据块就可以获取图片本身的所有数据，因此我们也称这四种数据块为 “关键数据块”。</p>
-<h2 id="数据块格式">数据块格式</h2>
-<p>数据块格式如下：</p>
-<table>
-<thead>
-<tr>
-<th>描述</th>
-<th>长度</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>数据块内容长度</td>
-<td>4 字节</td>
-</tr>
-<tr>
-<td>数据块类型</td>
-<td>4 字节</td>
-</tr>
-<tr>
-<td>数据块内容</td>
-<td>不定字节</td>
-</tr>
-<tr>
-<td>CRC 冗余校验码</td>
-<td>4 字节</td>
-</tr>
-</tbody>
-</table>
-<p>这样我们就可以轻易的指导当前数据块的长度了，即 <code>数据块内容长度 + 12 字节</code>，用代码实现如下：</p>
-<pre><code class="language-javascript">// 读取32位无符号整型数
-function readInt32(buffer, offset) {
-    offset = offset || 0;
-    return (buffer[offset] &lt;&lt; 24) + (buffer[offset + 1] &lt;&lt; 16) + (buffer[offset + 2] &lt;&lt; 8) + (buffer[offset + 3] &lt;&lt; 0);
-}
- 
-let length = readInt32(readBytes(4)); // 数据块内容长度
-let type = readBytes(4); // 数据块类型
-let chunkData = readBytes(length); // 数据块内容
-let crc = readBytes(4); // CRC 冗余校验码
-</code></pre>
-<p>这里的 CRC 冗余校验码在我们解码过程中用不到，所以这里不做详解。除此之外，数据块内容长度和数据块内容好解释，不过数据块类型有何作用呢，这里我们先将这个 <code>type</code> 转成字符串类型：</p>
-<pre><code class="language-javascript">// 将buffer数组转为字符串
-function bufferToString(buffer) {
-    let str = '';
-    for(let i=0, len=buffer.length; i&lt;len; i++){
-        str += String.fromCharCode(buffer[i]);
-    }
-    return str;
-}
- 
-type = bufferToString(type);
-</code></pre>
-<p>然后会发现 <code>type</code> 的值是四个大写英文字母，没错，这就是上面提到的数据块类型。上面还提到了我们只需要解析关键数据块，因此遇到 <code>type</code> 不等于 <code>IHDR</code>、<code>PLTE</code>、<code>IDAT</code>、<code>IEND</code> 中任意一个的数据块就直接舍弃好了。当我们拿到一个关键数据块，就直接解析其数据块内容就可以了，即上面代码中的 <code>chunkData</code> 字段。</p>
-<h2 id="ihdr">IHDR</h2>
-<p>类型为 <code>IHDR</code> 的数据块用来存放图片信息，其长度为固定的 13 个字节：</p>
-<table>
-<thead>
-<tr>
-<th>描述</th>
-<th>长度</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>图片宽度</td>
-<td>4 字节</td>
-</tr>
-<tr>
-<td>图片高度</td>
-<td>4 字节</td>
-</tr>
-<tr>
-<td>图像深度</td>
-<td>1 字节</td>
-</tr>
-<tr>
-<td>颜色类型</td>
-<td>1 字节</td>
-</tr>
-<tr>
-<td>压缩方法</td>
-<td>1 字节</td>
-</tr>
-<tr>
-<td>过滤方式</td>
-<td>1 字节</td>
-</tr>
-<tr>
-<td>扫描方式</td>
-<td>1 字节</td>
-</tr>
-</tbody>
-</table>
-<p>其中宽高很好解释，直接转成 32 位整数，就是这张 png 图片等宽高（以像素为单位）。压缩方法目前只支持一种（<code>deflate/inflate</code> 压缩算法），其值为 0；过滤方式也只有一种（包含标准的 5 种过滤类型），其值为 0；扫描方式有两种，一种是逐行扫描，值为 0，还有一种是 <code>Adam7</code> 隔行扫描，其值为 1，此次只针对普通的逐行扫描方式进行解析，因此暂时不考虑 <code>Adam7</code> 隔行扫描。</p>
-<p>图片深度是指每个像素点中的每个通道（channel）占用的位数，只有 1、2、4、8 和 16 这 5 个值；颜色类型用来判断每个像素点中有多少个通道，只有 0、2、3、4 和 6 这 5 个值：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">颜色类型的值</th>
-<th style="text-align:center">占用通道数</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">0</td>
-<td style="text-align:center">1</td>
-<td>灰度图像，只有 1 个灰色通道</td>
-</tr>
-<tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">3</td>
-<td>rgb 真彩色图像，有 RGB3 色通道</td>
-</tr>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">1</td>
-<td>索引颜色图像，只有索引值一个通道</td>
-</tr>
-<tr>
-<td style="text-align:center">4</td>
-<td style="text-align:center">2</td>
-<td>灰度图像 + alpha 通道</td>
-</tr>
-</tbody>
-</table>
-<h2 id="plte">PLTE</h2>
-<p>类型为 <code>PLTE</code> 的数据块用来存放索引颜色，我们又称之为 “调色板”。</p>
-<p>由 <code>IHDR</code> 数据块解析出来的图像信息可知，图像的数据可能是以索引值的方式进行存储。当图片数据采用索引值的时候，调色板就起作用了。调色板的长度和图像深度有关，假设图像深度的值是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">x</span></span></span></span>，则其长度通常为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mi>x</mi></msup><mo>×</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">2^x\times 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.747722em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span></span></span></span>。原因是图像深度保存的就是通道占用的位数，而在使用索引颜色的时候，通道里存放的就是索引值，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mi>x</mi></msup></mrow><annotation encoding="application/x-tex">2^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.664392em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span></span></span></span></span></span></span></span> 就表示这个通道可能存放的索引值有多少个，即调色板里的颜色数。而每个索引颜色是 RGB3 色通道存放的，因此此处还需要 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>×</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\times 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">×</span><span class="mord">3</span></span></span></span>。</p>
-<table>
-<thead>
-<tr>
-<th>通常使用索引颜色的情况下，图像深度的值即为 8，因而调色板里存放的颜色就只有 256 种颜色，长度为 256 * 3 个字节。再加上 1 位布尔值表示透明像素，这就是我们常说的 png8 图片了。</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-<h2 id="idat">IDAT</h2>
-<p>类型为 <code>IDAT</code> 的数据块用来存放图像数据，跟其他关键数据块不同的是，其数量可以是连续的复数个；其他关键数据块在 1 个 png 文件里有且只有 1 个。</p>
-<p>这里的数据得按顺序把所有连续的 <code>IDAT</code> 数据块全部解析并将数据联合起来才能进行最终处理，这里先略过。</p>
-<pre><code class="language-javascript">let dataChunks = [];
-let length = 0; // 总数据长度
- 
-// ... 
- 
-while(/* 存在IDAT数据块 */) {
-    dataChunks.push(chunkData);
-    length += chunkData.length;
-}
-</code></pre>
-<h2 id="iend">IEND</h2>
-<p>当解析到类型为 <code>IEND</code> 的数据块时，就表明所有的 <code>IDAT</code> 数据块已经解析完毕，我们就可以停止解析了。</p>
-<p><code>IEND</code> 整个数据块的值时固定的：<code>[0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82]</code>，因为 <code>IEND</code> 数据块没有数据块内容，所以其数据块内容长度字段（数据块前 4 个字节）的值也是 0。</p>
-<h1 id="解析">解析</h1>
-<h2 id="解压缩">解压缩</h2>
-<p>当我们收集完 <code>IDAT</code> 的所有数据块内容时，我们要先对其进行解压缩：</p>
-<pre><code class="language-javascript">const zlib = require('zlib');
- 
-let data = new Buffer(length);
-let index = 0;
-dataChunks.forEach((chunkData) =&gt; {
-    chunkData.forEach((item) =&gt; {data[index++] = item});
-});
- 
-// inflate解压缩
-data = zlib.inflateSync(new Buffer(data));
-</code></pre>
-<h2 id="扫描">扫描</h2>
-<p>上面说过，此次我们只考虑逐行扫描的方式：</p>
-<pre><code class="language-javascript">// 读取8位无符号整型数
-function readInt8(buffer, offset) {
-    offset = offset || 0;
-    return buffer[offset] &lt;&lt; 0;
-}
- 
-let width; // 解析IHDR数据块时得到的图像宽度
-let height; // 解析IHDR数据块时得到的图像高度
-let colors; // 解析IHDR数据块时得到的通道数
-let bitDepth; // 解析IHDR数据块时得到的图像深度
- 
-let bytesPerPixel = Math.max(1, colors * bitDepth / 8); // 每像素字节数
-let bytesPerRow = bytesPerPixel * width; // 每行字节数
- 
-let pixelsBuffer = new Buffer(bytesPerPixel * width * height); // 存储过滤后的像素数据
-let offset = 0; // 当前行的偏移位置
- 
-// 逐行扫描解析
-for(let i=0, len=data.length; i&lt;len; i+=bytesPerRow+1) {
-    let scanline = Array.prototype.slice.call(data, i+1, i+1+bytesPerRow); // 当前行
-    let args = [scanline, bytesPerPixel, bytesPerRow, offset];
- 
-    // 第一个字节代表过滤类型
-    switch(readInt8(data, i)) {
-        case 0:
-            filterNone(args);
-            break;
-        case 1:
-            filterSub(args);
-            break;
-        case 2:
-            filterUp(args);
-            break;
-        case 3:
-            filterAverage(args);
-            break;
-        case 4:
-            filterPaeth(args);
-            break;
-        default:
-            throw new Error('未知过滤类型！');
-    }
- 
-    offset += bytesPerRow;
-}
-</code></pre>
-<p>上面代码前半部分不难理解，就是通过之前解析得到的图像宽高，再加上图像深度和通道数计算得出每个像素占用的字节数和每一行数据占用的字节数。因此我们就可以拆分出每一行的数据和每一个像素的数据。</p>
-<p>在得到每一行数据后，就要进行这个 png 编码里最关键的 1 步——过滤。</p>
-<h2 id="过滤">过滤</h2>
-<p>早先我们说过过滤方法只有 1 种，其中包含 5 种过滤类型，图像每一行数据里的第一个字节就表示当前行数什么过滤类型。</p>
-<p>png 为什么要对图像数据进行过滤呢？</p>
-<p>大多数情况下，图像的相邻像素点的色值时很相近的，而且很容易呈现线性变化（相邻数据的值是相似或有某种规律变化的），因此借由这个特性对图像的数据进行一定程度的压缩。针对这种情况我们常常使用一种叫差分编码的编码方式，即是记录当前数据和某个标准值的差距来存储当前数据。</p>
-<p>比如说有这么一个数组 <code>[99, 100, 100, 102, 103]</code>，我们可以将其转存为 <code>[99, 1, 0, 2, 1]</code>。转存的规则就是以数组第 1 位为标准值，标准值存储原始数据，后续均存储以前 1 位数据的差值。</p>
-<p>当我们使用了差分编码后，再进行 <code>deflate</code> 压缩的话，效果会更好（<code>deflate</code> 压缩是 LZ77 延伸出来的一种算法，压缩频繁重复出现的数据段的效果是相当不错的，有兴趣的同学可自行去了解）。</p>
-<p>好，回到正题来讲 png 的 5 种过滤类型，首先我们要定义几个变量以便于说明：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>C</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>B</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>A</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>X</mi></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{matrix}
-C &amp; B \\
-A &amp; X
-\end{matrix}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.4000000000000004em;vertical-align:-0.9500000000000004em;"></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">A</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
-<ul>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span></span></span></span>：当前像素。</li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span></span></span></span>：当前像素点左边的像素。</li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span>：当前像素点上边的像素。</li>
-<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi></mrow><annotation encoding="application/x-tex">C</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span>：当前像素点左上边的像素。</li>
-</ul>
-<h3 id="过滤类型-0none">过滤类型 0：None</h3>
-<p>这个没啥好解释的，就是完全不做任何过滤。</p>
-<pre><code class="language-javascript">function filterNone(scanline, bytesPerPixel, bytesPerRow, offset) {
-    for(let i=0; i&lt;bytesPerRow; i++) {
-        pixelsBuffer[offset + i] = scanline[i];
-    }
-}
-</code></pre>
-<h3 id="过滤类型-1sub">过滤类型 1：Sub</h3>
-<p>记录 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>−</mo><mi>A</mi></mrow><annotation encoding="application/x-tex">X - A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span></span></span></span> 的值，即当前像素和左边像素的差值。左边起第一个像素是标准值，不做任何过滤。</p>
-<pre><code class="language-javascript">function filterSub(scanline, bytesPerPixel, bytesPerRow, offset) {
-    for(let i=0; i&lt;bytesPerRow; i++) {
-        if(i &lt; bytesPerPixel) {
-            // 第一个像素，不作解析
-            pixelsBuffer[offset + i] = scanline[i];
-        } else {
-            // 其他像素
-            let a = pixelsBuffer[offset + i - bytesPerPixel];
- 
-            let value = scanline[i] + a;
-            pixelsBuffer[offset + i] = value &amp; 0xFF;
-        }
-    }
-}
-</code></pre>
-<h3 id="过滤类型-2up">过滤类型 2：Up</h3>
-<p>记录 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>−</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">X - B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span></span></span></span> 的值，即当前像素和上边像素点差值。如果当前行是第 1 行，则当前行数标准值，不做任何过滤。</p>
-<pre><code class="language-javascript">function filterUp(scanline, bytesPerPixel, bytesPerRow, offset) {
-    if(offset &lt; bytesPerRow) {
-        // 第一行，不作解析
-        for(let i=0; i&lt;bytesPerRow; i++) {
-            pixelsBuffer[offset + i] = scanline[i];
-        }
-    } else {
-        for(let i=0; i&lt;bytesPerRow; i++) {
-            let b = pixelsBuffer[offset + i - bytesPerRow];
- 
-            let value = scanline[i] + b;
-            pixelsBuffer[offset + i] = value &amp; 0xFF;
-        }
-    }
-}
-</code></pre>
-<h3 id="过滤类型-3average">过滤类型 3：Average</h3>
-<p>记录 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>−</mo><mo>(</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo>)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">X - (A + B) / 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">A</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mclose">)</span><span class="mord">/</span><span class="mord">2</span></span></span></span> 的值，即当前像素与左边像素和上边像素的平均值的差值。</p>
-<ul>
-<li>如果当前行数第一行：做特殊的 <code>Sub</code> 过滤，左边起第一个像素是标准值，不做任何过滤。其他像素记录该像素与左边像素的<strong>二分之一</strong>的值的差值。</li>
-<li>如果当前行数不是第一行：左边起第一个像素记录该像素与上边像素的<strong>二分之一</strong>的值的差值，其他像素做正常的 <code>Average</code> 过滤。</li>
-</ul>
-<pre><code class="language-javascript">function filterAverage(scanline, bytesPerPixel, bytesPerRow, offset) {
-    if(offset &lt; bytesPerRow) {
-        // 第一行，只做Sub
-        for(let i=0; i&lt;bytesPerRow; i++) {
-            if(i &lt; bytesPerPixel) {
-                // 第一个像素，不作解析
-                pixelsBuffer[offset + i] = scanline[i];
-            } else {
-                // 其他像素
-                let a = pixelsBuffer[offset + i - bytesPerPixel];
- 
-                let value = scanline[i] + (a &gt;&gt; 1); // 需要除以2
-                pixelsBuffer[offset + i] = value &amp; 0xFF;
-            }
-        }
-    } else {
-        for(let i=0; i&lt;bytesPerRow; i++) {
-            if(i &lt; bytesPerPixel) {
-                // 第一个像素，只做Up
-                let b = pixelsBuffer[offset + i - bytesPerRow];
- 
-                let value = scanline[i] + (b &gt;&gt; 1); // 需要除以2
-                pixelsBuffer[offset + i] = value &amp; 0xFF;
-            } else {
-                // 其他像素
-                let a = pixelsBuffer[offset + i - bytesPerPixel];
-                let b = pixelsBuffer[offset + i - bytesPerRow];
- 
-                let value = scanline[i] + ((a + b) &gt;&gt; 1);
-                pixelsBuffer[offset + i] = value &amp; 0xFF;
-            }
-        }
-    }
-}
-</code></pre>
-<h2 id="过滤类型-4paeth">过滤类型 4：Paeth</h2>
-<p>记录 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>−</mo><mi>P</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">X - Pr</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span></span></span></span> 的值，这种过滤方式比较复杂，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">Pr</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span></span></span></span> 的计算方式（伪代码）如下：</p>
-<pre><code>p = a + b - c
-pa = abs(p - a)
-pb = abs(p - b)
-pc = abs(p - c)
-if pa &lt;= pb and pa &lt;= pc then Pr = a
-else if pb &lt;= pc then Pr = b
-else Pr = c
-return Pr
-</code></pre>
-<ul>
-<li>如果当前行数第一行：做 <code>Sub</code> 过滤。</li>
-<li>如果当前行数不是第一行：左边起第一个像素记录该像素与上边像素的差值，其他像素做正常的 <code>Peath</code> 过滤。</li>
-</ul>
-<pre><code class="language-javascript">function filterPaeth(scanline, bytesPerPixel, bytesPerRow, offset) {
-    if(offset &lt; bytesPerRow) {
-        // 第一行，只做Sub
-        for(let i=0; i&lt;bytesPerRow; i++) {
-            if(i &lt; bytesPerPixel) {
-                // 第一个像素，不作解析
-                pixelsBuffer[offset + i] = scanline[i];
-            } else {
-                // 其他像素
-                let a = pixelsBuffer[offset + i - bytesPerPixel];
- 
-                let value = scanline[i] + a;
-                pixelsBuffer[offset + i] = value &amp; 0xFF;
-            }
-        }
-    } else {
-        for(let i=0; i&lt;bytesPerRow; i++) {
-            if(i &lt; bytesPerPixel) {
-                // 第一个像素，只做Up
-                let b = pixelsBuffer[offset + i - bytesPerRow];
- 
-                let value = scanline[i] + b;
-                pixelsBuffer[offset + i] = value &amp; 0xFF;
-            } else {
-                // 其他像素
-                let a = pixelsBuffer[offset + i - bytesPerPixel];
-                let b = pixelsBuffer[offset + i - bytesPerRow];
-                let c = pixelsBuffer[offset + i - bytesPerRow - bytesPerPixel];
- 
-                let p = a + b - c;
-                let pa = Math.abs(p - a);
-                let pb = Math.abs(p - b);
-                let pc = Math.abs(p - c);
-                let pr;
- 
-                if (pa &lt;= pb &amp;&amp; pa &lt;= pc) pr = a;
-                else if (pb &lt;= pc) pr = b;
-                else pr = c;
- 
-                let value = scanline[i] + pr;
-                pixelsBuffer[offset + i] = value &amp; 0xFF;
-            }
-        }
-    }
-}
-</code></pre>
-<h1 id="获取像素">获取像素</h1>
-<p>到这里，解析的工作就做完了，上面代码里的 <code>pixelsBuffer</code> 数组里存的就是像素的数据了，不过我们要如何获取具体某个像素的数据呢？方式可参考下面代码：</p>
-<pre><code class="language-javascript">let palette; // PLTE数据块内容，即调色板内容
-let colorType; // 解析IHDR数据块时得到的颜色类型
-let transparentPanel; // 透明像素面板，解析tRNS数据块获得
- 
-function getPixel(x, y) {
-    if(x &lt; 0 || x &gt;= width || y &lt; 0 || y &gt;= height) {
-        throw new Error('x或y的值超出了图像边界！');
-    }
- 
-    let bytesPerPixel = Math.max(1, colors * bitDepth / 8); // 每像素字节数
-    let index = bytesPerPixel * ( y * width + x);
- 
-    switch(colorType) {
-        case 0: 
-            // 灰度图像
-            return [pixelsBuffer[index], pixelsBuffer[index], pixelsBuffer[index], 255];
-        case 2: 
-            // rgb真彩色图像
-            return [pixelsBuffer[index], pixelsBuffer[index + 1], pixelsBuffer[index + 2], 255];
-        case 3: 
-            // 索引颜色图像
-            let paletteIndex = pixelsBuffer[index];
- 
-            let transparent = transparentPanel[paletteIndex]
-            if(transparent === undefined) transparent = 255;
- 
-            return [palette[paletteIndex * 3 + 0], palette[paletteIndex * 3 + 1], palette[paletteIndex * 3 + 2], transparent];
-        case 4: 
-            // 灰度图像 + alpha通道
-            return [pixelsBuffer[index], pixelsBuffer[index], pixelsBuffer[index], pixelsBuffer[index + 1]];
-        case 6: 
-            // rgb真彩色图像 + alpha通道
-            return [pixelsBuffer[index], pixelsBuffer[index + 1], pixelsBuffer[index + 2], pixelsBuffer[index + 3]];
-    }
-}
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>此处用到了非关键数据块 <code>tRNS</code> 的数据，不过这里不做讲解，有兴趣的同学可去官网了解：https://www.w3.org/TR/PNG/#11tRNS（此数据块的结构相当简单）</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-<h1 id="尾声">尾声</h1>
-<p>png 的解析流程可以由这一张图简单概括：<br>
-<img src="https://faded.auspicious.space/post-images/1587572426621.png" alt="" loading="lazy"><br>
-此文只对 png 图片的格式做了简单的介绍，我们也知道如何对一张 png 图片做简单的解析。上面出现的代码只是 js 代码片段，如果对完整代码有兴趣的同学可以戳<a href="https://github.com/JuneAndGreen/doimg/blob/master/src/png.js">这里</a>，虽然代码仓库还在建设过程中，不过关于简单的 png 图片解析部分已经完成。</p>
-<p>参考资料：</p>
-<ul>
-<li><a href="https://www.w3.org/TR/PNG/">https://www.w3.org/TR/PNG/</a></li>
-<li><a href="http://www.libpng.org/pub/png/">http://www.libpng.org/pub/png/</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Portable_Network_Graphics">https://en.wikipedia.org/wiki/Portable_Network_Graphics</a></li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[贝尔实验室的历史]]></title>
-        <id>https://faded.auspicious.space/post/the-history-of-the-bell-labs/</id>
-        <link href="https://faded.auspicious.space/post/the-history-of-the-bell-labs/">
-        </link>
-        <updated>2020-04-22T15:08:33.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="http://roclinux.cn/?p=3267">贝尔实验室的历史</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="http://roclinux.cn/?p=3267">贝尔实验室的历史</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="发明家贝尔">发明家贝尔</h1>
-<p><img src="https://faded.auspicious.space/post-images/1587568297338.png" alt="亚历山大·贝尔" loading="lazy"><br>
-贝尔的全名是亚历山大·格拉厄姆·贝尔（Alexander Graham Bell）</p>
-<p>亚历山大·贝尔（外国人常常将中间的名字略去）在 1847 年出生在苏格兰的一个声学世家，</p>
-<ul>
-<li>23岁（1870年）：移民加拿大；</li>
-<li>24岁（1871年）：又来到美国；</li>
-<li>29岁（1876年）：试验成功了第一台可用的电话，并在同年获得电话专利；</li>
-<li>30岁（1877年）：贝尔便创立了贝尔电话公司，公司以出租电话机收取使用费的方式盈利；</li>
-<li>31岁（1878年）：贝尔退出了贝尔电话公司，但他所拥有的电话专利可以让他不断获得可观的专利费；</li>
-<li>35岁（1882年）：正式加入美国国籍；</li>
-<li>76岁（1922年）：贝尔离开了人世。</li>
-</ul>
-<h1 id="att">AT&amp;T</h1>
-<p>AT&amp;T，即 American Telephone &amp; Telegraph Company，中文则是“美国电话电报公司”，它是当今世界五百强之一。<br>
-<img src="https://faded.auspicious.space/post-images/1587568425930.png" alt="AT&amp;T公司" loading="lazy"><br>
-<strong>AT&amp;T的前身便是刚刚提到的于 1877 年创立的“贝尔电话公司”（简称贝尔公司）</strong>，在经营了 18 年之后，也就是 1895 年，贝尔电话公司决定将“全美范围内的长途业务”分割出来，成立一家独立的公司，起名叫做“AT&amp;T”。AT&amp;T 发展迅猛，在 1899 年，AT&amp;T 便把其前身的贝尔电话公司整合进来，于是 AT&amp;T 便成了贝尔公司的母公司。</p>
-<h1 id="贝尔实验室">贝尔实验室</h1>
-<p><strong>在 1925 年，AT&amp;T 收购了西方电子公司的研究部门，并成立了一个叫做“贝尔电话实验室公司”（简称便是贝尔实验室）的独立实体，在建立之初，贝尔实验室便致力于数学、物理学、材料科学、计算机编程、电信技术等各方面的研究。</strong></p>
-<p>不幸的是，在 1984 年，美国司法部依据《反托拉斯法》对如日中天的 AT&amp;T 进行拆分，形成了新的 AT&amp;T 公司及七个本地电话公司，贝尔实验室也因此缩减形成了贝尔实验室核心团队，主要负责为各个拆分后的公司提供研究开发的服务。</p>
-<h1 id="朗讯">朗讯</h1>
-<p><strong>在 1995 年到 1996 年间，AT&amp;T 公司又被进行了一轮拆分，贝尔实验室和设备制造部门脱离出来形成了一个新的公司，叫做朗讯科技</strong>，而 AT&amp;T 则只保留了通信服务业务，也只保留很小一批研究人员组建了AT&amp;T 实验室。</p>
-<p>自从 1996 年从 AT&amp;T 独立出来后，朗讯（Lucent）公司以贝尔实验室作为强力后盾，一致致力于为全球最大的通信服务提供商设计和提供网络。</p>
-<p>朗讯公司的总部位于美国新泽西州的茉莉山。<br>
-<img src="https://faded.auspicious.space/post-images/1587568662891.png" alt="朗讯科技" loading="lazy"></p>
-<h1 id="阿尔卡特">阿尔卡特</h1>
-<p>阿尔卡特（Alcatel）公司，创立于 1898 年，总部位于法国巴黎，一直专注于电信系统和设备以及相关的电缆和部件领域的研究和生产。<br>
-<img src="https://faded.auspicious.space/post-images/1587568713979.png" alt="阿尔卡特" loading="lazy"></p>
-<h1 id="阿朗">阿朗</h1>
-<p>在 2006 年，通信行业发生了一件大事，那就是法国阿尔卡特公司和美国朗讯公司发表联合声明，宣布了阿尔卡特公司收购朗讯公司的消息。在合并后的新公司中，阿尔卡特占据 60% 的股份，朗讯占有 40% 的股份。合并后的规模仅次于美国思科。</p>
-<p>合并后的公司叫做阿尔卡特-朗讯（Alcatel-Lucent，简称“阿朗”），总部设在法国巴黎。<br>
-<img src="https://faded.auspicious.space/post-images/1587568850546.png" alt="阿尔卡特-朗讯" loading="lazy"><br>
-<strong>与此同时，原属朗讯科技的贝尔实验室也一并合并到阿朗。</strong></p>
-<h1 id="贝尔实验室的历史">贝尔实验室的历史</h1>
-<p>通过上面的背景知识介绍，相信你一定已经了解了贝尔实验室的发展历程，我们再来用简短的文字总结一下：</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mtext>贝尔发明电话</mtext></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>贝尔建立贝尔电话公司</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>贝尔电话公司分离出 AT&amp;T 公司专门负责全美长途业务</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>AT&amp;T 整合原贝尔电话公司</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>AT&amp;T 收购西方电子研究部门并建立贝尔电话实验室（即贝尔实验室）</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>AT&amp;T 因垄断被拆分</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>AT&amp;T再次被拆分，贝尔实验室和设备制造部门被独立出来成立朗讯科技公司</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>阿尔卡特收购朗讯组成阿朗，贝尔实验室也一起合并</mtext></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>→</mo><mtext>贝尔实验室现在服务于阿朗公司</mtext></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
-\text{贝尔发明电话} &amp;\to \text{贝尔建立贝尔电话公司} \\
-&amp;\to \text{贝尔电话公司分离出 AT\&amp;T 公司专门负责全美长途业务}\\
-&amp;\to \text{AT\&amp;T 整合原贝尔电话公司}\\
-&amp;\to \text{AT\&amp;T 收购西方电子研究部门并建立贝尔电话实验室（即贝尔实验室）}\\
-&amp;\to \text{AT\&amp;T 因垄断被拆分}\\
-&amp;\to \text{AT\&amp;T再次被拆分，贝尔实验室和设备制造部门被独立出来成立朗讯科技公司}\\
-&amp;\to \text{阿尔卡特收购朗讯组成阿朗，贝尔实验室也一起合并}\\
-&amp;\to \text{贝尔实验室现在服务于阿朗公司}
-\end{aligned}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:12.000000000000002em;vertical-align:-5.750000000000001em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:6.250000000000001em;"><span style="top:-8.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">贝尔发明电话</span></span></span></span><span style="top:-6.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-5.409999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-3.9099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-2.4099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-0.9099999999999988em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:0.5900000000000007em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:2.0900000000000007em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:5.750000000000001em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:6.250000000000001em;"><span style="top:-8.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord cjk_fallback">贝尔建立贝尔电话公司</span></span></span></span><span style="top:-6.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord cjk_fallback">贝尔电话公司分离出</span><span class="mord"> AT&amp;T </span><span class="mord cjk_fallback">公司专门负责全美长途业务</span></span></span></span><span style="top:-5.409999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord">AT&amp;T </span><span class="mord cjk_fallback">整合原贝尔电话公司</span></span></span></span><span style="top:-3.9099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord">AT&amp;T </span><span class="mord cjk_fallback">收购西方电子研究部门并建立贝尔电话实验室（即贝尔实验室）</span></span></span></span><span style="top:-2.4099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord">AT&amp;T </span><span class="mord cjk_fallback">因垄断被拆分</span></span></span></span><span style="top:-0.9099999999999988em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord">AT&amp;T</span><span class="mord cjk_fallback">再次被拆分，贝尔实验室和设备制造部门被独立出来成立朗讯科技公司</span></span></span></span><span style="top:0.5900000000000007em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord cjk_fallback">阿尔卡特收购朗讯组成阿朗，贝尔实验室也一起合并</span></span></span></span><span style="top:2.0900000000000007em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord text"><span class="mord cjk_fallback">贝尔实验室现在服务于阿朗公司</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:5.750000000000001em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
-<p>所以，当你进入到<a href="http://www.bell-labs.com/">贝尔实验室的官方首页</a>时，你会发现 LOGO 也是 Alcatel-Lucent 的。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[浏览器 user-agent 详解]]></title>
-        <id>https://faded.auspicious.space/post/an-introduction-to-browser-user-agent/</id>
-        <link href="https://faded.auspicious.space/post/an-introduction-to-browser-user-agent/">
-        </link>
-        <updated>2020-04-22T14:09:06.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.iteye.com/blog/ducaijun-1407030">浏览器user-agent详解</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.iteye.com/blog/ducaijun-1407030">浏览器user-agent详解</a></p>
-</blockquote>
-<!-- more -->
-<blockquote>
-<p>特性检测并非浏览器检测</p>
-</blockquote>
-<h1>浏览器们的家族史</h1>
-<h2 id="较古的浏览器">较古的浏览器</h2>
-<p>1993年，NCSA 发布了首款 Web 浏览器 Mosaic。它的 <code>user-agent</code> 字串非常简洁：</p>
-<pre><code class="language-javascript">Mosaic/0.9
-</code></pre>
-<p>虽然当时由于它对操作系统和平台的依赖性，但是基本格式还是很简单明了。在文本中，斜杠前面是产品名称(可能会显示为 NCSA Mosaic 或是其他类似的字)，斜杠后面是产品版本号。</p>
-<p>Netscape Communications 开发了 Web 浏览器 Mozilla（当时号称“Mosaic 杀手”）。他们首款公开发行版本： Netscape Navigator 2 的 <code>user-agent</code> 字串具有如下格式：</p>
-<pre><code class="language-javascript">Mozilla/Version [Language] (Platform; Encryption)
-</code></pre>
-<p>Netscape 按之前的做法在 <code>user-agent</code> 字串的前半部分使用了产品名称和产品版本，但在后面增加了下列信息：</p>
-<ul>
-<li><code>Language</code> - 表示应用程序用的是哪个语言；</li>
-<li><code>Platform</code> - 表示应用程序是在什么操作系统和/或平台中运行；</li>
-<li><code>Encryption</code> - 表示应用程序包含了什么安全加密类型。其中的值可能是<code>U</code>（128 位加密）、<code>I</code>（40 位加密）、<code>N</code>（没加密）。</li>
-</ul>
-<p>Netscape Navigator 2 的 <code>user-agent</code> 字串的示例：</p>
-<pre><code class="language-javascript">Mozilla/2.02 [fr] (WinNT; I)
-</code></pre>
-<p>上面的字串指： Netscape Navigator 2.02 、法语 、Windows NT 、40 位加密。在当时，通过 <code>user-agent</code> 字串中的产品名称，可以正确判断使用的是哪个 Web 浏览器。</p>
-<h2 id="netscape-navigator-3-internet-explorer-3">Netscape Navigator 3 、Internet Explorer 3</h2>
-<p>1996 年，Netscape Navigator 3 发布，它远远超过 Mosaic 成为当时最流行的 Web 浏览器。而 <code>user-agent</code> 字串只有些小的变化：去掉了语言部分，多了个放操作系统或 CPU 的可选信息。格式如下：</p>
-<pre><code class="language-javascript">Mozilla/Version (Platform; Encryption [; OS-or-CPU description])
-</code></pre>
-<p>在 Windows 系统中 Netscape Navigator 3 的 <code>user-agent</code> 字串的示例：</p>
-<pre><code class="language-javascript">Mozilla/3.0 (Win95; U)
-</code></pre>
-<p>上面的字串指：Netscape Navigator 3 、Windows 95 、128 位加密。在 Windows 系统中，字串里面不会显示 OS 或 CPU 的信息。</p>
-<p>Netscape Navigator 3 发布不久，微软公布了它的首款 Web 浏览器： IE 3 ¹，但是 Netscape 是当时首选浏览器，大多数服务器在加载页面前都会检查 <code>user-agent</code> 是否为该款浏览器。IE 如果不兼容 Netscape <code>user-agent</code> 字串，使用 IE 的用户就根本打不开这些页面，于是造就了如下格式：</p>
-<pre><code class="language-javascript">Mozilla/2.0 (compatible; MSIE Version; Operating System)
-</code></pre>
-<p>在 Windows 95 中 IE 3.02 的 <code>user-agent</code> 字串的示例：</p>
-<pre><code class="language-javascript">Mozilla/2.0 (compatible; MSIE 3.02; Windows 95)
-</code></pre>
-<p>由于当时的浏览器嗅探只查 <code>user-agent</code> 字串中的产品名称部分，结果 IE 摇身一变被识别成了 Mozilla，伪装成 Netscape Navigator。这个做法引发了对浏览器识别的争论。从此以后，浏览器真正的版本埋没在了字串的中间。</p>
-<h2 id="netscape-communicator-4-internet-explorer-4-至-8">Netscape Communicator 4 、Internet Explorer 4 至 8</h2>
-<p>1997 年8月，Netscape Communicator 4 发布（发布的名称中 Navigator 换成了 Communicator），它的 <code>user-agent</code> 字串格式与 3 版本一致。Windows 98 中 4 版本的 <code>user-agent</code> 字串如下:</p>
-<pre><code class="language-javascript">Mozilla/4.0 (Win98; I)
-</code></pre>
-<p>Netscape 浏览器在更新时，版本也相应增加。4.79 版本的 <code>user-agent</code> 字串如下：</p>
-<pre><code class="language-javascript">Mozilla/4.79 (Win98; I)
-</code></pre>
-<p>微软发布 IE 4 时，<code>user-agent</code> 字串更新了版本，格式如下：</p>
-<pre><code class="language-javascript">Mozilla/4.0 (compatible; MSIE Version; Operating System)
-</code></pre>
-<p>在 Windows 98 中 IE 4 的 <code>user-agent</code> 字串的示例：</p>
-<pre><code class="language-javascript">Mozilla/4.0 (compatible; MSIE 4.0; Windows 98)
-</code></pre>
-<p>可以看出，Mozilla 的版本与 IE 实际的版本一致，这样就可以识别第 4 代浏览器了。但遗憾的是，不久 IE 4.5 马上就发布了(只在 Mac 平台)，虽然 Mozilla 版本仍是 4，但是 IE 的版本改成如下：</p>
-<pre><code class="language-javascript">Mozilla/4.0 (compatible; MSIE 4.5; Mac_PowerPC)
-</code></pre>
-<p>此后，IE 的版本一直到 7 都沿用了这个模式。</p>
-<p>而 IE 8 的 <code>user-agent</code> 字串添加了呈现引擎（rendering engine）版本：</p>
-<pre><code class="language-javascript">Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)
-</code></pre>
-<p>新增的呈现引擎非常重要！这样 IE8 以 MSIE 7.0 兼容模式运行时，Trident 版本保持不变，而原先 IE7 的 <code>user-agent</code> 字串不包括 Trident 版本。这样可以区分 IE7 与 IE8 运行的兼容模式。</p>
-<p>注意：别指望能从 Mozilla 版本中得到什么靠谱的信息。</p>
-<h2 id="gecko">Gecko</h2>
-<p>Gecko 是 Firefox 的呈现引擎。Gecko 首次开发是作为 Mozilla 浏览器 Netscape 6 的一部分。Netscape 6 的 <code>user-agent</code> 字串的结构是面向未来的，新版本反应出从 4.x 版本的简单变得较为复杂，它的格式如下：</p>
-<pre><code class="language-javascript">Mozilla/MozillaVersion (Platform; Encryption; OS-or-CPU; Language; PrereleaseVersion)Gecko/GeckoVersion ApplicationProduct/ApplicationProductVersion
-</code></pre>
-<p>为了更好的理解上面的 Gecko <code>user-agent</code> 字串格式，下面来看看各种从基于 Gecko 浏览器中取得的字串。</p>
-<p>在 Windows XP 中的 Netscape 6.21：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:0.9.4) Gecko/20011128 Netscape6/6.2.1
-</code></pre>
-<p>在 Linux 中的 SeaMonkey 1.1a:</p>
-<pre><code class="language-javascript">Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1b2) Gecko/20060823 SeaMonkey/1.1a
-</code></pre>
-<p>在 Windows XP 中的 Firefox 2.0.0.11 :</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11
-</code></pre>
-<p>Mac OS X 中的 Camino 1.5.1:</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en; rv:1.8.1.6) Gecko/20070809 Camino/1.5.1
-</code></pre>
-<p>上面都是基于 Gecko 的浏览器所取得的 <code>user-agent</code> 字串，区别只是版本有所不同。Mozilla 版本 5.0 是自从首款基于 Gecko 发布后就一直不变，而且以后有可能也不会变²。</p>
-<h2 id="webkit">WebKit</h2>
-<p>2003 年，Apple 宣布发布首款他们自主开发的 Web 浏览器：Safari。它的呈现引擎叫 WebKit。它是 Linux 中的 Web 浏览器 Konqueror 呈现引擎 KHTML 的一个分支，几年后，WebKit 的开源吸引了呈现引擎的开发人员。</p>
-<p>这款新浏览器和呈现引擎的开发人员也遇到了曾经 IE 3.0 类似的问题：怎样才能溶入主流而不被踢出局？答案是：在 <code>user-agent</code> 字串中放详尽的信息，以便骗取网站的信任使它与其它流行的浏览器兼容。<code>user-agent</code> 字串格式如下：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Platform; Encryption; OS-or-CPU; Language) AppleWebKit/AppleWebKitVersion (KHTML, like Gecko) Safari/SafariVersion
-</code></pre>
-<p>下面是示例：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/124 (KHTML, like Gecko) Safari/125.1
-</code></pre>
-<p>这又是个挺长的 <code>user-agent</code> 字串，其中包括的信息既有 Apple WebKit 的版本，也有 Safari 的版本。凡是基于 WebKit 的浏览器都将自己伪装成了 Mozilla 5.0，与基于 Gecko 浏览器完全一样。但 Safari 的版本是浏览器的构建版本号（build number）。Safari 1.25 在 <code>user-agent</code> 字串中号为 125.1（如上所示）。Safari 版本 3 的 <code>user-agent</code> 字串包括了实际的 Safari 版本：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/522.15.5 (KHTML, like Gecko) Version/3.0.3 Safari/522.15.5
-</code></pre>
-<p>其中的“（KHTML, like Gecko）”在 Safari 1.0 预览版本中就有了，这字串部分是最耐人寻味又饱受诟病。Apple 的野心是为了让开发人员把 Safari 当成 Gecko，所以采取了当初微软 IE <code>user-agent</code> 的类似做法：Safari 是兼容 Mozilla 的，否则 Safari 用户会认为用的浏览器不受支持。</p>
-<p>而其它基于 WebKit 的浏览器与 Safari 不同的是，没有上面说的这个情况，所以检测断定浏览器是否基于 WebKit 比看有没有明确标 Safari 更有用。</p>
-<h2 id="konqueror">Konqueror</h2>
-<p>Konqueror 是款在 KDE Linux 桌面环境中的浏览器，基于 KHTML 开源呈现引擎。它只发布了在 Linux 的版本，但是拥有活跃的用户群。为了兼容性最大化，<code>user-agent</code> 字串的格式也紧跟 IE 的后尘：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (compatible; Konqueror/Version; OS-or-CPU)
-</code></pre>
-<p>Konqueror 3.2 为了与 WebKit <code>user-agent</code> 字串变化保持一致，它将 KHTML 作为它的标识：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (compatible; Konqueror/Version; OS-or-CPU) KHTML/KHTMLVersion (like Gecko)
-</code></pre>
-<p>如下所示：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (compatible; Konqueror/3.5; SunOS) KHTML/3.5.0 (like Gecko)
-</code></pre>
-<p>Konqueror 和 KHTML 的版本号比较一致，唯一的区别就是下点处不同，比如Konquerer 3.5、KHTML 3.5.1。</p>
-<h2 id="chrome">Chrome</h2>
-<p>Google Chrome 浏览器以 WebKit 作为呈现引擎，JavaScript 引擎却用了另一种。最初发布的版本是 0.2，它的 <code>user-agent</code> 字串格式是在 WebKit 信息的基础上又增加了如下：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Platform; Encryption; OS-or-CPU; Language) AppleWebKit/AppleWebKitVersion (KHTML, like Gecko) Chrome/ChromeVersion Safari/SafariVersion
-</code></pre>
-<p>Chrome 0.2 <code>user-agent</code> 信息的示例如下：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.2.149.29 Safari/525.13
-</code></pre>
-<p>虽我不敢完全保证，但很可能 WebKit 版本和 Safari 版本总会保持同步。</p>
-<h2 id="opera">Opera</h2>
-<p>Opera 浏览器默认 <code>user-agent</code> 字串是现代浏览器中最合理的——正确的标识了它自己及其版本。 在 Opera 8.0 前，它的 <code>user-agent</code> 字串格式如下：</p>
-<pre><code class="language-javascript">Opera/Version (OS-or-CPU; Encryption) [Language]
-</code></pre>
-<p>在 Windows XP 中 Opera 7.54 user-agent 字串示例：</p>
-<pre><code class="language-javascript">Opera/7.54 (Windows NT 5.1; U) [en]
-</code></pre>
-<p>Opera 8 <code>user-agent</code> 字串的语言部分移到了括号内。</p>
-<pre><code class="language-javascript">Opera/Version (OS-or-CPU; Encryption; Language)
-</code></pre>
-<p>在 Windows XP 中 Opera 8 <code>user-agent</code> 字串示例：</p>
-<pre><code class="language-javascript">Opera/8.0 (Windows NT 5.1; U; en)
-</code></pre>
-<p>当时 Opera 做为主流浏览器之一，它的 <code>user-agent</code> 字串是唯一使用产品名称和版本完全真实的标识了它自己。但是由于大量的浏览器嗅探代码在 Internet 上像蝗虫飞过般只吃标 Mozilla 产品名的 <code>user-agent</code> 字串，造成了 Opera 的 <code>user-agent</code> 字串发生了完全的改变。</p>
-<p>Opera 9 <code>user-agent</code> 字串有两种修改的方式：一种方式是将自己标识为 Firefox 或 IE 浏览器。在这种方式下，<code>user-agent</code> 字串与 Firefox 或 IE 的几乎一样，只不过末尾附加了“Opera”及版本号。如下所示：</p>
-<pre><code class="language-javascript">Mozilla/5.0 (Windows NT 5.1; U; en; rv:1.8.1) Gecko/20061208 Firefox/2.0.0 Opera 9.50
-Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en) Opera 9.50
-</code></pre>
-<p>前 一字串将 Opera 9.5 标识为 Firefox 2。后一字串将 Opera 9.5 标识为 IE 6，在两个字串中都带有 Opera 版本信息。虽然这种方式是作为 Firefox 或 IE 打开的，但也能识别出 Opera。另一种方法则是浏览器 <code>user-agent</code> 字串标识伪装成 Firefox 或 IE，同时也找不到“Opera”字串及其版本信息。这样从字面上去区分 Opera 浏览器便成了“不可能完成的任务”。³</p>
-<h2 id="结论">结论</h2>
-<p><code>user-agent</code> 字串史可以说明曾对 <code>user-agent</code> 嗅探说不的原因：IE 想要将自己识别为 Netscape 4，Konqueror 和 WebKit 想要识别为 Firefox，Chrome 想要识别为 Safari。这样使得除 Opera 外所有浏览器的 <code>user-agent</code> 嗅探区别很小，想要从一堆茫茫浏览器海洋中找出有用的标识太少了。关于嗅探要记住：一款浏览器与其它浏览器是兼容的，这样造成了不能完全准确的断定是哪款 浏览器。</p>
-<p>比如说 Chrome ，它声称任何可以在 Safari 3 访问的网站 Chrome 也都可以访问，但是对检测 Chrome 没有一点用。为了浏览器的兼容——这便是这个声明的理由。</p>
-<hr>
-<p>起初前端工程师们就极力反对浏览器检测，他们认为类似 <code>user-agent</code> 嗅探的方法是很不好的，理由是它并不是一种面向未来的代码，无法适应新版的浏览器。更好的做法是使用特性检测，就像这样：</p>
-<pre><code class="language-javascript">if (navigator.userAgent.indexOf(&quot;MSIE 7&quot;) &gt; -1) {
-    //do something 
-}
-</code></pre>
-<p>而更好的做法是这样：</p>
-<pre><code class="language-javascript">if (document.all) {
-    //do something
-}
-</code></pre>
-<p>这两种方式并不相同。前者是检测浏览器的特殊名称和版本；后者却是检测浏览器的特性。UA 嗅探能够精确得到浏览器的类型和版本（至少能得知浏览器类型），而特性检测却是去确定浏览器是否拥有某个对象或者支持某个方法。注意这两者是完全不同的。</p>
-<p>因为特性检测依赖于哪些浏览器支持，当出现新版本浏览器的时候需要繁琐的确认工作。例如 DOM 标准刚出现的时候，并不是所有浏览器都支持 <code>getElementById()</code> 方法，所以一开始代码可能是这样：</p>
-<pre><code class="language-javascript">if (document.getElementById) {
-    //DOM 
-    element = document.getElementById(id);
-} else if (document.all) {
-    //IE 
-    element = document.all[id];
-} else if (document.layers) {
-    //Netscape &lt; 6 
-    element = document.layers[id];
-}
-</code></pre>
-<p>这是特性检测很好的一个例子，亮点在于当其它浏览器开始支持 <code>getElementById()</code> 方法时不必修改代码。</p>
-<h2 id="混合方式">混合方式</h2>
-<p>后来前端工程师们考虑改进的写法，代码变化成这样：</p>
-<pre><code class="language-javascript">//AVOID!!! 
-if (document.all) {
-    //IE 
-    id = document.uniqueID;
-} else {
-    id = Math.random();
-}
-</code></pre>
-<p>这个代码的问题是通过检测 <code>document.all</code> 属性来确定是否是 IE。当确定是 IE 后，假定使用私有的 <code>document.uniqueID</code> 属性也是安全的。然而，目前所作的只是确定是否支持 <code>document.all</code>，并非是去辨识浏览器是否为 IE。仅仅支持 <code>document.all</code> 的话也不意味着 <code>document.uniqueID</code> 是可用的。</p>
-<p>后来人们开始这样写，用下面那行代替上面的：</p>
-<pre><code class="language-javascript">var isIE = navigator.userAgent.indexOf(&quot;MSIE&quot;) &gt; -1;
-//下面这行代替上面那行 
-var isIE = !!document.all;
-</code></pre>
-<p>这些变化说明大家对“不要使用UA嗅探”存在误解——不再对浏览器的详细信息进行检测，取而代之的是通过特性的支持来推断。这种基于浏览器特性检测的方式非常不好。</p>
-<p>后来前端们发现 <code>document.all</code> 并不可靠，更好的检测 IE 变为：</p>
-<pre><code class="language-javascript">var isIE = !!document.all &amp;&amp; document.uniqueID;
-</code></pre>
-<p>这种实现方式陷入歧途。不仅需要费时费事地去识别浏览器所增加的特性支持，另外也不能确定其它浏览器开始支持相同的特性。</p>
-<p>如果你认为这样的代码并未被广泛使用，那么看看来自于老版本的Mootools代码片段吧：</p>
-<pre><code class="language-javascript">//from MooTools 1.1.2 
-if (window.ActiveXObject)
-    window.ie = window[window.XMLHttpRequest ? 'ie7' : 'ie6'] = true;
-else if (document.childNodes &amp;&amp; !document.all &amp;&amp; !navigator.taintEnabled)
-    window.webkit = window[window.xpath ? 'webkit420' : 'webkit419'] = true;
-else if (document.getBoxObjectFor != null || window.mozInnerScreenX != null)
-    window.gecko = true;
-</code></pre>
-<p>注意它是如何使用特性检测的。我可以指出它一系列的问题，比如通过检测 <code>window.ie</code> 会将 IE 8 误认为 IE 7。</p>
-<h2 id="余波">余波</h2>
-<p>随着浏览器的快速发展，使用特性检测变得越来越困难和不可靠。但是 Mootools 1.2.4 仍然使用这一方法，例如：<code>getBoxObjectFor()</code>。</p>
-<pre><code class="language-javascript">//from MooTools 1.2.4 
-var Browser = $merge({
-    Engine: { name: 'unknown', version: 0 },
-    Platform: {
-        name: (window.orientation != undefined)
-            ? 'ipod' : (navigator.platform.match(/mac|win|linux/i)
-                || ['other'])[0].toLowerCase()
-    }, Features: {
-        xpath: !!(document.evaluate),
-        air: !!(window.runtime),
-        query: !!(document.querySelector)
-    }, Plugins: {},
-    Engines: {
-        presto: function () {
-            return (!window.opera) ? false
-                : ((arguments.callee.caller) ? 960
-                    : ((document.getElementsByClassName) ? 950 : 925));
-        }, trident: function () {
-            return (!window.ActiveXObject) ? false
-                : ((window.XMLHttpRequest)
-                    ? ((document.querySelectorAll) ? 6 : 5) : 4);
-        }, webkit: function () {
-            return (navigator.taintEnabled) ? false
-                : ((Browser.Features.xpath)
-                    ? ((Browser.Features.query) ? 525 : 420) : 419);
-        }, gecko: function () {
-            return (!document.getBoxObjectFor &amp;&amp; window.mozInnerScreenX == null)
-                ? false : ((document.getElementsByClassName) ? 19 : 18);
-        }
-    }
-}, Browser || {});
-</code></pre>
-<h2 id="应该怎么做">应该怎么做？</h2>
-<p>特性检测是个应该避免的方法，尽管直接进行特性检测是个很好的方法，并且大部分情况下能满足需求。一般只要在检测前知道这个特性是否被实现即可，而不会去考虑它们之间的关系。</p>
-<p>我并非是说永远不使用浏览器特性检测而是基于 UA 嗅探，因为我相信它还是有很多用途的，然而我不相信它有很多合理的用途。如果你考虑 UA 嗅探的话， 请先贯彻这一思想：唯一安全的方式是针对特定浏览器的特定版本，超出范围之外都是不可靠的——例如新出的浏览器版本。其实这样做也是个明智的办法，因为相 较于向前兼容不确定的新版本而言，向后兼容老版本是最简单的做法。</p>
 ]]></content>
     </entry>
 </feed>
