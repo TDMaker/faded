@@ -2,13 +2,1938 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://faded.auspicious.space</id>
     <title>Typhoeus</title>
-    <updated>2020-04-26T03:11:19.568Z</updated>
+    <updated>2020-04-29T06:57:31.619Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://faded.auspicious.space"/>
     <link rel="self" href="https://faded.auspicious.space/atom.xml"/>
     <logo>https://faded.auspicious.space/images/avatar.png</logo>
     <icon>https://faded.auspicious.space/favicon.ico</icon>
     <rights>All rights reserved 2020, Typhoeus</rights>
+    <entry>
+        <title type="html"><![CDATA[二维码的生成细节和原理]]></title>
+        <id>https://faded.auspicious.space/post/qr-code-generation-details-and-principles/</id>
+        <link href="https://faded.auspicious.space/post/qr-code-generation-details-and-principles/">
+        </link>
+        <updated>2020-04-29T03:11:23.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://coolshell.cn/articles/10590.html">二维码的生成细节和原理</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://coolshell.cn/articles/10590.html">二维码的生成细节和原理</a></p>
+</blockquote>
+<!-- more -->
+<p>二维码又称QR Code，QR 全称Quick Response，是一个近几年来移动设备上超流行的一种编码方式，它比传统的 Bar Code 条形码能存更多的信息，也能表示更多的数据类型：比如：字符，数字，日文，中文等等。这两天学习了一下二维码图片生成的相关细节，觉得这个玩意就是一个密码算法，在此写一这篇文章 ，揭露一下。供好学的人一同学习之。</p>
+<p>关于QR Code Specification，可参看这个PDF：<a href="http://raidenii.net/files/datasheets/misc/qr_code.pdf">http://raidenii.net/files/datasheets/misc/qr_code.pdf</a>。</p>
+<h1 id="1-基础知识">1 基础知识</h1>
+<p>首先，我们先说一下二维码一共有 40 个尺寸。官方叫版本 Version。Version 1 是 21 x 21 的矩阵，Version 2 是  25 x 25 的矩阵，Version 3 是 29 的尺寸，每增加一个 version，就会增加 4 的尺寸，公式是：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mi>V</mi><mo>−</mo><mn>1</mn><mo>)</mo><mo>×</mo><mn>4</mn><mo>+</mo><mn>21</mn></mrow><annotation encoding="application/x-tex">(V-1)\times 4 + 21</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">1</span></span></span></span>（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>V</mi></mrow><annotation encoding="application/x-tex">V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span></span></span></span> 是版本号） 最高 Version 40，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mn>40</mn><mo>−</mo><mn>1</mn><mo>)</mo><mo>×</mo><mn>4</mn><mo>+</mo><mn>21</mn><mo>=</mo><mn>177</mn></mrow><annotation encoding="application/x-tex">(40-1)\times 4+21 = 177</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">4</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">7</span><span class="mord">7</span></span></span></span>，所以最高是 177 x 177 的正方形。</p>
+<p>下面我们看看一个二维码的样例：<br>
+<img src="https://faded.auspicious.space/post-images/1588130301517.jpeg" alt="" loading="lazy"></p>
+<h2 id="11-定位图案">1.1 定位图案</h2>
+<ul>
+<li><strong>Position Detection Pattern</strong> 是定位图案，用于标记二维码的矩形大小。这三个定位图案有白边叫 Separators for Postion Detection Patterns。之所以三个而不是四个意思就是三个就可以标识一个矩形了。</li>
+<li><strong>Timing Patterns</strong> 也是用于定位的。原因是二维码有 40 种尺寸，尺寸过大了后需要有根标准线，不然扫描的时候可能会扫歪了。</li>
+<li><strong>Alignment Patterns</strong> 只有 Version 2 以上（包括 Version2）的二维码需要这个东东，同样是为了定位用的。</li>
+</ul>
+<h2 id="12-功能性数据">1.2 功能性数据</h2>
+<ul>
+<li><strong>Format Information</strong> 存在于所有的尺寸中，用于存放一些格式化数据的。</li>
+<li><strong>Version Information</strong> 在 &gt;= Version 7 以上，需要预留两块 3 x 6 的区域存放一些版本信息。</li>
+</ul>
+<h2 id="13-数据码和纠错码">1.3 数据码和纠错码</h2>
+<p>除了上述的那些地方，剩下的地方存放 Data Code 数据码 和 Error Correction Code 纠错码。</p>
+<h1 id="2-数据编码">2 数据编码</h1>
+<p>我们先来说说数据编码。QR码支持如下的编码：</p>
+<ul>
+<li><strong>Numeric mode</strong> 数字编码，从 0 到 9。如果需要编码的数字的个数不是 3 的倍数，那么，最后剩下的 1 或 2 位数会被转成 4 或 7 bits，则其它的每 3 位数字会被编成 10，12，14 bits，编成多长还要看二维码的尺寸（下面有一个表 Table 3 说明了这点）。</li>
+<li><strong>Alphanumeric mode</strong> 字符编码。包括 0-9，大写的 A 到 Z（没有小写），以及符号 <code>$ % * + – . / :</code> 包括空格。这些字符会映射成一个字符索引表。如下所示：（其中的 SP 是空格，Char 是字符，Value 是其索引值） 编码的过程是把字符两两分组，然后转成下表的 45 进制，然后转成 11 bits 的二进制，如果最后有一个落单的，那就转成 6bits 的二进制。而编码模式和字符的个数需要根据不同的 version 尺寸编成 9，11 或 13 个二进制（如下表中 Table 3）。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+<th>Char</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>6</td>
+<td>C</td>
+<td>12</td>
+<td>I</td>
+<td>18</td>
+<td>O</td>
+<td>24</td>
+<td>U</td>
+<td>30</td>
+<td>SP</td>
+<td>36</td>
+<td>.</td>
+<td>42</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>7</td>
+<td>7</td>
+<td>D</td>
+<td>13</td>
+<td>J</td>
+<td>19</td>
+<td>P</td>
+<td>25</td>
+<td>V</td>
+<td>31</td>
+<td>$</td>
+<td>37</td>
+<td>/</td>
+<td>43</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>8</td>
+<td>8</td>
+<td>E</td>
+<td>14</td>
+<td>K</td>
+<td>20</td>
+<td>Q</td>
+<td>26</td>
+<td>W</td>
+<td>32</td>
+<td>%</td>
+<td>38</td>
+<td>:</td>
+<td>44</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+<td>9</td>
+<td>9</td>
+<td>F</td>
+<td>15</td>
+<td>L</td>
+<td>21</td>
+<td>R</td>
+<td>27</td>
+<td>X</td>
+<td>33</td>
+<td>*</td>
+<td>39</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>A</td>
+<td>10</td>
+<td>G</td>
+<td>16</td>
+<td>M</td>
+<td>22</td>
+<td>S</td>
+<td>28</td>
+<td>Y</td>
+<td>34</td>
+<td>+</td>
+<td>40</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>5</td>
+<td>B</td>
+<td>11</td>
+<td>H</td>
+<td>17</td>
+<td>N</td>
+<td>23</td>
+<td>T</td>
+<td>29</td>
+<td>Z</td>
+<td>35</td>
+<td>-</td>
+<td>41</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Byte mode</strong>，字节编码，可以是 <code>0-255</code> 的 <code>ISO-8859-1</code> 字符。有些二维码的扫描器可以自动检测是否是 <code>UTF-8</code> 的编码。</li>
+<li><strong>Kanji mode</strong> 这是日文编码，也是双字节编码。同样，也可以用于中文编码。日文和汉字的编码会减去一个值。如：在 <code>0x8140</code> to <code>0x9FFC</code> 中的字符会减去 <code>8140</code>，在 <code>0xE040</code> 到 <code>0xEBBF</code> 中的字符要减去 <code>0xC140</code>，然后把结果前两个 16 进制位拿出来乘以 <code>0xC0</code>，然后再加上后两个 16 进制位，最后转成 13 bit 的编码。如下图示例：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Input character</th>
+<th>“点”</th>
+<th>“茗”</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(Shift JIS value):</td>
+<td>935F</td>
+<td>E4AA</td>
+</tr>
+<tr>
+<td>1. Subtract 8140 or C140</td>
+<td>935F - 8140 = 121F</td>
+<td>E4AA - C140 = 236A</td>
+</tr>
+<tr>
+<td>2. Multiply m.s.b. by C0</td>
+<td>12 × C0 = D80</td>
+<td>23 × C0 = 1A40</td>
+</tr>
+<tr>
+<td>3. Add I.s.b.</td>
+<td>D80 + 1F = D9F</td>
+<td>1A40 + 6A = 1AAA</td>
+</tr>
+<tr>
+<td>4. Convert to 13 bit binary</td>
+<td>0D9F → 0 1101 1001 1111</td>
+<td>1AAA → 1 1010 1010 1010</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Extended Channel Interpretation (ECI) mode</strong> 主要用于特殊的字符集。并不是所有的扫描器都支持这种编码。</li>
+<li><strong>Structured Append mode</strong> 用于混合编码，也就是说，这个二维码中包含了多种编码格式。</li>
+<li><strong>FNC1 mode</strong> 这种编码方式主要是给一些特殊的工业或行业用的。比如 GS1 条形码之类的。</li>
+</ul>
+<p>简单起见，后面三种不会在本文 中讨论。</p>
+<p>下面两张表中，</p>
+<ul>
+<li><strong>Table 2</strong> 是各个编码格式的“编号”，这个东西要写在 Format Information 中。注：中文是 <code>1101</code>。</li>
+<li><strong>Table 3</strong> 表示了，不同版本（尺寸）的二维码，对于，数字，字符，字节和 Kanji 模式下，对于单个编码的 2 进制的位数。（在二维码的规格说明书中，有各种各样的编码规范表，后面还会提到）。</li>
+</ul>
+<p><strong>Table 2 - Mode indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Mode</th>
+<th style="text-align:center">Indicator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ECI</td>
+<td style="text-align:center">0111</td>
+</tr>
+<tr>
+<td style="text-align:center">Numeric</td>
+<td style="text-align:center">0001</td>
+</tr>
+<tr>
+<td style="text-align:center">Alphanumeric</td>
+<td style="text-align:center">0010</td>
+</tr>
+<tr>
+<td style="text-align:center">8-bit Byte</td>
+<td style="text-align:center">0100</td>
+</tr>
+<tr>
+<td style="text-align:center">Kanji</td>
+<td style="text-align:center">1000</td>
+</tr>
+<tr>
+<td style="text-align:center">Structured Append</td>
+<td style="text-align:center">0011</td>
+</tr>
+<tr>
+<td style="text-align:center">FNC1</td>
+<td style="text-align:center">0101(First position) <br> 1001(Second posotion)</td>
+</tr>
+<tr>
+<td style="text-align:center">Terminator(End of Message)</td>
+<td style="text-align:center">0000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 3 - Number of bits in Character Count Indicator</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Version</th>
+<th style="text-align:center">Numeric Mode</th>
+<th style="text-align:center">Alphanumeric Mode</th>
+<th style="text-align:center">8-bit Byte Mode</th>
+<th style="text-align:center">Kanji Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1 to 9</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">9</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">8</td>
+</tr>
+<tr>
+<td style="text-align:center">10 to 26</td>
+<td style="text-align:center">12</td>
+<td style="text-align:center">11</td>
+<td style="text-align:center">16</td>
+<td style="text-align:center">10</td>
+</tr>
+<tr>
+<td style="text-align:center">27 to 40</td>
+<td style="text-align:center">14</td>
+<td style="text-align:center">13</td>
+<td style="text-align:center">16</td>
+<td style="text-align:center">12</td>
+</tr>
+</tbody>
+</table>
+<p>下面我们看几个示例：</p>
+<h2 id="21-示例一数字编码">2.1 示例一：数字编码</h2>
+<p>在 Version 1 的尺寸下，纠错级别为 <code>H</code> 的情况下，编码：<code>01234567</code>：</p>
+<ol>
+<li>把上述数字分成三组：<code>012 345 67</code>。</li>
+<li>把他们转成二进制：<code>012</code> 转成 <code>0000001100</code>；<code>345</code> 转成 <code>0101011001</code>；<code>67</code> 转成 <code>1000011</code>。</li>
+<li>把这三个二进制串起来：<code>0000001100 0101011001 1000011</code>。</li>
+<li>把数字的个数转成二进制（Version 1-H 是10 bits）：8 个数字的二进制是 <code>0000001000</code>。</li>
+<li>把数字编码的标志 <code>0001</code> 和第 4 步的编码加到前面：<code>0001 0000001000 0000001100 0101011001 1000011</code>。</li>
+</ol>
+<h2 id="22-示例二字符编码">2.2 示例二：字符编码</h2>
+<p>在 Version 1 的尺寸下，纠错级别为 <code>H</code> 的情况下，编码：<code>AC-42</code>：</p>
+<ol>
+<li>从字符索引表中找到 <code>AC-42</code> 这五个字条的索引 <code>(10,12,41,4,2)</code>。</li>
+<li>两两分组：<code>(10,12) (41,4) (2)</code>。</li>
+<li>把每一组转成 11 bits 的二进制:
+<ul>
+<li><code>(10,12) 10*45+12</code> 等于 <code>462</code> 转成 <code>00111001110</code>；</li>
+<li><code>(41,4) 41*45+4</code> 等于 <code>1849</code> 转成 <code>11100111001</code>；</li>
+<li><code>(2)</code> 等于 <code>2</code> 转成 <code>000010</code>。</li>
+</ul>
+</li>
+<li>把这些二进制连接起来：<code>00111001110 11100111001 000010</code>。</li>
+<li>把字符的个数转成二进制（Version 1-H 为 9 bits）：5 个字符，5 转成 <code>000000101</code>。</li>
+<li>在头上加上编码标识 <code>0010</code> 和第 5 步的个数编码:  <code>0010 000000101 00111001110 11100111001 000010</code>。</li>
+</ol>
+<h1 id="3-结束符和补齐符">3 结束符和补齐符</h1>
+<p>假如我们有个 HELLO WORLD 的字符串要编码，根据上面的示例二，我们可以得到下面的编码：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">编码</th>
+<th style="text-align:center">字符数</th>
+<th style="text-align:center">HELLO WORLD 的编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0010</td>
+<td style="text-align:center">000001011</td>
+<td style="text-align:center">01100001011 01111000110 10001011100 10110111000 10011010100 001101</td>
+</tr>
+</tbody>
+</table>
+<p>我们还要加上结束符：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">编码</th>
+<th style="text-align:center">字符数</th>
+<th style="text-align:center">HELLO WORLD 的编码</th>
+<th style="text-align:center">结束</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0010</td>
+<td style="text-align:center">000001011</td>
+<td style="text-align:center">01100001011 01111000110 10001011100 10110111000 10011010100 001101</td>
+<td style="text-align:center">0000</td>
+</tr>
+</tbody>
+</table>
+<h2 id="31-按-8-bits-重排">3.1 按 8 bits 重排</h2>
+<p>如果所有的编码加起来不是 8 个倍数我们还要在后面加上足够的 <code>0</code>，比如上面一共有 78 个 bits，所以，我们还要加上 2 个 <code>0</code>，然后按 8 个 bits 分好组：</p>
+<p>00100000   01011011   00001011   01111000   11010001   01110010   11011100   01001101   01000011   010000<font color="red">00</font></p>
+<h2 id="32-补齐码padding-bytes">3.2 补齐码（Padding Bytes）</h2>
+<p>最后，如果如果还没有达到我们最大的 bits 数的限制，我们还要加一些补齐码（Padding Bytes），Padding Bytes 就是重复下面的两个 bytes：<code>11101100 00010001</code>（这两个二进制转成十进制是 <code>236</code> 和 <code>17</code>，我也不知道为什么，只知道 Spec 上是这么写的）关于每一个 version 的每一种纠错级别的最大 Bits 限制，可以参看 QR Code Spec 的第 28 页到 32 页的 Table-7 一表。</p>
+<p>假设我们需要编码的是 Version 1 的 Q 纠错级，那么，其最大需要 104 个 bits，而我们上面只有 80 个 bits，所以，还需要补 24 个 bits，也就是需要 3 个 Padding Bytes，我们就添加三个，于是得到下面的编码：</p>
+<p>00100000 01011011 00001011 01111000 11010001 01110010 11011100 01001101 01000011 01000000 <font color="red">11101100 00010001 11101100</font></p>
+<p>上面的编码就是数据码了，叫 Data Codewords，每一个 8 bits 叫一个 codeword，我们还要对这些数据码加上纠错信息。</p>
+<h1 id="4-纠错码">4 纠错码</h1>
+<p>上面我们说到了一些纠错级别，Error Correction Code Level，二维码中有四种级别的纠错，这就是为什么二维码有残缺还能扫出来，也就是为什么有人在二维码的中心位置加入图标。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">错误</th>
+<th style="text-align:center">修正容量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">L 水平</td>
+<td style="text-align:center">7% 的字码可被修正</td>
+</tr>
+<tr>
+<td style="text-align:center">M 水平</td>
+<td style="text-align:center">15% 的字码可被修正</td>
+</tr>
+<tr>
+<td style="text-align:center">Q 水平</td>
+<td style="text-align:center">25% 的字码可被修正</td>
+</tr>
+<tr>
+<td style="text-align:center">H 水平</td>
+<td style="text-align:center">30% 的字码可被修正</td>
+</tr>
+</tbody>
+</table>
+<p>那么，QR 是怎么对数据码加上纠错码的？首先，我们需要对数据码进行分组，也就是分成不同的 Block，然后对各个 Block 进行纠错编码，对于如何分组，我们可以查看 QR Code Spec 的第 33 页到 44 页的 Table-13 到 Table-22 的定义表。注意最后两列：</p>
+<ul>
+<li><strong>Number of Error Code Correction Blocks</strong>：需要分多少个块。</li>
+<li><strong>Error Correction Code Per Blocks</strong>：每一个块中的 code 个数，所谓的 code 的个数，也就是有多少个 8 bits 的字节。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">134</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">26</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">(134, 108, 13)</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">48</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">(67, 43, 12)</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">72</td>
+<td style="text-align:center">2<br>2</td>
+<td style="text-align:center">(33, 15, 9)<br>(34, 16, 9)</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">88</td>
+<td style="text-align:center">2<br>2</td>
+<td style="text-align:center">(33, 11, 11)<br>(34, 12, 11)</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">172</td>
+<td style="text-align:center">L</td>
+<td style="text-align:center">36</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">(86, 68, 9)</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">M</td>
+<td style="text-align:center">64</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">(43, 27, 8)</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">96</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">(43, 19, 12)</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">H</td>
+<td style="text-align:center">112</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">(43, 15, 14)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>a (c, k, r):
+<ul>
+<li>c = total number of codewords</li>
+<li>k = number of data codewords</li>
+<li>r = number of error correction capacity</li>
+</ul>
+</li>
+<li>b Error correction capacity is less than half the number of error correction codewords to reduce the probability of misdecodes.</li>
+</ul>
+<p>举个例子：上述的 Version 5 + Q 纠错级：需要 4 个 Blocks（2 个 Blocks 为一组，共两组），头一组的两个 Blocks 中各 15 个 bits 数据 + 各 9 个 bits 的纠错码（注：表中的 codewords 就是一个 8 bits 的 byte）（再注：最后一例中的（c, k, r）的公式为：<code>c = k + 2 * r</code>，因为后脚注解释了：纠错码的容量小于纠错码的一半）。</p>
+<p>下图给一个 5-Q 的示例（因为二进制写起来会让表格太大，所以，我都用了十进制，我们可以看到每一块的纠错码有 18 个 codewords，也就是 18 个 8 bits 的二进制数）。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">组</th>
+<th style="text-align:center">块</th>
+<th style="text-align:center">数据</th>
+<th style="text-align:center">对每个块的纠错码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">67 85 70 134 87 38 85 194 119 50 6 18 6 103 38</td>
+<td style="text-align:center">213 199 11 45 115 247 241 223 229 248 154 117 154 111 86 161 111 39</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">246 246 66 7 118 134 242 7 38 86 22 198 199 146 6</td>
+<td style="text-align:center">87 204 96 60 202 182 124 157 200 134 27 129 209 17 163 163 120 133</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">182 230 247 119 50 7 118 134 87 38 82 6 134 151 50 7</td>
+<td style="text-align:center">148 116 177 212 76 133 75 242 238 76 195 230 189 10 108 240 192 141</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">70 247 118 86 194 6 151 50 16 236 17 236 17 236 17 236</td>
+<td style="text-align:center">235 159 5 173 24 147 59 33 106 40 255 172 82 2 131 32 178 236</td>
+</tr>
+</tbody>
+</table>
+<p>注：二维码的纠错码主要是通过 Reed-Solomon error correction（里德-所罗门纠错算法）来实现的。对于这个算法，对于我来说是相当的复杂，里面有很多的数学计算，比如：多项式除法，把 1-255 的数映射成 2 的 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 次方（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn><mo>≤</mo><mi>n</mi><mo>≤</mo><mn>255</mn></mrow><annotation encoding="application/x-tex">0\le n \le 255</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7719400000000001em;vertical-align:-0.13597em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">5</span><span class="mord">5</span></span></span></span>）的伽罗瓦域 Galois Field 之类的神一样的东西，以及基于这些基础的纠错数学公式，因为我的数据基础差，对于我来说太过复杂，所以我一时半会儿还有点没搞明白，还在学习中，所以，我在这里就不展开说这些东西了。还请大家见谅了。（当然，如果有朋友很明白，也繁请教教我）</p>
+<h1 id="5-最终编码">5 最终编码</h1>
+<h2 id="51-穿插放置">5.1 穿插放置</h2>
+<p>如果你以为我们可以开始画图，你就错了。二维码的混乱技术还没有玩完，它还要把数据码和纠错码的各个 codewords 交替放在一起。如何交替呢，规则如下：</p>
+<p>对于数据码：把每个块的第一个 codewords 先拿出来按顺度排列好，然后再取第一块的第二个，如此类推。如：上述示例中的 Data Codewords 如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">块 1</td>
+<td style="text-align:center">67</td>
+<td style="text-align:center">85</td>
+<td style="text-align:center">70</td>
+<td style="text-align:center">134</td>
+<td style="text-align:center">87</td>
+<td style="text-align:center">38</td>
+<td style="text-align:center">85</td>
+<td style="text-align:center">194</td>
+<td style="text-align:center">119</td>
+<td style="text-align:center">50</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">18</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">103</td>
+<td style="text-align:center">38</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">块 2</td>
+<td style="text-align:center">246</td>
+<td style="text-align:center">246</td>
+<td style="text-align:center">66</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">118</td>
+<td style="text-align:center">134</td>
+<td style="text-align:center">242</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">38</td>
+<td style="text-align:center">86</td>
+<td style="text-align:center">22</td>
+<td style="text-align:center">198</td>
+<td style="text-align:center">199</td>
+<td style="text-align:center">146</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">块 3</td>
+<td style="text-align:center">182</td>
+<td style="text-align:center">230</td>
+<td style="text-align:center">247</td>
+<td style="text-align:center">119</td>
+<td style="text-align:center">50</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">118</td>
+<td style="text-align:center">134</td>
+<td style="text-align:center">87</td>
+<td style="text-align:center">38</td>
+<td style="text-align:center">82</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">134</td>
+<td style="text-align:center">151</td>
+<td style="text-align:center">50</td>
+<td style="text-align:center">7</td>
+</tr>
+<tr>
+<td style="text-align:center">块 4</td>
+<td style="text-align:center">70</td>
+<td style="text-align:center">247</td>
+<td style="text-align:center">118</td>
+<td style="text-align:center">86</td>
+<td style="text-align:center">194</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">151</td>
+<td style="text-align:center">50</td>
+<td style="text-align:center">16</td>
+<td style="text-align:center">236</td>
+<td style="text-align:center">17</td>
+<td style="text-align:center">236</td>
+<td style="text-align:center">17</td>
+<td style="text-align:center">236</td>
+<td style="text-align:center">17</td>
+<td style="text-align:center">236</td>
+</tr>
+</tbody>
+</table>
+<p>我们先取第一列的：67，246，182，70</p>
+<p>然后再取第二列的：67，246，182，70，85，246，230，247</p>
+<p>如此类推：67，246，182，70，85，246，230，247………，38，6，50，17，7，236</p>
+<p>对于纠错码，也是一样：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+<th style="text-align:center"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">块 1</td>
+<td style="text-align:center">213</td>
+<td style="text-align:center">199</td>
+<td style="text-align:center">11</td>
+<td style="text-align:center">45</td>
+<td style="text-align:center">115</td>
+<td style="text-align:center">247</td>
+<td style="text-align:center">241</td>
+<td style="text-align:center">223</td>
+<td style="text-align:center">229</td>
+<td style="text-align:center">248</td>
+<td style="text-align:center">154</td>
+<td style="text-align:center">117</td>
+<td style="text-align:center">154</td>
+<td style="text-align:center">111</td>
+<td style="text-align:center">86</td>
+<td style="text-align:center">161</td>
+<td style="text-align:center">111</td>
+<td style="text-align:center">39</td>
+</tr>
+<tr>
+<td style="text-align:center">块 2</td>
+<td style="text-align:center">87</td>
+<td style="text-align:center">204</td>
+<td style="text-align:center">96</td>
+<td style="text-align:center">60</td>
+<td style="text-align:center">202</td>
+<td style="text-align:center">182</td>
+<td style="text-align:center">124</td>
+<td style="text-align:center">157</td>
+<td style="text-align:center">200</td>
+<td style="text-align:center">134</td>
+<td style="text-align:center">27</td>
+<td style="text-align:center">129</td>
+<td style="text-align:center">209</td>
+<td style="text-align:center">17</td>
+<td style="text-align:center">163</td>
+<td style="text-align:center">163</td>
+<td style="text-align:center">120</td>
+<td style="text-align:center">133</td>
+</tr>
+<tr>
+<td style="text-align:center">块 3</td>
+<td style="text-align:center">148</td>
+<td style="text-align:center">116</td>
+<td style="text-align:center">177</td>
+<td style="text-align:center">212</td>
+<td style="text-align:center">76</td>
+<td style="text-align:center">133</td>
+<td style="text-align:center">75</td>
+<td style="text-align:center">242</td>
+<td style="text-align:center">238</td>
+<td style="text-align:center">76</td>
+<td style="text-align:center">195</td>
+<td style="text-align:center">230</td>
+<td style="text-align:center">189</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">108</td>
+<td style="text-align:center">240</td>
+<td style="text-align:center">192</td>
+<td style="text-align:center">141</td>
+</tr>
+<tr>
+<td style="text-align:center">块 4</td>
+<td style="text-align:center">235</td>
+<td style="text-align:center">159</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">173</td>
+<td style="text-align:center">24</td>
+<td style="text-align:center">147</td>
+<td style="text-align:center">59</td>
+<td style="text-align:center">33</td>
+<td style="text-align:center">106</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">255</td>
+<td style="text-align:center">172</td>
+<td style="text-align:center">82</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">131</td>
+<td style="text-align:center">32</td>
+<td style="text-align:center">178</td>
+<td style="text-align:center">236</td>
+</tr>
+</tbody>
+</table>
+<p>和数据码取的一样，得到：213，87，148，235，199，204，116，159，…… …… 39，133，141，236</p>
+<p>然后，再把这两组放在一起（纠错码放在数据码之后）得到：</p>
+<p>67, 246, 182, 70, 85, 246, 230, 247, 70, 66, 247, 118, 134, 7, 119, 86, 87, 118, 50, 194, 38, 134, 7, 6, 85, 242, 118, 151, 194, 7, 134, 50, 119, 38, 87, 16, 50, 86, 38, 236, 6, 22, 82, 17, 18, 198, 6, 236, 6, 199, 134, 17, 103, 146, 151, 236, 38, 6, 50, 17, 7, 236, 213, 87, 148, 235, 199, 204, 116, 159, 11, 96, 177, 5, 45, 60, 212, 173, 115, 202, 76, 24, 247, 182, 133, 147, 241, 124, 75, 59, 223, 157, 242, 33, 229, 200, 238, 106, 248, 134, 76, 40, 154, 27, 195, 255, 117, 129, 230, 172, 154, 209, 189, 82, 111, 17, 10, 2, 86, 163, 108, 131, 161, 163, 240, 32, 111, 120, 192, 178, 39, 133, 141, 236</p>
+<p>这就是我们的数据区。</p>
+<h2 id="52-remainder-bits">5.2 Remainder Bits</h2>
+<p>最后再加上 Reminder Bits，对于某些 version 的 QR，上面的还不够长度，还要加上 Remainder Bits，比如：上述的 5Q 版的二维码，还要加上 7 个 bits，Remainder Bits 加零就好了。关于哪些 version 需要多少个 Remainder bit，可以参看 <a href="http://raidenii.net/files/datasheets/misc/qr_code.pdf">QR Code Spec</a> 的第 15 页的 Table-1 的定义表。</p>
+<h1 id="6-画二维码图">6 画二维码图</h1>
+<h2 id="61-position-detection-pattern">6.1 Position Detection Pattern</h2>
+<p>首先，先把 Position Detection 图案画在三个角上。（无论 version 如何，这个图案的尺寸就是这么大）。<br>
+<img src="https://faded.auspicious.space/post-images/1588136941190.png" alt="" loading="lazy"></p>
+<h2 id="62-alignment-pattern">6.2 Alignment Pattern</h2>
+<p>然后，再把 Alignment 图案画上（无论 version 如何，这个图案的尺寸就是这么大）。<br>
+<img src="https://faded.auspicious.space/post-images/1588136972101.png" alt="" loading="lazy"></p>
+<p>关于 Alignment 的位置，可以查看 <a href="http://raidenii.net/files/datasheets/misc/qr_code.pdf">QR Code Spec</a>  的第 81 页的 Table-E.1 的定义表（下表是不完全表格）。</p>
+<table>
+  <caption>Table E.1 - Row/column coordinates of center module of Alignment Patterns</caption>
+  <theader>
+    <tr>
+      <td>Version</td>
+      <td>Number of Alignment Patterns</td>
+      <td colspan="7">Row/Column coordinates of center module</td>
+    </tr>
+  </theader>
+  <tbody>
+    <tr><td>1</td><td>0</td><td>-</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>2</td><td>1</td><td>6</td><td>18</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>3</td><td>1</td><td>6</td><td>22</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>4</td><td>1</td><td>6</td><td>26</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>5</td><td>1</td><td>6</td><td>30</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>6</td><td>1</td><td>6</td><td>34</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>7</td><td>6</td><td>6</td><td>22</td><td>38</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>8</td><td>6</td><td>6</td><td>24</td><td>42</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>9</td><td>6</td><td>6</td><td>26</td><td>46</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>10</td><td>6</td><td>6</td><td>28</td><td>50</td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table>
+<p>下图是根据上述表格中的 Version 8 的一个例子（6，24，42）<br>
+<img src="https://faded.auspicious.space/post-images/1588140727054.png" alt="" loading="lazy"></p>
+<h2 id="63-timing-pattern">6.3 Timing Pattern</h2>
+<p>接下来是 Timing Pattern 的线（这个不用多说了）<br>
+<img src="https://faded.auspicious.space/post-images/1588140769566.png" alt="" loading="lazy"></p>
+<h2 id="64-format-information">6.4 Format Information</h2>
+<p>再接下来是 Formation Information，下图中的蓝色部分。<br>
+<img src="https://faded.auspicious.space/post-images/1588140809329.png" alt="" loading="lazy"><br>
+Format Information 是一个 15 个 bits 的信息，每一个 bit 的位置如下图所示：（注意图中的 Dark Module，那是永远出现的）<br>
+<img src="https://faded.auspicious.space/post-images/1588140853639.png" alt="" loading="lazy"></p>
+<p>这 15 个 bits 中包括：</p>
+<ul>
+<li>5 个数据 bits：其中，2 个 bits 用于表示使用什么样的 Error Correction Level， 3 个 bits 表示使用什么样的 Mask。</li>
+<li>10 个纠错 bits。主要通过 BCH Code 来计算。</li>
+</ul>
+<p>然后 15 个 bits 还要与 <code>101010000010010</code> 做 <code>XOR</code> 操作。这样就保证不会因为我们选用了 <code>00</code> 的纠错级别和 <code>000</code> 的 Mask，从而造成全部为白色，这会增加我们的扫描器的图像识别的困难。</p>
+<p>下面是一个示例：<br>
+<img src="https://faded.auspicious.space/post-images/1588140948528.png" alt="" loading="lazy"></p>
+<p>关于 Error Correction Level 如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Error Correction Level</th>
+<th style="text-align:center">Binary indicator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">L</td>
+<td style="text-align:center">01</td>
+</tr>
+<tr>
+<td style="text-align:center">M</td>
+<td style="text-align:center">00</td>
+</tr>
+<tr>
+<td style="text-align:center">Q</td>
+<td style="text-align:center">11</td>
+</tr>
+<tr>
+<td style="text-align:center">H</td>
+<td style="text-align:center">10</td>
+</tr>
+</tbody>
+</table>
+<p>关于Mask图案如后面的Table 23所示。</p>
+<h2 id="65-version-information">6.5 Version Information</h2>
+<p>再接下来是 Version Information（版本 7 以后需要这个编码），下图中的蓝色部分。<br>
+<img src="https://faded.auspicious.space/post-images/1588141142733.png" alt="" loading="lazy"><br>
+Version Information 一共是 18 个 bits，其中包括 6 个 bits 的版本号以及 12 个 bits 的纠错码，下面是一个示例：<br>
+<img src="https://faded.auspicious.space/post-images/1588141174000.png" alt="" loading="lazy"><br>
+而其填充位置如下：<br>
+<img src="https://faded.auspicious.space/post-images/1588141190178.png" alt="" loading="lazy"></p>
+<h2 id="66-数据和数据纠错码">6.6 数据和数据纠错码</h2>
+<p>然后是填接我们的最终编码，最终编码的填充方式如下：从左下角开始沿着红线填我们的各个 bits，<code>1</code> 是黑色，<code>0</code> 是白色。如果遇到了上面的非数据区，则绕开或跳过。<br>
+<img src="https://faded.auspicious.space/post-images/1588141231547.png" alt="" loading="lazy"></p>
+<h2 id="67-掩码图案">6.7 掩码图案</h2>
+<p>这样下来，我们的图就填好了，但是，也许那些点并不均衡，如果出现大面积的空白或黑块，会告诉我们扫描识别的困难。所以，我们还要做 Masking 操作（靠，还嫌不复杂）QR 的 Spec 中说了，QR 有 8 个 Mask 你可以使用，如下所示：其中，各个 mask 的公式在各个图下面。所谓 mask，说白了，就是和上面生成的图做 <code>XOR</code> 操作。Mask 只会和数据区进行 <code>XOR</code>，不会影响功能区。（注：选择一个合适的 Mask 也是有算法的）<br>
+<img src="https://faded.auspicious.space/post-images/1588141296426.png" alt="" loading="lazy"><br>
+其 Mask 的标识码如下所示：（其中的 i, j 分别对应于上图的 x, y）</p>
+<p><strong>Table 23 - Mask pattern generation conditions</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Mask Pattern Reference</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">000</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(i+j)\mod 2 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">001</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">i \mod 2 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">010</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>j</mi><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>3</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">j \mod 3 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">011</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>3</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(i+j)\mod 3 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">100</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mo>(</mo><mi>i</mi><mtext> div </mtext><mn>2</mn><mo>)</mo><mo>+</mo><mo>(</mo><mi>j</mi><mtext> div </mtext><mn>3</mn><mo>)</mo><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">((i \text{ div } 2)+(j \text{ div } 3)) \mod 2 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mord text"><span class="mord"> div </span></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord text"><span class="mord"> div </span></span><span class="mord">3</span><span class="mclose">)</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">101</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mi>i</mi><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>+</mo><mo>(</mo><mi>i</mi><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>3</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(ij)\mod 2 + (ij)\mod 3 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">110</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mo>(</mo><mi>i</mi><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>+</mo><mo>(</mo><mi>i</mi><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>3</mn><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">((ij)\mod 2 + (ij)\mod 3) \mod 2 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">111</td>
+<td><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mo>(</mo><mi>i</mi><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>3</mn><mo>+</mo><mo>(</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>)</mo><mspace></mspace><mspace width="0.6666666666666666em"/><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mtext> </mtext><mtext> </mtext><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">((ij) \mod 3 + (i+j) \mod 2) \mod 2 = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.6666666666666666em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">m</span><span class="mord mathrm">o</span><span class="mord mathrm">d</span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
+<p>下面是 Mask 后的一些样子，我们可以看到被某些 Mask <code>XOR</code> 了的数据变得比较零散了。<br>
+<img src="https://faded.auspicious.space/post-images/1588142938463.png" alt="" loading="lazy"></p>
+<p>Mask 过后的二维码就成最终的图了。</p>
+<p>好了，大家可以去尝试去写一下 QR 的编码程序，当然，你可以用网上找个 Reed Soloman 的纠错算法的库，或是看看别人的源代码是怎么实现这个繁锁的编码。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[curl 与 wget 高级用法]]></title>
+        <id>https://faded.auspicious.space/post/curl-and-wget-in-deep/</id>
+        <link href="https://faded.auspicious.space/post/curl-and-wget-in-deep/">
+        </link>
+        <updated>2020-04-29T03:04:04.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA4NzQzMzU4Mg==&amp;mid=2652922380&amp;idx=2&amp;sn=5ad7705fdca944e606f9e9f5a0062812&amp;chksm=8bed4a0dbc9ac31b5119d16183ac0491d9bf8b68ad90d662e546460d3411da1665e4eba221b2&amp;mpshare=1&amp;scene=23&amp;srcid=0819jJReiMzSV6hda9i2QKTl#rd">curl与wget高级用法</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA4NzQzMzU4Mg==&amp;mid=2652922380&amp;idx=2&amp;sn=5ad7705fdca944e606f9e9f5a0062812&amp;chksm=8bed4a0dbc9ac31b5119d16183ac0491d9bf8b68ad90d662e546460d3411da1665e4eba221b2&amp;mpshare=1&amp;scene=23&amp;srcid=0819jJReiMzSV6hda9i2QKTl#rd">curl与wget高级用法</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="curl文件传输工具">curl（文件传输工具）</h1>
+<h2 id="常用参数">常用参数</h2>
+<pre><code class="language-bash">-c，–cookie-jar：将cookie写入到文件
+-b，–cookie：从文件中读取cookie
+-C，–continue-at：断点续传
+-d，–data：http post方式传送数据
+-D，–dump-header：把header信息写入到文件
+-F，–from：模拟http表达提交数据
+-s，–slient：减少输出信息
+-o，–output：将信息输出到文件
+-O，–remote-name：按照服务器上的文件名，存在本地
+–l，–head：仅返回头部信息
+-u，–user[user:pass]：设置http认证用户和密码
+-T，–upload-file：上传文件
+-e，–referer：指定引用地址
+-x，–proxy：指定代理服务器地址和端口
+-w，–write-out：输出指定格式内容
+–retry：重试次数
+–connect-timeout：指定尝试连接的最大时间/s
+</code></pre>
+<h2 id="使用示例">使用示例</h2>
+<p>例1：抓取页面到指定文件，如果有乱码可以使用 <code>iconv</code> 转码</p>
+<pre><code class="language-bash"># curl -o baidu.html www.baidu.com
+# curl –s –o baidu.html www.baidu.com |iconv -f utf-8 #减少输出信息
+</code></pre>
+<p>例2：模拟浏览器头（user-agent）</p>
+<pre><code class="language-bash"># curl -A “Mozilla/4.0 (compatible;MSIE 6.0; &lt;a href=&quot;http://www.ttlsa.com/windows/&quot; title=&quot;windows&quot;target=&quot;_blank&quot;&gt;Windows&lt;/a&gt; NT 5.0)” www.baidu.com
+</code></pre>
+<p>例3：处理重定向页面</p>
+<pre><code class="language-bash"># curl –L http://192.168.1.100/301.&lt;a href=&quot;http://www.ttlsa.com/php/&quot; title=&quot;php&quot;target=&quot;_blank&quot;&gt;php&lt;/a&gt; #默认curl是不处理重定向
+</code></pre>
+<p>例4：模拟用户登陆，保存cookie信息到cookies.txt文件，再使用cookie登陆</p>
+<pre><code class="language-bash"># curl -c ./cookies.txt -F NAME=user -F PWD=***URL #NAME和PWD是表单属性不同，每个网站基本都不同
+# curl -b ./cookies.txt –o URL
+</code></pre>
+<p>例5：获取HTTP响应头headers</p>
+<pre><code class="language-bash"># curl -I http://www.baidu.com
+# curl -D ./header.txt http://www.baidu.com #将headers保存到文件中
+
+例6：访问HTTP认证页面
+```bash
+# curl –u user:pass URL
+</code></pre>
+<p>例7：通过ftp上传和下载文件</p>
+<pre><code class="language-bash"># curl -T filename ftp://user:pass@ip/docs #上传
+# curl -O ftp://user:pass@ip/filename #下载
+</code></pre>
+<h1 id="wget文件下载工具">wget（文件下载工具）</h1>
+<h2 id="常用参数-2">常用参数</h2>
+<h3 id="启动参数">启动参数</h3>
+<pre><code class="language-bash">-V，–version：显示版本号
+-h，–help：查看帮助
+-b，–background：启动后转入后台执行
+</code></pre>
+<h3 id="日志记录和输入文件参数">日志记录和输入文件参数</h3>
+<pre><code class="language-bash">-o，–output-file=file：把记录写到file文件中
+-a，–append-output=file：把记录追加到file文件中
+-i，–input-file=file：从file读取url来下载
+</code></pre>
+<h3 id="下载参数">下载参数</h3>
+<pre><code class="language-bash">-bind-address=address：指定本地使用地址
+-t，-tries=number：设置最大尝试连接次数
+-c，-continue：接着下载没有下载完的文件
+-O，-output-document=file：将下载内容写入到file文件中
+-spider：不下载文件
+-T，-timeout=sec：设置响应超时时间
+-w，-wait=sec：两次尝试之间间隔时间
+–limit-rate=rate：限制下载速率
+-progress=type：设置进度条
+</code></pre>
+<h3 id="目录参数">目录参数</h3>
+<pre><code class="language-bash">-P，-directory-prefix=prefix：将文件保存到指定目录
+</code></pre>
+<h3 id="http参数">HTTP参数</h3>
+<pre><code class="language-bash">-http-user=user：设置http用户名
+-http-passwd=pass：设置http密码
+-U，–user-agent=agent：伪装代理
+-no-http-keep-alive：关闭http活动链接，变成永久链接
+-cookies=off：不使用cookies
+-load-cookies=file：在开始会话前从file文件加载cookies
+-save-cookies=file：在会话结束将cookies保存到file文件
+</code></pre>
+<h3 id="ftp参数">FTP参数</h3>
+<pre><code class="language-bash">-passive-ftp：默认值，使用被动模式
+-active-ftp：使用主动模式
+</code></pre>
+<h3 id="递归下载排除参数">递归下载排除参数</h3>
+<pre><code class="language-bash">-A，–accept=list：分号分割被下载扩展名的列表
+-R，–reject=list：分号分割不被下载扩展名的列表
+-D，–domains=list：分号分割被下载域的列表
+–exclude-domains=list：分号分割不被下载域的列表
+</code></pre>
+<h2 id="使用示例-2">使用示例</h2>
+<p>例1：下载单个文件到当前目录下，也可以-P指定下载目录</p>
+<pre><code class="language-bash"># wget http://nginx.org/download/nginx-1.8.0.tar.gz
+</code></pre>
+<p>例2：对于网络不稳定的用户可以使用-c和–tries参数，保证下载完成</p>
+<pre><code class="language-bash"># wget –tries=20 -c http://nginx.org/download/nginx-1.8.0.tar.gz
+</code></pre>
+<p>例3：下载大的文件时，我们可以放到后台去下载，这时会生成wget-log文件来保存下载进度</p>
+<pre><code class="language-bash"># wget -b http://nginx.org/download/nginx-1.8.0.tar.gz
+</code></pre>
+<p>例4：可以利用—spider参数判断网址是否有效</p>
+<pre><code class="language-bash"># wget –spider http://nginx.org/download/nginx-1.8.0.tar.gz
+</code></pre>
+<p>例5：自动从多个链接下载文件</p>
+<pre><code class="language-bash"># cat url_list.txt #先创建一个URL文件
+http://nginx.org/download/nginx-1.8.0.tar.gz
+http://nginx.org/download/nginx-1.6.3.tar.gz
+# wget -i url_list.txt
+</code></pre>
+<p>例6：限制下载速度</p>
+<pre><code class="language-bash"># wget –limit-rate=1m http://nginx.org/download/nginx-1.8.0.tar.gz
+</code></pre>
+<p>例7：登陆ftp下载文件</p>
+<pre><code class="language-bash"># wget –ftp-user=user –ftp-password=pass ftp://ip/filenam
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[追 MM 与设计模式]]></title>
+        <id>https://faded.auspicious.space/post/chasing-mm-and-design-patterns/</id>
+        <link href="https://faded.auspicious.space/post/chasing-mm-and-design-patterns/">
+        </link>
+        <updated>2020-04-28T05:03:27.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MjM5NzA1MTcyMA==&amp;mid=206725951&amp;idx=3&amp;sn=9528c2947a2e0427faa5f4a2c346cc52#rd">追MM与设计模式（23种设计模式巧妙解析，趣味理解）</a><br>
+在网络上流畅很广的一篇旧文，暂时没找到原作者，目前所看到的最早转载时间是 2005 年 2 月 28 日。作者用轻松的语言，形象解释了 23 种模式，有很好的启发作用。</p>
+</blockquote>
+<h1 id="创建型模式">创建型模式</h1>
+<h2 id="factory">FACTORY</h2>
+<p>追 MM 少不了请吃饭了，麦当劳的鸡翅和肯德基的鸡翅都是 MM 爱吃的东西，虽然口味有所不同，但不管你带 MM 去麦当劳或肯德基，只管向服务员说“来四个鸡翅”就行了。麦当劳和肯德基就是生产鸡翅的 Factory。</p>
+<h3 id="工厂模式">工厂模式</h3>
+<p>客户类和工厂类分开。消费者任何时候需要某种产品，只需向工厂请求即可。消费者无须修改就可以接纳新产品。缺点是当产品修改时，工厂类也要做相应的修改。如：如何创建及如何向客户端提供。</p>
+<h2 id="builder">BUILDER</h2>
+<p>MM 最爱听的就是“我爱你”这句话了，见到不同地方的 MM，要能够用她们的方言跟她说这句话哦，我有一个多种语言翻译机，上面每种语言都有一个按键，见到 MM 我只要按对应的键，它就能够用相应的语言说出“我爱你”这句话了，国外的 MM 也可以轻松搞掂，这就是我的“我爱你”builder。（这一定比美军在伊拉克用的翻译机好卖）。</p>
+<h3 id="建造模式">建造模式</h3>
+<p>将产品的内部表象和产品的生成过程分割开来，从而使一个建造过程生成具有不同的内部表象的产品对象。建造模式使得产品内部表象可以独立的变化，客户不必知道产品内部组成的细节。建造模式可以强制实行一种分步骤进行的建造过程。</p>
+<h2 id="factory-method">FACTORY METHOD</h2>
+<p>请 MM 去麦当劳吃汉堡，不同的MM有不同的口味，要每个都记住是一件烦人的事情，我一般采用 Factory Method 模式，带着MM到服务员那儿，说“要一个汉堡”，具体要什么样的汉堡呢，让 MM 直接跟服务员说就行了。</p>
+<h3 id="工厂方法模式">工厂方法模式</h3>
+<p>核心工厂类不再负责所有产品的创建，而是将具体创建的工作交给子类去做，成为一个抽象工厂角色，仅负责给出具体工厂类必须实现的接口，而不接触哪一个产品类应当被实例化这种细节。</p>
+<h2 id="prototype">PROTOTYPE</h2>
+<p>跟 MM 用 QQ 聊天，一定要说些深情的话语了，我搜集了好多肉麻的情话，需要时只要 copy 出来放到 QQ 里面就行了，这就是我的情话 prototype 了。（100 块钱一份，你要不要）</p>
+<h3 id="原始模型模式">原始模型模式</h3>
+<p>通过给出一个原型对象来指明所要创建的对象的类型，然后用复制这个原型对象的方法创建出更多同类型的对象。原始模型模式允许动态的增加或减少产品类，产品类不需要非得有任何事先确定的等级结构，原始模型模式适用于任何的等级结构。缺点是每一个类都必须配备一个克隆方法。</p>
+<h2 id="singleton">SINGLETON</h2>
+<p>俺有 6 个漂亮的老婆，她们的老公都是我，我就是我们家里的老公 Sigleton，她们只要说道“老公”，都是指的同一个人，那就是我（刚才做了个梦啦，哪有这么好的事）。</p>
+<h3 id="单例模式">单例模式</h3>
+<p>单例模式确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例单例模式。单例模式只应在有真正的“单一实例”的需求时才可使用。</p>
+<h1 id="结构型模式">结构型模式</h1>
+<h2 id="adapter">ADAPTER</h2>
+<p>在朋友聚会上碰到了一个美女 Sarah，从香港来的，可我不会说粤语，她不会说普通话，只好求助于我的朋友 Kent 了，他作为我和 Sarah 之间的 Adapter，让我和 Sarah 可以相互交谈了(也不知道他会不会耍我)。</p>
+<h3 id="适配器变压器模式">适配器（变压器）模式</h3>
+<p>把一个类的接口变换成客户端所期待的另一种接口，从而使原本因接口原因不匹配而无法一起工作的两个类能够一起工作。适配类可以根据参数返还一个合适的实例给客户端。</p>
+<h2 id="bridge">BRIDGE</h2>
+<p>早上碰到 MM，要说早上好，晚上碰到 MM，要说晚上好；碰到 MM 穿了件新衣服，要说你的衣服好漂亮哦，碰到 MM 新做的发型，要说你的头发好漂亮哦。不要问我“早上碰到 MM 新做了个发型怎么说”这种问题，自己用 BRIDGE 组合一下不就行了。</p>
+<h3 id="桥梁模式">桥梁模式</h3>
+<p>将抽象化与实现化脱耦，使得二者可以独立的变化，也就是说将他们之间的强关联变成弱关联，也就是指在一个软件系统的抽象化和实现化之间使用组合/聚合关系而不是继承关系，从而使两者可以独立的变化。</p>
+<h2 id="composite">COMPOSITE</h2>
+<p>Mary 今天过生日。“我过生日，你要送我一件礼物。”“嗯，好吧，去商店，你自己挑。”“这件 T 恤挺漂亮，买，这条裙子好看，买，这个包也不错，买。”“喂，买了三件了呀，我只答应送一件礼物的哦。”“什么呀，T 恤加裙子加包包，正好配成一套呀，小姐，麻烦你包起来。”“……”，MM 都会用 Composite 模式了，你会了没有？</p>
+<h3 id="合成模式">合成模式</h3>
+<p>合成模式将对象组织到树结构中，可以用来描述整体与部分的关系。合成模式就是一个处理对象的树结构的模式。合成模式把部分与整体的关系用树结构表示出来。合成模式使得客户端把一个个单独的成分对象和由他们复合而成的合成对象同等看待。</p>
+<h2 id="decorator">DECORATOR</h2>
+<p>Mary 过完轮到 Sarly 过生日，还是不要叫她自己挑了，不然这个月伙食费肯定玩完，拿出我去年在华山顶上照的照片，在背面写上“最好的的礼物，就是爱你的Fita”，再到街上礼品店买了个像框（卖礼品的 MM 也很漂亮哦），再找隔壁搞美术设计的 Mike 设计了一个漂亮的盒子装起来……，我们都是 Decorator，最终都在修饰我这个人呀，怎么样，看懂了吗？</p>
+<h3 id="装饰模式">装饰模式</h3>
+<p>装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案，提供比继承更多的灵活性。动态给一个对象增加功能，这些功能可以再动态的撤消。增加由一些基本功能的排列组合而产生的非常大量的功能。</p>
+<h2 id="facade">FACADE</h2>
+<p>我有一个专业的 Nikon 相机，我就喜欢自己手动调光圈、快门，这样照出来的照片才专业，但 MM 可不懂这些，教了半天也不会。幸好相机有 Facade 设计模式，把相机调整到自动档，只要对准目标按快门就行了，一切由相机自动调整，这样 MM 也可以用这个相机给我拍张照片了。</p>
+<h3 id="门面模式">门面模式</h3>
+<p>外部与一个子系统的通信必须通过一个统一的门面对象进行。门面模式提供一个高层次的接口，使得子系统更易于使用。每一个子系统只有一个门面类，而且此门面类只有一个实例，也就是说它是一个单例模式。但整个系统可以有多个门面类。</p>
+<h2 id="flyweight">FLYWEIGHT</h2>
+<p>每天跟 MM 发短信，手指都累死了，最近买了个新手机，可以把一些常用的句子存在手机里，要用的时候，直接拿出来，在前面加上 MM 的名字就可以发送了，再不用一个字一个字敲了。共享的句子就是 Flyweight，MM 的名字就是提取出来的外部特征，根据上下文情况使用。</p>
+<h3 id="享元模式">享元模式</h3>
+<p>FLYWEIGHT 在拳击比赛中指最轻量级。享元模式以共享的方式高效的支持大量的细粒度对象。享元模式能做到共享的关键是区分内蕴状态和外蕴状态。内蕴状态存储在享元内部，不会随环境的改变而有所不同。外蕴状态是随环境的改变而改变的。外蕴状态不能影响内蕴状态，它们是相互独立的。将可以共享的状态和不可以共享的状态从常规类中区分开来，将不可以共享的状态从类里剔除出去。客户端不可以直接创建被共享的对象，而应当使用一个工厂对象负责创建被共享的对象。享元模式大幅度的降低内存中对象的数量。</p>
+<h2 id="proxy">PROXY</h2>
+<p>跟 MM 在网上聊天，一开头总是“hi，你好”,“你从哪儿来呀？”“你多大了？”“身高多少呀？”这些话，真烦人，写个程序做为我的 Proxy 吧，凡是接收到这些话都设置好了自动的回答，接收到其他的话时再通知我回答，怎么样，酷吧。</p>
+<h3 id="代理模式">代理模式</h3>
+<p>代理模式给某一个对象提供一个代理对象，并由代理对象控制对源对象的引用。代理就是一个人或一个机构代表另一个人或者一个机构采取行动。某些情况下，客户不想或者不能够直接引用一个对象，代理对象可以在客户和目标对象直接起到中介的作用。客户端分辨不出代理主题对象与真实主题对象。代理模式可以并不知道真正的被代理对象，而仅仅持有一个被代理对象的接口，这时候代理对象不能够创建被代理对象，被代理对象必须有系统的其他角色代为创建并传入。</p>
+<h1 id="行为模式">行为模式</h1>
+<h2 id="chain-of-responsibleity">CHAIN OF RESPONSIBLEITY</h2>
+<p>晚上去上英语课，为了好开溜坐到了最后一排，哇，前面坐了好几个漂亮的 MM 哎，找张纸条，写上“Hi，可以做我的女朋友吗？如果不愿意请向前传”，纸条就一个接一个的传上去了，糟糕，传到第一排的 MM 把纸条传给老师了，听说是个老处女呀，快跑!</p>
+<h3 id="责任链模式">责任链模式</h3>
+<p>在责任链模式中，很多对象由每一个对象对其下家的引用而接起来形成一条链。请求在这个链上传递，直到链上的某一个对象决定处理此请求。客户并不知道链上的哪一个对象最终处理这个请求，系统可以在不影响客户端的情况下动态的重新组织链和分配责任。处理者有两个选择：承担责任或者把责任推给下家。一个请求可以最终不被任何接收端对象所接受。</p>
+<h2 id="command">COMMAND</h2>
+<p>俺有一个 MM 家里管得特别严，没法见面，只好借助于她弟弟在我们俩之间传送信息，她对我有什么指示，就写一张纸条让她弟弟带给我。这不，她弟弟又传送过来一个 COMMAND，为了感谢他，我请他吃了碗杂酱面，哪知道他说：“我同时给我姐姐三个男朋友送 COMMAND，就数你最小气，才请我吃面。”，😦</p>
+<h3 id="命令模式">命令模式</h3>
+<p>命令模式把一个请求或者操作封装到一个对象中。命令模式把发出命令的责任和执行命令的责任分割开，委派给不同的对象。命令模式允许请求的一方和发送的一方独立开来，使得请求的一方不必知道接收请求的一方的接口，更不必知道请求是怎么被接收，以及操作是否执行，何时被执行以及是怎么被执行的。系统支持命令的撤消。</p>
+<h2 id="interpreter">INTERPRETER</h2>
+<p>俺有一个《泡 MM 真经》，上面有各种泡 MM 的攻略，比如说去吃西餐的步骤、去看电影的方法等等，跟 MM 约会时，只要做一个 Interpreter，照着上面的脚本执行就可以了。</p>
+<h3 id="解释器模式">解释器模式</h3>
+<p>给定一个语言后，解释器模式可以定义出其文法的一种表示，并同时提供一个解释器。客户端可以使用这个解释器来解释这个语言中的句子。解释器模式将描述怎样在有了一个简单的文法后，使用模式设计解释这些语句。在解释器模式里面提到的语言是指任何解释器对象能够解释的任何组合。在解释器模式中需要定义一个代表文法的命令类的等级结构，也就是一系列的组合规则。每一个命令对象都有一个解释方法，代表对命令对象的解释。命令对象的等级结构中的对象的任何排列组合都是一个语言。</p>
+<h2 id="iterator">ITERATOR</h2>
+<p>我爱上了 Mary，不顾一切的向她求婚。</p>
+<p>Mary：“想要我跟你结婚，得答应我的条件”</p>
+<p>我：“什么条件我都答应，你说吧”</p>
+<p>Mary：“我看上了那个一克拉的钻石”</p>
+<p>我：“我买，我买，还有吗？”</p>
+<p>Mary：“我看上了湖边的那栋别墅”</p>
+<p>我：“我买，我买，还有吗？”</p>
+<p>Mary：“你的小弟弟必须要有 50cm 长”</p>
+<p>我脑袋嗡的一声，坐在椅子上，一咬牙：“我剪，我剪，还有吗？”</p>
+<p>……</p>
+<h3 id="迭代子模式">迭代子模式</h3>
+<p>迭代子模式可以顺序访问一个聚集中的元素而不必暴露聚集的内部表象。多个对象聚在一起形成的总体称之为聚集，聚集对象是能够包容一组对象的容器对象。迭代子模式将迭代逻辑封装到一个独立的子对象中，从而与聚集本身隔开。迭代子模式简化了聚集的界面。每一个聚集对象都可以有一个或一个以上的迭代子对象，每一个迭代子的迭代状态可以是彼此独立的。迭代算法可以独立于聚集角色变化。</p>
+<h2 id="mediator">MEDIATOR</h2>
+<p>四个 MM 打麻将，相互之间谁应该给谁多少钱算不清楚了，幸亏当时我在旁边，按照各自的筹码数算钱，赚了钱的从我这里拿，赔了钱的也付给我，一切就 OK 啦，俺得到了四个 MM 的电话。</p>
+<h3 id="调停者模式">调停者模式</h3>
+<p>调停者模式包装了一系列对象相互作用的方式，使得这些对象不必相互明显作用。从而使他们可以松散偶合。当某些对象之间的作用发生改变时，不会立即影响其他的一些对象之间的作用。保证这些作用可以彼此独立的变化。调停者模式将多对多的相互作用转化为一对多的相互作用。调停者模式将对象的行为和协作抽象化，把对象在小尺度的行为上与其他对象的相互作用分开处理。</p>
+<h2 id="memento">MEMENTO</h2>
+<p>同时跟几个 MM 聊天时，一定要记清楚刚才跟 MM 说了些什么话，不然 MM 发现了会不高兴的哦，幸亏我有个备忘录，刚才与哪个 MM 说了什么话我都拷贝一份放到备忘录里面保存，这样可以随时察看以前的记录啦。</p>
+<h3 id="备忘录模式">备忘录模式</h3>
+<p>备忘录对象是一个用来存储另外一个对象内部状态的快照的对象。备忘录模式的用意是在不破坏封装的条件下，将一个对象的状态捉住，并外部化，存储起来，从而可以在将来合适的时候把这个对象还原到存储起来的状态。</p>
+<h2 id="observer">OBSERVER</h2>
+<p>想知道咱们公司最新 MM 情报吗？加入公司的 MM 情报邮件组就行了，Tom 负责搜集情报，他发现的新情报不用一个一个通知我们，直接发布给邮件组，我们作为订阅者（观察者）就可以及时收到情报啦</p>
+<h3 id="观察者模式">观察者模式</h3>
+<p>观察者模式定义了一种一队多的依赖关系，让多个观察者对象同时监听某一个主题对象。这个主题对象在状态上发生变化时，会通知所有观察者对象，使他们能够自动更新自己。</p>
+<h2 id="state">STATE</h2>
+<p>跟 MM 交往时，一定要注意她的状态哦，在不同的状态时她的行为会有不同，比如你约她今天晚上去看电影，对你没兴趣的 MM 就会说“有事情啦”，对你不讨厌但还没喜欢上的 MM 就会说“好啊，不过可以带上我同事么？”，已经喜欢上你的 MM 就会说“几点钟？看完电影再去泡吧怎么样？”，当然你看电影过程中表现良好的话，也可以把 MM 的状态从不讨厌不喜欢变成喜欢哦。</p>
+<h3 id="状态模式">状态模式</h3>
+<p>状态模式允许一个对象在其内部状态改变的时候改变行为。这个对象看上去象是改变了它的类一样。状态模式把所研究的对象的行为包装在不同的状态对象里，每一个状态对象都属于一个抽象状态类的一个子类。状态模式的意图是让一个对象在其内部状态改变的时候，其行为也随之改变。状态模式需要对每一个系统可能取得的状态创立一个状态类的子类。当系统的状态变化时，系统便改变所选的子类。</p>
+<h2 id="strategy">STRATEGY</h2>
+<p>跟不同类型的 MM 约会，要用不同的策略，有的请电影比较好，有的则去吃小吃效果不错，有的去海边浪漫最合适，单目的都是为了得到 MM 的芳心，我的追 MM 锦囊中有好多 Strategy 哦。</p>
+<h3 id="策略模式">策略模式</h3>
+<p>策略模式针对一组算法，将每一个算法封装到具有共同接口的独立的类中，从而使得它们可以相互替换。策略模式使得算法可以在不影响到客户端的情况下发生变化。策略模式把行为和环境分开。环境类负责维持和查询行为类，各种算法在具体的策略类中提供。由于算法和环境独立开来，算法的增减，修改都不会影响到环境和客户端。</p>
+<h2 id="template-method">TEMPLATE METHOD</h2>
+<p>看过《如何说服女生上床》这部经典文章吗？女生从认识到上床的不变的步骤分为巧遇、打破僵局、展开追求、接吻、前戏、动手、爱抚、进去八大步骤（Template method），但每个步骤针对不同的情况，都有不一样的做法，这就要看你随机应变啦(具体实现)；</p>
+<h3 id="模板方法模式">模板方法模式</h3>
+<p>模板方法模式准备一个抽象类，将部分逻辑以具体方法以及具体构造子的形式实现，然后声明一些抽象方法来迫使子类实现剩余的逻辑。不同的子类可以以不同的方式实现这些抽象方法，从而对剩余的逻辑有不同的实现。先制定一个顶级逻辑框架，而将逻辑的细节留给具体的子类去实现。</p>
+<h2 id="visitor">VISITOR</h2>
+<p>情人节到了，要给每个 MM 送一束鲜花和一张卡片，可是每个 MM 送的花都要针对她个人的特点，每张卡片也要根据个人的特点来挑，我一个人哪搞得清楚，还是找花店老板和礼品店老板做一下 Visitor，让花店老板根据 MM 的特点选一束花，让礼品店老板也根据每个人特点选一张卡，这样就轻松多了；</p>
+<h3 id="访问者模式">访问者模式</h3>
+<p>访问者模式的目的是封装一些施加于某种数据结构元素之上的操作。一旦这些操作需要修改的话，接受这个操作的数据结构可以保持不变。访问者模式适用于数据结构相对未定的系统，它把数据结构和作用于结构上的操作之间的耦合解脱开，使得操作集合可以相对自由的演化。访问者模式使得增加新的操作变的很容易，就是增加一个新的访问者类。访问者模式将有关的行为集中到一个访问者对象中，而不是分散到一个个的节点类中。当使用访问者模式时，要将尽可能多的对象浏览逻辑放在访问者类中，而不是放到它的子类中。访问者模式可以跨过几个类的等级结构访问属于不同的等级结构的成员类。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[嵌入式知识总汇]]></title>
+        <id>https://faded.auspicious.space/post/embedded-summary/</id>
+        <link href="https://faded.auspicious.space/post/embedded-summary/">
+        </link>
+        <updated>2020-04-27T06:32:22.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://raw.githubusercontent.com/phodal/eks/master/README.md">嵌入式知识总汇</a></p>
+</blockquote>
+<h1 id="嵌入式工程师">嵌入式工程师</h1>
+<h2 id="硬件核心hardware-core">硬件核心(Hardware Core)</h2>
+<h3 id="controller控制器">Controller(控制器)</h3>
+<ul>
+<li>CPU
+<ul>
+<li>AMD x86 x64</li>
+<li>Intel x86 x64</li>
+</ul>
+</li>
+<li>MCU
+<ul>
+<li>MCS-51</li>
+<li>HCS12</li>
+<li>AVR XMEGA</li>
+<li>ESP</li>
+<li>Coldfire</li>
+<li>ARM</li>
+<li>STM32</li>
+<li>FreeScale K60 K40</li>
+<li>PIC32 PIC12/14/16</li>
+<li>TM4C123 TM4C129X</li>
+<li>Stellaris lm4f120</li>
+<li>CC3200</li>
+<li>Renesas R-Car Boards</li>
+<li>MIPS Creator CI20</li>
+</ul>
+</li>
+<li>MPU</li>
+<li>SOC
+<ul>
+<li>OMAP</li>
+<li>BCM2835(Raspberry Pi A+、B、B+)</li>
+<li>BCM2836(Raspberry Pi 2B)</li>
+</ul>
+</li>
+<li>CPLD
+<ul>
+<li>Altera EPM7128S</li>
+<li>Lattice LC4128V</li>
+<li>Xilinx XC9500</li>
+</ul>
+</li>
+<li>FPGA
+<ul>
+<li>Altera Cyclone</li>
+<li>Lattice MachXO2 MachXO3</li>
+</ul>
+</li>
+<li>PowerPC
+<ul>
+<li>MPC505、821、850、860、8240、8245</li>
+<li>QUICC ⅡMPC826</li>
+<li>QUICC Ⅲ MPC8560</li>
+</ul>
+</li>
+<li>DSC
+<ul>
+<li>TMS320F28x</li>
+<li>MC56 F83x</li>
+</ul>
+</li>
+<li>MIPS</li>
+</ul>
+<h3 id="actuator执行器">Actuator(执行器)</h3>
+<ul>
+<li>直流电机
+<ul>
+<li>有刷直流电机</li>
+<li>无刷直流电机</li>
+</ul>
+</li>
+<li>交流电机
+<ul>
+<li>单相电机</li>
+<li>三相电机</li>
+</ul>
+</li>
+<li>步进电机</li>
+<li>直线电机</li>
+<li>舵机</li>
+<li>伺服电机</li>
+</ul>
+<h3 id="sensor传感器">Sensor(传感器)</h3>
+<ul>
+<li>RIP(人体红外)</li>
+<li>Temperature(温度)</li>
+<li>humidity sensor（湿度传感器）</li>
+<li>geomagnetic sensor（地磁传感器）</li>
+<li>acceleration transducer（加速度传感器）</li>
+<li>optoelectronic switch （光电开关）</li>
+<li>pneumatic sensor (气流传感器)</li>
+<li>current sensor (电流传感器)</li>
+<li>soil sensor (土壤传感器)</li>
+<li>llumination sensor (光照传感器)</li>
+<li>laser sensor (激光传感器)</li>
+<li>Motion(运动)</li>
+<li>Moisture sensor (土壤温度传感器)</li>
+<li>电压传感器</li>
+<li>three-axis gyroscope（三轴陀螺仪）</li>
+<li>Camera 感光元件（图像传感器）</li>
+<li>baroceptor（气压传感器）</li>
+<li>gas sensor（气敏传感器）</li>
+<li>Dust concentration sensor（粉尘浓度传感器）PM2.5</li>
+<li>Water level sensor（水位传感器）</li>
+<li>Pulse sensor（脉搏传感器）</li>
+<li>EEG sensor（脑皮质电位传感器）</li>
+<li>Flex Sensor (弯曲传感器）</li>
+<li>proximity sensor (近距离传感器)</li>
+<li>Atmospheric Pressure Sensor （气压传感器）</li>
+</ul>
+<h2 id="electronic-component电子元件">Electronic Component(电子元件)</h2>
+<ul>
+<li>电容</li>
+<li>保护装置</li>
+<li>端子与连接器</li>
+<li>电线</li>
+<li>开关
+<ul>
+<li>Switch</li>
+<li>Keypad</li>
+<li>Relay</li>
+</ul>
+</li>
+<li>电阻
+<ul>
+<li>Thermistor (热敏电阻)</li>
+<li>Varistor(压敏电阻)</li>
+<li>Photosensitive resistance(光敏电阻)</li>
+</ul>
+</li>
+<li>电磁感应装置</li>
+<li>network
+<ul>
+<li>电阻排</li>
+</ul>
+</li>
+<li>忆阻器</li>
+<li>压电装置、晶体谐振器</li>
+<li>电源</li>
+<li>二极管</li>
+<li>晶体管</li>
+</ul>
+<h2 id="mcucpudspsoc-peripherals">MCU/CPU/DSP/SOC peripherals</h2>
+<ul>
+<li>ADC / DAC</li>
+<li>RTC</li>
+<li>Timer / Watchdog Timer (定时器)</li>
+<li>Flash / NAND Flash</li>
+<li>ROM / EEPROM</li>
+<li>RAM
+<ul>
+<li>SDRAM</li>
+<li>DDR1 DDR2 DDR3 DDR4</li>
+</ul>
+</li>
+<li>Cache</li>
+<li>PWM</li>
+<li>I/O / GPIO</li>
+<li>UART</li>
+<li>Modem</li>
+<li>DTMF</li>
+<li>CAN</li>
+<li>SPI</li>
+<li>I2C</li>
+<li>IEEE</li>
+<li>CRC</li>
+<li>Interrupt (中断)</li>
+</ul>
+<h2 id="communication通信">Communication(通信)</h2>
+<ul>
+<li>硬件间无线通信
+<ul>
+<li>Bluetooth</li>
+<li>Xbee / Zigbee</li>
+<li>Z-Wave</li>
+<li>6LoWPAN</li>
+<li>NFC</li>
+<li>Wifi</li>
+<li>Radio</li>
+<li>IR (红外)</li>
+<li>802.11</li>
+<li>Sub-GHZ 1Ghz以下RF</li>
+</ul>
+</li>
+<li>硬件通信
+<ul>
+<li>UART</li>
+<li>I2C</li>
+<li>RS232C/RS485</li>
+<li>HDLC</li>
+<li>SPI/SCI/SI</li>
+<li>CAN</li>
+<li>USB</li>
+<li>FireWire</li>
+<li>1-wire</li>
+</ul>
+</li>
+<li>网络协议
+<ul>
+<li>HTTP</li>
+<li>CoAP</li>
+<li>MQTT</li>
+<li>XMPP</li>
+<li>WebSocket</li>
+<li>UDP</li>
+<li>TCP</li>
+</ul>
+</li>
+</ul>
+<h2 id="软件编程">软件编程</h2>
+<ul>
+<li>Common
+<ul>
+<li>ISR</li>
+<li>Driver</li>
+<li>DMA</li>
+<li>I2C</li>
+</ul>
+</li>
+<li>OS
+<ul>
+<li>uCOS</li>
+<li>Contiki</li>
+<li>TinyOS</li>
+<li>VXWorks</li>
+<li>FreeRTOS</li>
+<li>mbed OS</li>
+<li>emOS</li>
+<li>Salvo</li>
+<li>MQX</li>
+<li>RIOT</li>
+<li>rt-thread</li>
+<li>Linux
+<ul>
+<li>uCLinux</li>
+<li>openWRT</li>
+</ul>
+</li>
+<li>Windows
+<ul>
+<li>Windows CE</li>
+<li>Windows 10 IoT Core</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>non-OS
+<ul>
+<li>LwIP</li>
+</ul>
+</li>
+</ul>
+<h2 id="电路">电路</h2>
+<ul>
+<li>基础
+<ul>
+<li>焊电路</li>
+<li>模拟电路</li>
+<li>数字电路</li>
+</ul>
+</li>
+<li>PCB设计
+<ul>
+<li>设计工具
+<ul>
+<li>Eagle</li>
+<li>Cadence</li>
+<li>Protel</li>
+<li>Altium</li>
+<li>Mentor</li>
+<li>Kicad</li>
+<li>gEAD</li>
+<li>ZUKEN</li>
+<li>PADS</li>
+<li>FreePCB</li>
+<li>Fritzing</li>
+<li>PCBmodE</li>
+</ul>
+</li>
+<li>布线/布线</li>
+</ul>
+</li>
+<li>电路仿真
+<ul>
+<li>原理仿真软件
+<ul>
+<li>Multisim</li>
+<li>Proteus</li>
+<li>Pspice</li>
+</ul>
+</li>
+<li>信号仿真软件
+<ul>
+<li>ADS</li>
+<li>HFSS</li>
+<li>HyperLynx</li>
+<li>Sigrity</li>
+<li>MATLAB</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[负载均衡集群 LVS 详解]]></title>
+        <id>https://faded.auspicious.space/post/a-detailed-explanation-of-load-balancing-cluster-lvs/</id>
+        <link href="https://faded.auspicious.space/post/a-detailed-explanation-of-load-balancing-cluster-lvs/">
+        </link>
+        <updated>2020-04-27T02:38:53.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="http://liaoph.com/lvs/">负载均衡集群 LVS 详解</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="http://liaoph.com/lvs/">负载均衡集群 LVS 详解</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="服务器扩展">服务器扩展</h1>
+<p>当服务器遇到性能瓶颈需要进行扩展时，一般来说有两种解决思路：<strong>Scale-up</strong> 和 <strong>Scale out</strong>，也称作垂直扩展和水平扩展。</p>
+<h2 id="垂直扩展">垂直扩展</h2>
+<p>通常指增加 CPU 和内存，购买昂贵的高性能服务器。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>耗电量相比使用多台服务器要少；</li>
+<li>实施简单。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>价格太昂贵；</li>
+<li>由于资源的争用，服务器性能的增长会越来越小；</li>
+<li>有很大的硬件故障导致服务不可用的风险；</li>
+<li>受限制于供应商，且可扩展升级的空间是有限的。</li>
+</ul>
+<h2 id="水平扩展">水平扩展</h2>
+<p>通常指增加多台普通配置的服务器。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>比起垂直扩展要便宜的多；</li>
+<li>有容错能力；</li>
+<li>易升级；</li>
+<li>有着很大的扩展空间。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>服务器的维护和管理更加麻烦；</li>
+<li>耗电和制冷的费用会比垂直扩展要高；</li>
+<li>如果使用付费授权软件，那么会增加 lisence 的费用。</li>
+</ul>
+<p>一般来说，随着服务器性能提升，其价格也是指数级上升的，使用水平扩展的方式能够节约很多成本，同时还能够增加整个服务的容错能力。</p>
+<h1 id="负载均衡集群">负载均衡集群</h1>
+<p>负载均衡集群指使用多台提供相同服务的服务器组成集群系统，提高服务的并发处理能力。负载均衡集群的前端使用一个调度器，将客户端请求平均分配到后端的服务器中，同时调度器可能还具有后端服务器状态检测的功能，将故障的服务器自动下线，使得集群具有一定的容错能力。</p>
+<p>使用负载均衡集群能够有效的扩展服务的并发能力，负载均衡集群中的主机间应该尽量的「低耦合」，最好是「无状态」的，这样就能够方便的增加主机实现扩展。</p>
+<h2 id="常见的负载均衡器">常见的负载均衡器</h2>
+<p>根据工作在的协议层划分可划分为：</p>
+<ul>
+<li>四层负载均衡：根据请求报文中的目标地址和端口进行调度；</li>
+<li>七层负载均衡：根据请求报文的内容进行调度，这种调度属于「代理」的方式。</li>
+</ul>
+<p><strong>根据软硬件划分：</strong></p>
+<ul>
+<li>硬件负载均衡：
+<ul>
+<li>F5 的 BIG-IP；</li>
+<li>Citrix 的 NetScaler。<br>
+这类硬件负载均衡器通常能同时提供四层和七层负载均衡，但同时也价格不菲。</li>
+</ul>
+</li>
+<li>软件负载均衡：
+<ul>
+<li>TCP 层：LVS，HaProxy，Nginx；</li>
+<li>基于 HTTP 协议：Haproxy，Nginx，ATS（Apache Traffic Server），squid，varnish；</li>
+<li>基于 MySQL 协议：mysql-proxy。</li>
+</ul>
+</li>
+</ul>
+<h1 id="lvs">LVS</h1>
+<p>LVS 是一个工作在四层的负载均衡器，它的实现和 <code>iptables/netfilter</code> 类似，工作在内核空间的 TCP/IP 协议栈上，LVS 工作在 INPUT Hook Funtion 上，并在 INPUT 设置附加规则，一旦客户端请求的是集群服务，LVS 会强行修改请求报文，将报文发往 POSTROUTING，转发至后端的主机。</p>
+<p>和 iptables/netfilter 类似，LVS 也是两段式的：</p>
+<ul>
+<li><code>ipvsadm</code>：工作在用户空间，负责定义和管理集群服务的规则；</li>
+<li><code>ipvs</code>：工作在内核中，在 2.4.23 之前，必须向内核打补丁，并重新编译内核。在 2.4.23 和 2.6 之后的版本，<code>ipvs</code> 直接内置在内核中。</li>
+</ul>
+<p><strong>LVS 集群的设备地址命名：</strong></p>
+<ul>
+<li>VIP：Virtual IP，LVS 面向用户请求的 IP 地址；</li>
+<li>RIP：Real server IP，后端服务器用于和 LVS 通信的 IP 地址；</li>
+<li>DIP：Director IP，LVS 用户和后端服务器通信的 IP 地址；</li>
+<li>CIP：Client IP，客户端 IP 地址。</li>
+</ul>
+<h2 id="lvs-的工作模型">LVS 的工作模型</h2>
+<h3 id="lvs-nat">LVS-NAT</h3>
+<p><img src="https://faded.auspicious.space/post-images/1587956377129.png" alt="" loading="lazy"><br>
+LVS-NAT 模型类似于 DNAT，工作机制与 DNAT 一样，当客户端请求的是集群服务时，LVS 修改请求报文的目标地址为 RIP，转发至后端的 RealServer，并修改后端响应报文的源地址为 VIP，响应至客户端。</p>
+<p>在 LVS-NAT 模型下，Director 进出请求报文都经过 Director，因此 Director 的压力是比较大的。</p>
+<p><strong>LVS-NAT 的特性：</strong></p>
+<ul>
+<li>集群节点跟 Director 必须在同一个 IP 网络中；</li>
+<li>RIP 通常是私有地址，仅用于各集群节点间的通信；</li>
+<li>Director 位于 client 和 Realserver 之间，负责处理进出的所有报文；</li>
+<li>Realserver 必须将网关指向 DIP；</li>
+<li>支持端口映射；</li>
+<li>较大规模应用场景中，Director 易成为系统瓶颈（bottleneck）。</li>
+</ul>
+<h3 id="lvs-dr">LVS-DR</h3>
+<p><img src="https://faded.auspicious.space/post-images/1587957110278.png" alt="" loading="lazy"><br>
+DR 值 Direct Routing，直接路由，DR 模型中，Director 和 Realserver 处在同一网络中，对于 Director，VIP 用于接受客户端请求，DIP 用于和 Realserver 通信。对于 Realserver，每个 Realserver 都配有和 Director 相同的 VIP（此 VIP 隐藏，关闭对 ARP 请求的响应），仅用户响应客户端的请求，RIP 用于和 Director 通信。</p>
+<p>当客户端请求集群服务时，请求报文发送至 Director 的 VIP（Realserver的 VIP 不会响应 ARP 请求），Director 将客户端报文的源和目标 MAC 地址进行重新封装，将报文转发至 Realserver，Realserver 接收转发的报文。此时报文的源 IP 和目标 IP 都没有被修改，因此 Realserver 接受到的请求报文的目标 IP 地址为本机配置的 VIP，它将使用自己的 VIP 直接响应客户端。</p>
+<p>LVS-DR 模型中，客户端的响应报文不会经过 Director，因此 Director 的并发能力有很大提升。</p>
+<p><strong>LVS-DR 模型的特性：</strong></p>
+<ul>
+<li>保证前端路由器将目标地址为 VIP 的报文通过 ARP 解析后送往 Director。
+<ul>
+<li>静态绑定：在前端路由将 VIP 对应的目标 MAC 地址静态配置为Director VIP 接口的 MAC 地址。</li>
+<li>arptables：在各 Realserver 上，通过 arptables 规则拒绝其响应对 VIP 的 ARP 广播请求。</li>
+<li>修改内核参数：在 Realserver 上修改内核参数，并结合地址的配置方式实现拒绝响应对 VIP 的 ARP 广播请求。</li>
+</ul>
+</li>
+<li>各RIP 必须与 DIP 在同一个物理网络中。</li>
+<li>RS 的 RIP 可以使用私有地址，也可以使用公网地址，以方便配置。</li>
+<li>Director 仅负责处理入站请求，响应报文由 Realserver 直接发往客户端。</li>
+<li>Realserver 不能将网关指向 DIP，而直接使用前端网关。</li>
+<li>不支持端口映射。</li>
+</ul>
+<h3 id="lvs-tun">LVS-TUN</h3>
+<p><img src="https://faded.auspicious.space/post-images/1587957103642.png" alt="" loading="lazy"><br>
+和 DR 模型类似，Realserver 都配有不可见的 VIP，Realserver 的 RIP 是公网地址，且可能和 DIP 不再同一网络中。当请求到达 Director 后，Director 不修改请求报文的源 IP 和目标 IP 地址，而是使用 IP 隧道技术，使用 DIP 作为源 IP，RIP 作为目标 IP 再次封装此请求报文，转发至 RIP 的 Realserver 上，Realserver 解析报文后仍然使用 VIP 作为源地址响应客户端。</p>
+<p><strong>LVS-TUN 的特性：</strong></p>
+<ul>
+<li>集群节点和可以跨越 Internet；</li>
+<li>RIP，DIP，VIP 都是公网地址；</li>
+<li>Director 仅负责处理入站请求，响应报文由 Realserver 直接发往客户端；</li>
+<li>Realserver 使用自己的网关而不是 Director；</li>
+<li>Realserver 只能使用支持隧道功能的操作系统；</li>
+<li>不支持端口映射。</li>
+</ul>
+<h3 id="lvs-fullnat">LVS-FULLNAT</h3>
+<p>FULLNAT 由淘宝研发，目前还没有加入至 CentOS 可用的内核中，使用时需要向内核打补丁。</p>
+<p>类似于 DNAT，它修改请求报文的源地址为 DIP，目标地址为 RIP 来实现转发。对于响应报文，源地址修改为 VIP，目标地址修改为 CIP 来实现转发。</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>RIP，DIP 可以使用私有地址；</li>
+<li>RIP 和 DIP 可以不再同一网络中，且 RIP 的网关不需要指向 DIP；</li>
+<li>支持端口映射；</li>
+<li>请求和响应报文都经由 Director。</li>
+</ul>
+<h2 id="lvs-的调度算法">LVS 的调度算法</h2>
+<p>当 LVS 接受到一个客户端对集群服务的请求后，它需要进行决策将请求调度至某一台后端主机进行响应。LVS 的调度算法共有 10 种，按类别可以分为动态和静态两种类型。</p>
+<h3 id="静态调度算法">静态调度算法</h3>
+<p>静态调度算法调度时不会考虑后端服务器的状态</p>
+<ul>
+<li><code>rr</code>：round robin，轮询，即简单在各主机间轮流调度</li>
+<li><code>wrr</code>：weighted round robin，加权轮询，根据各主机的权重进行轮询</li>
+<li><code>sh</code>：source hash，源地址哈希，对客户端地址进行哈希计算，保存在 Director 的哈希表中，在一段时间内，同一个客户端 IP 地址的请求会被调度至相同的 Realserver。sh 算法的目的是实现 session affinity（会话绑定），但是它也在一定程度上损害了负载均衡的效果。如果集群本身有 session sharing 机制或者没有 session 信息，那么不需要使用 sh 算法</li>
+<li><code>dh</code>：destination hash，和 sh 类似，dh 将请求的目标地址进行哈希，将相同 IP 的请求发送至同一主机，dh 机制的目的是，当 Realserver 为透明代理缓存服务器时，提高缓存的命中率。</li>
+</ul>
+<h3 id="动态调度算法">动态调度算法</h3>
+<p>动态调度算法在调度时，会根据后端 Realserver 的负载状态来决定调度选择，Realserver 的负载状态通常由活动链接（active），非活动链接（inactive）和权重来计算。</p>
+<ul>
+<li><code>lc</code>：least connted，最少连接，LVS 根据 <code>overhead = active*256 + inactive</code> 计算服务器的负载状态，每次选择 overhead 最小的服务器</li>
+<li><code>wlc</code>：weighted lc，加权最少连接，LVS 根据 <code>overhead = (active*256+inactive)/weight</code> 来计算服务器负载，每次选择 overhead 最小的服务器，它是 LVS 的默认调度算法</li>
+<li><code>sed</code>：shortest expected delay，最短期望延迟，它不对 inactive 状态的连接进行计算，根据 <code>overhead = (active+1)*256/weight</code> 计算服务器负载，选择 overhead 最小的服务器进行调度</li>
+<li><code>nq</code>：never queue，当有空闲服务器时，直接调度至空闲服务器，当没有空闲服务器时，使用 SED 算法进行调度</li>
+<li>LBLC：locality based least connection，基于本地的最少连接，相当于 dh + wlc，正常请求下使用 dh 算法进行调度，如果服务器超载，则使用 wlc 算法调度至其他服务器</li>
+<li>LBLCR：locality based least connection with replication，基于本地的带复制功能的最少连接，与 LBLC 不同的是 LVS 将请求 IP 映射至一个服务池中，使用 dh 算法调度请求至对应的服务池中，使用 lc 算法选择服务池中的节点，当服务池中的所有节点超载，使用 lc 算法从所有后端 Realserver 中选择一个添加至服务吃中。</li>
+</ul>
+<h2 id="ipvsadm">ipvsadm</h2>
+<p>ipvsadm 用于配置 LVS 的调度规则，管理集群服务和 Realserver。</p>
+<p><strong>管理集群服务：</strong></p>
+<pre><code class="language-bash">添加：-A -t|u|f service-address [-s scheduler]
+	 -t: TCP协议的集群
+	 -u: UDP协议的集群
+		service-address:     IP:PORT
+	 -f: FWM: 防火墙标记
+		service-address: Mark Number
+修改：-E
+删除：-D -t|u|f service-address
+
+例如：
+# ipvsadm -A -t 10.10.0.1:80 -s rr
+</code></pre>
+<p><strong>管理集群服务中的 RS：</strong></p>
+<pre><code class="language-bash">添加：-a -t|u|f service-address -r server-address [-g|i|m] [-w weight]
+	-t|u|f service-address：事先定义好的某集群服务
+	-r server-address: 某RS的地址，在NAT模型中，可使用IP：PORT实现端口映射；
+	[-g|i|m]: LVS类型
+		-g: DR
+		-i: TUN
+		-m: NAT
+	[-w weight]: 定义服务器权重
+修改：-e
+删除：-d -t|u|f service-address -r server-address
+
+例如：
+# ipvsadm -a -t 10.10.0.2:80 -r 192.168.10.8 -m
+# ipvsadm -a -t 10.10.0.3:80 -r 192.168.10.9 -m
+</code></pre>
+<p><strong>查看规则：</strong></p>
+<pre><code class="language-bash">-L|-l
+-n：数字格式显式主机地址和端口
+--stats：统计数据
+--rate: 速率
+--timeout: 显示tcp、tcpfin和udp的会话超时时长
+-c: 显示当前的ipvs连接状况
+</code></pre>
+<p><strong>删除所有集群服务：</strong></p>
+<pre><code class="language-bash">-C：清空 ipvs 规则
+</code></pre>
+<p><strong>保存规则：</strong></p>
+<pre><code class="language-bash">-S
+如：
+# ipvsadm -S &gt; /path/to/somefile
+</code></pre>
+<p><strong>载入保存的规则：</strong></p>
+<pre><code class="language-bash">-R
+如：
+# ipvsadm -R &lt; /path/from/somefile
+</code></pre>
+<h2 id="dr-模型的配置">DR 模型的配置</h2>
+<h3 id="dr-模型的-realserver-禁止-arp-响应">DR 模型的 Realserver 禁止 ARP 响应</h3>
+<p>对于 Linux 来说，地址是属于主机的，Linux 主机在开机时会通告连接所有网络内的所有其他主机自己的所有 IP 地址和 MAC 地址。</p>
+<p>可以利用 Linux 的特性，将VIP配置在 Realserver 的本地回环接口上作为别名，并使用 <code>arp_ignore</code> 和 <code>arp_annouce</code> 内核参数。</p>
+<h3 id="禁止-arp-响应的方式">禁止 ARP 响应的方式</h3>
+<p><code>arptables</code>：红帽系类系统上提供的程序</p>
+<p>修改内核参数：</p>
+<ul>
+<li>arp_ignore：定义接收到 ARP 请i去时的响应级别
+<ul>
+<li>0：只要本地配置有响应地址，就给与响应；</li>
+<li>1：仅在请求的目标地址配置请i去到达的接口上的时候，才进行响应。</li>
+</ul>
+</li>
+<li>arp_announce：定义主机将自己的地址想外通告时的通告级别
+<ul>
+<li>0：将本地任何接口上的任何地址向外通告；</li>
+<li>1：向目标网络通告与其网络匹配的地址；</li>
+<li>2：仅向本地接口上匹配的网络进行通告。</li>
+</ul>
+</li>
+</ul>
+<h3 id="添加特殊的路由条目">添加特殊的路由条目</h3>
+<p>Linux 主机在使用某一接口发出报文时，默认会使用此接口的 IP 作为源 IP 地址。</p>
+<p>当请求 Realserver 时，Realserver 的 VIP 是 lo 接口的别名，而 VIP 对外的通信实际需要使用的却是 eth0 接口，因此需要添加路由条目，让主机在使用 VIP 向外通信时，强制使用 lo 端口，因而它会使用 lo 端口的地址作为源 IP 进行响应，并最终由 lo 接口转发至 eth0 接口发出报文。</p>
+<pre><code class="language-bash"># /sbin/route add -host $VIP dev lo:0
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[快慢指针应用总结]]></title>
+        <id>https://faded.auspicious.space/post/fast-and-slow-pointer-application-summary/</id>
+        <link href="https://faded.auspicious.space/post/fast-and-slow-pointer-application-summary/">
+        </link>
+        <updated>2020-04-26T13:39:22.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p><a href="https://blog.csdn.net/qq_21815981/article/details/79833976">快慢指针应用总结</a></p>
+</blockquote>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p><a href="https://blog.csdn.net/qq_21815981/article/details/79833976">快慢指针应用总结</a></p>
+</blockquote>
+<!-- more -->
+<h1 id="快慢指针">快慢指针</h1>
+<p>快慢指针中的快慢指的是移动的步长，即每次向前移动速度的快慢。例如可以让快指针每次沿链表向前移动 2，慢指针每次向前移动 1 次。</p>
+<h1 id="快慢指针的应用">快慢指针的应用</h1>
+<h2 id="判断单链表是否存在环">判断单链表是否存在环</h2>
+<p>如果链表存在环，就好像操场的跑道是一个环形一样。此时让快慢指针都从链表头开始遍历，快指针每次向前移动两个位置，慢指针每次向前移动一个位置；如果快指针到达 <code>NULL</code>，说明链表以 <code>NULL</code> 为结尾，没有环。如果快指针追上慢指针，则表示有环。代码如下：</p>
+<pre><code class="language-c">bool HasCircle(Node *head) {
+	if(head == NULL)
+	    return false;
+	Node *slow = head, *fast = head;
+	while(fast != NULL &amp;&amp; fast-&gt;next!=NULL) {
+		slow = slow-&gt;next;
+		//慢指针每次前进一步
+		fast = fast-&gt;next-&gt;next;
+		//快指针每次前进两步
+		if(slow == fast) //相遇，存在环
+		return true;
+	}
+	return false;
+}
+</code></pre>
+<h2 id="在有序链表中寻找中位数">在有序链表中寻找中位数</h2>
+<p>快指针的移动速度是慢指针移动速度的 2 倍，因此当快指针到达链表尾时，慢指针到达中点。</p>
+<p>程序还要考虑链表结点个数的奇偶数因素，当快指针移动 <code>x</code> 次后到达表尾（<code>1+2x</code>），说明链表有奇数个结点，直接返回慢指针指向的数据即可。</p>
+<p>如果快指针是倒数第二个结点，说明链表结点个数是偶数，这时可以根据“规则”返回上中位数或下中位数或（上中位数+下中位数）的一半。</p>
+<pre><code class="language-c">while (fast &amp;&amp; slow) {
+	if (fast-&gt;next==NULL)
+	　　    return slow -&gt;data; else if (fast-&gt;next!= NULL &amp;&amp; fast-&gt;next-&gt;next== NULL)
+	　　    return (slow -&gt;data + slow -&gt;next-&gt;data)/2; else {
+		fast= fast-&gt;next;
+		fast= fast-&gt;next;
+		slow = slow -&gt;next;
+	}
+}
+</code></pre>
+<h2 id="输出链表中的倒数第-k-个节点即正数第-k-1-个节点">输出链表中的倒数第 K 个节点(即正数第 K-1 个节点)</h2>
+<p>可以定义两个指针，第一个指针从链表的头指针开始遍历向前走 <code>k-1</code> 步，第二个指针保持不动；从第 <code>k</code> 步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持在 <code>k-1</code>，当第一个指针到达链表的尾节点时候，第二个指针正好是倒数第 <code>k</code> 个节点，代码如下：</p>
+<pre><code class="language-c">// 查找单链表中倒数第K个结点  
+ListNode * RGetKthNode(ListNode * pHead, unsigned int k) // 函数名前面的R代表反向 {
+	if(k == 0 || pHead == NULL) // 这里k的计数是从1开始的，若k为0或链表为空返回NULL  
+	return NULL;
+	ListNode * pAhead = pHead;
+	ListNode * pBehind = pHead;
+	for (int i=0;i&lt;k-1;i++) {
+		pAhead=pAhead-&gt;next;
+		if(pAhead==null)  return null;
+		//当链表长度小于k时候，返回Null
+	}
+	while(pAhead-&gt;next != NULL)  // 前后两个指针一起向前走，直到前面的指针指向最后一个结点 {
+		pBehind = pBehind-&gt;next;
+		pAhead = pAhead-&gt;next;
+	}
+	return pBehind;
+	// 后面的指针所指结点就是倒数第k个结点
+}
+</code></pre>
+<h2 id="判断链表是否存在环如果存在找到环入口">判断链表是否存在环，如果存在，找到环入口</h2>
+<p>有一个单链表，其中可能有一个环，也就是某个节点的 <code>next</code> 指向的是链表中在它之前的节点，这样在链表的尾部形成一环。</p>
+<p>如何判断一个链表是否存在环？设定两个指针 <code>slow</code>，<code>fast</code>，均从头指针开始，每次分别前进 1 步、2 步。如存在环，则两者相遇；如不存在环，<code>fast</code> 遇到 <code>NULL</code> 退出。</p>
+<p>如果链表存在环，如果找到环的入口点？当 <code>fast</code> 若与 <code>slow</code> 相遇时，<code>slow</code> 肯定没有走遍历完链表或者恰好遍历一圈。于是我们从链表头与相遇点分别设一个指针，每次各走一步，两个指针必定相遇，且相遇第一点为环入口点。</p>
+<pre><code class="language-c">node* findLoopPort(node *head) {
+	node *fast, *slow;
+	fast = slow = head;
+	while (fast &amp;&amp; fast-&gt;next) {
+		//第一步：判断链表是否存在环
+		slow = slow-&gt;next;
+		fast = fast-&gt;next-&gt;next;
+		if (slow == fast) {
+			//链表存在环
+			break;
+		}
+	}
+	if ((fast == NULL) || (fast-&gt;next == NULL)) {
+		//链表不存在环
+		return NULL;
+	}
+	//第二步：寻找环的入口点
+	slow = head;
+	//让slow回到链表的起点，fast留在相遇点
+	while (slow != fast) {
+		//当slow和fast再次相遇时，那个点就是环的入口点
+		slow = slow-&gt;next;
+		fast = fast-&gt;next;
+	}
+	return slow;
+}
+</code></pre>
+<h2 id="判断两个单链表是否相交如果相交给出相交的第一个点假设两个链表都不存在环">判断两个单链表是否相交,如果相交，给出相交的第一个点（假设两个链表都不存在环）。</h2>
+<p><strong>思路</strong>：</p>
+<blockquote>
+<p>首先利用快慢指针判断链表是否存在环。</p>
+</blockquote>
+<ol>
+<li>如果都不存在环，则如果两个单向链表有公共节点，也就是两个链表从某一节点开始，他们的 <code>p_next</code> 都指向同一个节点，每个节点只有一个 <code>p-&gt;next</code>。因此从第一个公共节点开始，之后它们所有节点都是重合的。因此，首先两个链表各遍历一次，求出两个链表的长度 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">L_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>L</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">L_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，然后可以得到它们的长度差 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">L</span></span></span></span>。然后现在长的链表上遍历 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">L</span></span></span></span> 个节点，之后再同步遍历，于是在遍历中，第一个相同的节点就是第一个公共的节点。此时，若两个链表长度分别为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>，则时间复杂度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>M</mi><mo>+</mo><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(M+N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>。</li>
+<li>如果一个存在环，另外一个不存在环，则这两个链表是不可能相交的。</li>
+<li>如果利用快慢指针发现两个链表都存在环，则判断任意一个链表上快慢指针相遇的那个节点，在不在另外一个链表上，如果在，则相交，不在，则不相交。</li>
+</ol>
+<p>下面讨论两个没有环的链表如果是相交于某一结点的情况：</p>
+<p>相交的链表示意图如下所示：<br>
+<img src="https://faded.auspicious.space/post-images/1587909877666.jfif" alt="" loading="lazy"></p>
+<h3 id="方法一">方法一</h3>
+<p>两个没有环的链表如果是相交于某一结点，如上图所示，这个结点后面都是共有的。所以如果两个链表相交，那么两个链表的尾结点的地址也是一样的。程序实现时分别遍历两个单链表，直到尾结点。判断尾结点地址是否相等即可。时间复杂度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><msub><mi>L</mi><mn>1</mn></msub><mo>+</mo><msub><mi>L</mi><mn>2</mn></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">O(L_1+L_2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>。</p>
+<p>如何找到第一个相交结点？判断是否相交的时候，记录下两个链表的长度，算出长度差 <code>len</code>，接着先让较长的链表遍历 <code>len</code> 个长度，然后两个链表同时遍历，判断是否相等，如果相等，就是第一个相交的结点。</p>
+<pre><code class="language-c">void Is_2List_Intersect(LinkList L1, LinkList L2) {
+	if (L1 == NULL || L2 == NULL) {
+		exit(ERROR);
+	}
+	LinkList p = L1;
+	LinkList q = L2;
+	int L1_length = 0;
+	int L2_length = 0;
+	int len = 0;
+	while (p-&gt;next) {
+		L1_length ++;
+		p = p-&gt;next;
+	}
+	while (q-&gt;next) {
+		L2_length ++;
+		q = q-&gt;next;
+	}
+	printf(&quot;p: = %d\n&quot;, p);
+	printf(&quot;q: = %d\n&quot;, q);
+	printf(&quot;L1_length: = %d\n&quot;, L1_length);
+	printf(&quot;L2_length: = %d\n&quot;, L2_length);
+	if (p == q) {
+		printf(&quot; 相交\n&quot;);
+		/*p重新指向短的链表 q指向长链表*/
+		if (L1_length &gt; L2_length) {
+			len = L1_length - L2_length;
+			p = L2;
+			q = L1;
+		} else {
+			len = L2_length - L1_length;
+			p = L1;
+			q = L2;
+		}
+		while (len) {
+			q = q-&gt;next;
+			len--;
+		}
+		while (p != q) {
+			p = p-&gt;next;
+			q = q-&gt;next;
+		}
+		printf(&quot;相交的第一个结点是：%d\n&quot;, p-&gt;data );
+	} else {
+		printf(&quot;不相交 \n&quot;);
+	}
+}
+</code></pre>
+<h3 id="方法二">方法二</h3>
+<p>另外一个方法则是将一个链表首尾相接，然后判断另外一个链表是否有环，如果有环，则两个链表相交。那么求第一个交点则求出有环的的那个链表的环结点即是。</p>
+<pre><code class="language-c">int Is_ListLoop(LinkList L) {
+	LinkList fast, slow;
+	if (L == NULL || L-&gt;next == NULL) {
+		exit(ERROR);
+	}
+	fast = slow = L;
+	while (fast-&gt;next != NULL &amp;&amp; fast-&gt;next-&gt;next != NULL) {
+		slow = slow-&gt;next;
+		fast = fast-&gt;next-&gt;next;
+		if (fast == slow) {
+			return True;
+		}
+	}
+	return False;
+}
+int Find_Loop(LinkList L) {
+	LinkList fast, slow;
+	if (L == NULL || L-&gt;next == NULL) {
+		exit(ERROR);
+	}
+	fast = slow = L;
+	while (fast-&gt;next != NULL &amp;&amp; fast-&gt;next-&gt;next != NULL) {
+		slow = slow-&gt;next;
+		fast = fast-&gt;next-&gt;next;
+		if (fast == slow) {
+			break;
+		}
+	}
+	slow = L;
+	while (fast != slow) {
+		slow = slow-&gt;next;
+		fast = fast-&gt;next;
+	}
+	printf(&quot;%d\n&quot;, slow-&gt;data );
+	return TRUE;
+}
+void Is_2List_Intersect2(LinkList L1, LinkList L2) {
+	if (L1 == NULL || L2 == NULL) {
+		exit(ERROR);
+	}
+	LinkList p = L1;
+	LinkList q = L2;
+	while (p-&gt;next) {
+		p = p-&gt;next;
+	}
+	p-&gt;next = L1-&gt;next;
+	if(Is_ListLoop(L2)) {
+		printf(&quot;相交\n&quot;);
+		printf(&quot;相交的第一个结点是：&quot;);
+		Find_Loop(L2);
+	} else {
+		printf(&quot;不相交\n&quot;);
+	}
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[漫谈《大型网站技术架构》]]></title>
         <id>https://faded.auspicious.space/post/a-random-talk-on-large-website-technical-architecture/</id>
@@ -862,1292 +2787,6 @@ url=&quot;url&quot; 后者代表当前PC页所对应的手机页URL，两者必�
 <li><a href="http://www.html-5.com/metatags/">METATAGES in HTML5</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta">MDN META TAGS</a></li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[药品前后缀]]></title>
-        <id>https://faded.auspicious.space/post/prefix-and-suffix-of-drug/</id>
-        <link href="https://faded.auspicious.space/post/prefix-and-suffix-of-drug/">
-        </link>
-        <updated>2020-04-25T01:13:01.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.toutiao.com/i6381409325444760065/">药品名称中的那些“百家姓”</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.toutiao.com/i6381409325444760065/">药品名称中的那些“百家姓”</a></p>
-</blockquote>
-<!-- more -->
-<p><strong>看到一个药品名字中含有这些前缀/后缀，就应该知道它的基本作用是什么</strong>，以防吃药时犯低级错误哦。</p>
-<p>一般情况下，前缀或后缀相同的药品，就是同一类药物，具有同一类药效。例如：</p>
-<ul>
-<li><strong>头孢××</strong>。头孢类药物是很常用的抗菌药物，俗称为<strong>抗生素</strong>，例如<strong>头孢拉定</strong>、<strong>头孢呋辛</strong>、<strong>头孢羟氨苄</strong>、<strong>头孢曲松</strong>、<strong>头孢克洛</strong>、<strong>头孢吡肟</strong>等。他们是用来治疗感染性炎症的，比如<strong>上呼吸道感染</strong>、<strong>下呼吸道感染</strong>、<strong>皮肤软组织感染</strong>、<strong>泌尿道感染</strong>、<strong>耳鼻部感染</strong>、<strong>腹腔感染</strong>等等，需要知道的是，不同头孢的治疗侧重点不同，需要根据感染的类型选用。</li>
-<li><strong>××沙星</strong>。沙星类药物也是很常用的<strong>抗生素</strong>之一，例如<strong>环丙沙星</strong>、<strong>氧氟沙星</strong>、<strong>左氧氟沙星</strong>、<strong>莫西沙星</strong>等。他们也是用来治疗感染性炎症的，广泛用于<strong>呼吸系统感染</strong>、<strong>泌尿系统感染</strong>、<strong>皮肤软组织感染</strong>、<strong>肠道感染</strong>等。近年来，国家食药总局多次提醒大家关注这一类药物的不良反应，包括关节病变、致周围神经病变作用、中枢神经系统毒性等。同时，18岁以下患者禁用此类药物。</li>
-<li><strong>××拉唑</strong>。拉唑类药物是很常用的<strong>抑制胃酸</strong>药，例如<strong>奥美拉唑</strong>、<strong>埃索美拉唑</strong>、<strong>兰索拉唑</strong>、<strong>半托拉唑</strong>、<strong>雷贝拉唑</strong>等。他们是用来治疗<strong>胃溃疡</strong>、<strong>十二指肠溃疡</strong>、<strong>反流性食管炎</strong>等消化道疾病的。需要注意的是，由于这一类药物影响胃酸分泌，同时与其他很多药物共用代谢酶，所以相互作用会比较多，同时使用这一类药物和其他药物的患者，最好审查一下相互作用哦。</li>
-<li><strong>××他汀</strong>。他汀类药物是很常用的<strong>降脂药</strong>，主要用于<strong>高胆固醇血症</strong>和<strong>冠心病</strong>等，例如<strong>阿托伐他汀</strong>、<strong>瑞舒伐他汀</strong>、<strong>辛伐他汀</strong>、<strong>洛伐他汀</strong>、<strong>匹伐他汀</strong>、<strong>氟伐他汀</strong>等。不同他汀类药物的降脂强度不同，不可随意换用。另外，长期用药患者需要注意监测转氨酶和肌酸激酶。</li>
-<li><strong>××普利</strong>。普利类药物是很常用的<strong>降压药</strong>之一，学名称作<strong>血管紧张素转化酶抑制剂</strong>，是治疗<strong>高血压</strong>的一线药物之一，例如<strong>卡托普利</strong>、<strong>贝那普利</strong>、<strong>依那普利</strong>、<strong>福辛普利</strong>、<strong>培哚普利</strong>、<strong>雷米普利</strong>、<strong>赖诺普利</strong>等。使用普利类降压药时，需要注意其<strong>干咳的副作用</strong>。</li>
-<li><strong>××地平</strong>。地平类药物也是很常用的<strong>降压药</strong>，学名称为<strong>钙离子通道拮抗剂</strong>，也是治疗<strong>高血压</strong>的一线药物，例如<strong>硝苯地平</strong>、<strong>氨氯地平</strong>、<strong>尼群地平</strong>、<strong>拉西地平</strong>、<strong>尼卡地平</strong>等。其中，硝苯地平是最常用的<strong>降血压</strong>和<strong>缓解心绞痛</strong>的的药物之一，为了减少服药次数增加疗效稳定性，目前有多种缓控释制剂供选择。</li>
-</ul>
-<p>但是，任何事情都有例外，<strong>有些药品名称“看起来是一家”，实际上却“不是一家”</strong>。例如：</p>
-<ul>
-<li><strong>××霉素</strong>。药品名称中含有“霉素”两个字的药很多，但是他们并不都是一类的。例如，青霉素和苄星青霉素属于青霉素类抗菌药，庆大霉素、妥布霉素属于氨基糖苷类抗菌药，红霉素、阿奇霉素、克拉霉素属于大环内酯类抗菌药，万古霉素属于糖肽类抗菌药，链霉素、利福霉素常用于抗结核病类药，阿霉素、柔红霉素、丝裂霉素属于细胞毒药物（抗癌药）等。这些药物的药效和作用范围都不相同。</li>
-<li><strong>×格列×</strong>。名称中含有“格列”两个字的药也很多，例如降糖药里面的磺脲类降糖药格列美脲、格列喹酮，α-糖苷酶抑制剂伏格列波糖，胰岛素增敏药罗格列酮、吡格列酮等。这些药物虽然都是糖尿病患者的口服降糖药，但是具体作用机制和药物类别并不一样，适用人群和用法也不一样。</li>
-<li><strong>×莫司×</strong>。名称中含有“莫司”两个字的药也很多，但是药效作用各不相同，有免疫调节剂他克莫司、西罗莫司，有细胞毒药物司莫司汀、卡莫司汀、洛莫司汀、福莫司汀等，还有降血脂药阿昔莫司。</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[程序员经典语录]]></title>
-        <id>https://faded.auspicious.space/post/classic-quotes-of-programmer/</id>
-        <link href="https://faded.auspicious.space/post/classic-quotes-of-programmer/">
-        </link>
-        <updated>2020-04-25T00:52:40.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/7901115f61ec">程序员经典语录</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/7901115f61ec">程序员经典语录</a></p>
-</blockquote>
-<!-- more -->
-<ol>
-<li>
-<p>A good programmer is someone who always looks both ways before crossing a one-way street. (Doug Linder)<br>
-好的程序员即使在过单行道时也总是会环顾两边。</p>
-</li>
-<li>
-<p>Don't worry if it doesn't work right. If everything did, you'd be out of a job. (Mosher's Law of Software Engineering)<br>
-不要担心它能否正常工作。如果一切正常，那么你就会失去工作。</p>
-</li>
-<li>
-<p>The trouble with programmers is that you can never tell what a programmer is doing until it's too late. (Seymour Cray)<br>
-程序员的烦恼是，你永远无法知道一个程序员在做什么，直到为时已晚。</p>
-</li>
-<li>
-<p>Most of you are familiar with the virtues of a programmer. There are three, of course: laziness, impatience, and hubris. (Larry Wall)<br>
-程序员的美德：懒惰，没有耐心以及老子天下第一。</p>
-</li>
-<li>
-<p>Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live. (Martin Golding)<br>
-写代码的时候总是想象维护你代码的家伙是一个知道你住在哪里的暴力精神病患者。</p>
-</li>
-<li>
-<p>One man's crappy software is another man's full time job. (Jessica Gaston)<br>
-一个人写的烂软件将会给另一个人带来一份全职工作。</p>
-</li>
-<li>
-<p>If builders built buildings the way programmers wrote programs, then the first woodpecker that came along wound destroy civilization. (Gerald Weinberg)<br>
-如果建筑工人用程序员写程序的方式建造建筑物，那么来的第一只啄木鸟（找bug）就将摧毁文明。</p>
-</li>
-<li>
-<p>The most likely way for the world to be destroyed, most experts agree, is by accident.  That's where we come in; we're computer professionals. We cause accidents. (Nathaniel Borenstein)<br>
-大多数专家认为，世界被破坏的最有可能的方式是，是因为偶然。那就是我们所要进入的领域：我们是计算机专家。我们制造偶然。</p>
-</li>
-<li>
-<p>It's a curious thing about our industry: not only do we not learn from our mistakes, we also don't learn from our successes. (Keith  Braithwaite)<br>
-这是我们这个行业的一件咄咄怪事：我们不仅不从错误中学习，我们也不从成功中学习。</p>
-</li>
-<li>
-<p>Once a new technology starts rolling, if you're not part of the steamroller, you're part of the road. (Stewart Brand)<br>
-一旦一种新技术开始滚动碾压道路，如果你不能成为压路机的一部分，那么你就只能成为道路的一部分。</p>
-</li>
-<li>
-<p>If at first you don't succeed, call it version 1.0 (unknown)<br>
-如果第一次你没有成功，那么称之为1.0版，继续加油。</p>
-</li>
-<li>
-<p>All programmers are playwrights and all computers are lousy actors. (Anonymous Hack Actor)<br>
-所有的程序员都剧作家，而所有计算机都是糟糕的演员。</p>
-</li>
-<li>
-<p>The sooner you get behind in your work, the more time you have to catch up. (Anonymous Scheduler)<br>
-工作拉下得越早，赶上去所需要的时间越多。</p>
-</li>
-<li>
-<p>When a programming language is created that allows programmers to program in simple English, it will be discovered that programmers cannot speak English. (Anonymous Linguist)<br>
-当创建一种编程语言允许程序员使用简单英语编程的时候，那么新问题又来了，你会发现程序员不说英语。</p>
-</li>
-<li>
-<p>Why do we never have time to do it right, but always have time to do it over? (Anonymous)<br>
-为什么我们总是没有时间把事情做对，却有时间做完它？</p>
-</li>
-<li>
-<p>Any fool can write code that a computer can understand. Good programmers write code that humans can understand.<br>
-傻瓜写计算机能理解的代码。优秀的程序员写人类能读懂的代码。</p>
-</li>
-<li>
-<p>Any code of your own that you haven't looked at for six or more months might as well have been written by someone else. (Eagleson's law)<br>
-自己的代码六个月或更久不见，还不如别人写的代码。</p>
-</li>
-</ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[10 种常见的软件架构模式]]></title>
-        <id>https://faded.auspicious.space/post/10-common-software-architectural-patterns-in-a-nutshell/</id>
-        <link href="https://faded.auspicious.space/post/10-common-software-architectural-patterns-in-a-nutshell/">
-        </link>
-        <updated>2020-04-24T11:47:47.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/8377ce217b65">10种常见的软件架构模式</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/8377ce217b65">10种常见的软件架构模式</a></p>
-</blockquote>
-<!-- more -->
-<p>有没有想过要设计多大的企业规模系统？在主要的软件开发开始之前，我们必须选择一个合适的体系结构，它将为我们提供所需的功能和质量属性。因此，在将它们应用到我们的设计之前，我们应该了解不同的体系结构。</p>
-<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587729095513.png" alt="" loading="lazy"></figure>
-<h1>什么是架构模式？</h1>
-根据维基百科中的定义：
-<blockquote>
-<p>架构模式是一个通用的、可重用的解决方案，用于在给定上下文中的软件体系结构中经常出现的问题。架构模式与软件设计模式类似，但具有更广泛的范围。</p>
-</blockquote>
-<p>在本文中，将简要地解释以下 10 种常见的体系架构模式，以及它们的用法、优缺点。</p>
-<ol>
-<li><a href="#%E4%B8%80-%E5%88%86%E5%B1%82%E6%A8%A1%E5%BC%8F">分层模式</a></li>
-<li><a href="#%E4%BA%8C-%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A8%A1%E5%BC%8F">客户端-服务器模式</a></li>
-<li><a href="#%E4%B8%89-%E4%B8%BB%E4%BB%8E%E8%AE%BE%E5%A4%87%E6%A8%A1%E5%BC%8F">主从设备模式</a></li>
-<li><a href="#%E5%9B%9B-%E7%AE%A1%E9%81%93-%E8%BF%87%E6%BB%A4%E5%99%A8%E6%A8%A1%E5%BC%8F">管道-过滤器模式</a></li>
-<li><a href="#%E4%BA%94-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F">代理模式</a></li>
-<li><a href="#%E5%85%AD-%E7%82%B9%E5%AF%B9%E7%82%B9%E6%A8%A1%E5%BC%8F">点对点模式</a></li>
-<li><a href="#%E4%B8%83-%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF%E6%A8%A1%E5%BC%8F">事件总线模式</a></li>
-<li><a href="#%E5%85%AB-%E6%A8%A1%E5%9E%8B-%E8%A7%86%E5%9B%BE-%E6%8E%A7%E5%88%B6%E5%99%A8%E6%A8%A1%E5%BC%8F">模型-视图-控制器模式</a></li>
-<li><a href="#%E4%B9%9D-%E9%BB%91%E6%9D%BF%E6%A8%A1%E5%BC%8F">黑板模式</a></li>
-<li><a href="#%E5%8D%81-%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F">解释器模式</a></li>
-</ol>
-<h1 id="一-分层模式">一、分层模式</h1>
-<p>这种模式也称为多层体系架构模式。它可以用来构造可以分解为子任务组的程序，每个子任务都处于一个特定的抽象级别。每个层都为下一个提供更高层次服务。</p>
-<p>一般信息系统中最常见的是如下所列的 4 层。</p>
-<ul>
-<li>表示层（也称为 UI 层）；</li>
-<li>应用层（也称为服务层）；</li>
-<li>业务逻辑层（也称为领域层）；</li>
-<li>数据访问层（也称为持久化层）。</li>
-</ul>
-<p>使用场景：</p>
-<ul>
-<li>一般的桌面应用程序；</li>
-<li>电子商务 Web 应用程序。</li>
-</ul>
-<figure data-type="image" tabindex="2"><img src="https://faded.auspicious.space/post-images/1587729515629.png" alt="Layered pattern" loading="lazy"></figure>
-<h1 id="二-客户端-服务器模式">二、客户端-服务器模式</h1>
-<p>这种模式由两部分组成：一个服务器和多个客户端。服务器组件将为多个客户端组件提供服务。客户端从服务器请求服务，服务器为这些客户端提供相关服务。此外，服务器持续侦听客户机请求。</p>
-<p>使用场景：</p>
-<ul>
-<li>电子邮件，文件共享和银行等在线应用程序。</li>
-</ul>
-<figure data-type="image" tabindex="3"><img src="https://faded.auspicious.space/post-images/1587729648043.png" alt="Client-server pattern " loading="lazy"></figure>
-<h1 id="三-主从设备模式">三、主从设备模式</h1>
-<p>这种模式由两方组成：主设备和从设备。主设备组件在相同的从设备组件中分配工作，并计算最终结果，这些结果是由从设备返回的结果。</p>
-<p>使用场景：</p>
-<ul>
-<li>在数据库复制中，主数据库被认为是权威的来源，并且要与之同步；</li>
-<li>在计算机系统中与总线连接的外围设备（主和从驱动器）。</li>
-</ul>
-<figure data-type="image" tabindex="4"><img src="https://faded.auspicious.space/post-images/1587729762626.png" alt="Master-slave pattern" loading="lazy"></figure>
-<h1 id="四-管道-过滤器模式">四、管道-过滤器模式</h1>
-<p>此模式可用于构造生成和处理数据流的系统。每个处理步骤都封装在一个过滤器组件内。要处理的数据是通过管道传递的。这些管道可以用于缓冲或用于同步。</p>
-<p>使用场景：</p>
-<ul>
-<li>编译器。连续的过滤器执行词法分析、解析、语义分析和代码生成；</li>
-<li>生物信息学的工作流。</li>
-</ul>
-<figure data-type="image" tabindex="5"><img src="https://faded.auspicious.space/post-images/1587729828986.png" alt="Pipe-filter pattern" loading="lazy"></figure>
-<h1 id="五-代理模式">五、代理模式</h1>
-<p>此模式用于构造具有解耦组件的分布式系统。这些组件可以通过远程服务调用彼此交互。代理组件负责组件之间的通信协调。</p>
-<p>服务器将其功能（服务和特征）发布给代理。客户端从代理请求服务，然后代理将客户端重定向到其注册中心的适当服务。</p>
-<p>使用场景：</p>
-<ul>
-<li>消息代理软件，如 Apache ActiveMQ，Apache Kafka，RabbitMQ 和 JBoss Messaging。</li>
-</ul>
-<figure data-type="image" tabindex="6"><img src="https://faded.auspicious.space/post-images/1587729911790.png" alt="Broker pattern" loading="lazy"></figure>
-<h1 id="六-点对点模式">六、点对点模式</h1>
-<p>在这种模式中，单个组件被称为对等点。对等点可以作为客户端，从其他对等点请求服务，作为服务器，为其他对等点提供服务。对等点可以充当客户端或服务器或两者的角色，并且可以随时间动态地更改其角色。</p>
-<p>使用场景：</p>
-<ul>
-<li>像 Gnutella 和 G2 这样的文件共享网络；</li>
-<li>多媒体协议，如 P2PTV 和 PDTP；</li>
-<li>像 Spotify 这样的专有多媒体应用程序。</li>
-</ul>
-<figure data-type="image" tabindex="7"><img src="https://faded.auspicious.space/post-images/1587730026205.png" alt="Peer-to-peer pattern" loading="lazy"></figure>
-<h1 id="七-事件总线模式">七、事件总线模式</h1>
-<p>这种模式主要是处理事件，包括 4 个主要组件：事件源、事件监听器、通道和事件总线。消息源将消息发布到事件总线上的特定通道上。侦听器订阅特定的通道。侦听器会被通知消息，这些消息被发布到它们之前订阅的一个通道上。</p>
-<p>使用场景：</p>
-<ul>
-<li>安卓开发；</li>
-<li>通知服务。</li>
-</ul>
-<figure data-type="image" tabindex="8"><img src="https://faded.auspicious.space/post-images/1587730115823.png" alt="Event-bus pattern" loading="lazy"></figure>
-<h1 id="八-模型-视图-控制器模式">八、模型-视图-控制器模式</h1>
-<p>这种模式，也称为 MVC 模式，把一个交互式应用程序划分为 3 个部分，</p>
-<ul>
-<li><strong>模型</strong>：包含核心功能和数据；</li>
-<li><strong>视图</strong>：将信息显示给用户（可以定义多个视图）；</li>
-<li><strong>控制器</strong>：处理用户输入的信息。</li>
-</ul>
-<p>这样做是为了将信息的内部表示与信息的呈现方式分离开来，并接受用户的请求。它分离了组件，并允许有效的代码重用。</p>
-<p>使用场景：</p>
-<ul>
-<li>在主要编程语言中互联网应用程序的体系架构；</li>
-<li>像 Django 和 Rails 这样的 Web 框架。</li>
-</ul>
-<figure data-type="image" tabindex="9"><img src="https://faded.auspicious.space/post-images/1587730246020.png" alt="Model-view-controller pattern" loading="lazy"></figure>
-<h1 id="九-黑板模式">九、黑板模式</h1>
-<p>这种模式对于没有确定解决方案策略的问题是有用的。黑板模式由 3 个主要组成部分组成。</p>
-<ul>
-<li><strong>黑板</strong>——包含来自解决方案空间的对象的结构化全局内存；</li>
-<li><strong>知识源</strong>——专门的模块和它们自己的表示；</li>
-<li><strong>控制组件</strong>——选择、配置和执行模块；</li>
-</ul>
-<p>所有的组件都可以访问黑板。组件可以生成添加到黑板上的新数据对象。组件在黑板上查找特定类型的数据，并通过与现有知识源的模式匹配来查找这些数据。</p>
-<p>使用场景：</p>
-<ul>
-<li>语音识别；</li>
-<li>车辆识别和跟踪；</li>
-<li>蛋白质结构识别；</li>
-<li>声纳信号的解释。</li>
-</ul>
-<figure data-type="image" tabindex="10"><img src="https://faded.auspicious.space/post-images/1587730341022.png" alt="Blackboard pattern" loading="lazy"></figure>
-<h1 id="十-解释器模式">十、解释器模式</h1>
-<p>这个模式用于设计一个解释用专用语言编写的程序的组件。它主要指定如何评估程序的行数，即以特定的语言编写的句子或表达式。其基本思想是为每种语言的符号都有一个分类。</p>
-<p>使用场景：</p>
-<ul>
-<li>数据库查询语言，比如 SQL；</li>
-<li>用于描述通信协议的语言。</li>
-</ul>
-<figure data-type="image" tabindex="11"><img src="https://faded.auspicious.space/post-images/1587730400554.png" alt="Interpreter pattern" loading="lazy"></figure>
-<h1 id="体系架构模式的比较">体系架构模式的比较</h1>
-<p>下面给出的表格总结了每种体系架构模式的优缺点。</p>
-<table>
-<thead>
-<tr>
-<th style="width:20%">名称</th>
-<th style="width:40%">优点</th>
-<th style="width:40%">缺点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>分层模式</td>
-<td>一个较低的层可以被不同的层所使用。层使标准化更容易，因为我们可以清楚地定义级别。可以在层内进行更改，而不会影响其他层。</td>
-<td>不是普遍适用的。在某些情况下，某些层可能会被跳过。</td>
-</tr>
-<tr>
-<td>客户端-服务器模式</td>
-<td>很好地建立一组服务，用户可以请求他们的服务。</td>
-<td>请求通常在服务器上的单独线程中处理。由于不同的客户端具有不同的表示，进程间通信会导致额外开销。</td>
-</tr>
-<tr>
-<td>主从设备模式</td>
-<td>准确性——将服务的执行委托给不同的从设备，具有不同的实现。</td>
-<td>从设备是孤立的：没有共享的状态。主-从通信中的延迟可能是一个问题，例如在实时系统中。这种模式只能应用于可以分解的问题。</td>
-</tr>
-<tr>
-<td>管道-过滤器模式</td>
-<td>展示并发处理。当输入和输出由流组成时，过滤器在接收数据时开始计算。轻松添加过滤器，系统可以轻松扩展。过滤器可重复使用。 可以通过重新组合一组给定的过滤器来构建不同的管道。</td>
-<td>效率受到最慢的过滤过程的限制。从一个过滤器移动到另一个过滤器时的数据转换开销。</td>
-</tr>
-<tr>
-<td>代理模式</td>
-<td>允许动态更改、添加、删除和重新定位对象，这使开发人员的发布变得透明。</td>
-<td>要求对服务描述进行标准化。</td>
-</tr>
-<tr>
-<td>点对点模式</td>
-<td>支持分散式计算。对任何给定节点的故障处理具有强大的健壮性。在资源和计算能力方面具有很高的可扩展性。</td>
-<td>服务质量没有保证，因为节点是自愿合作的。安全是很难得到保证的。性能取决于节点的数量。</td>
-</tr>
-<tr>
-<td>事件总线模式</td>
-<td>新的发布者、订阅者和连接可以很容易地添加。对高度分布式的应用程序有效。</td>
-<td>可伸缩性可能是一个问题，因为所有消息都是通过同一事件总线进行的。</td>
-</tr>
-<tr>
-<td>模型-视图-控制器模式</td>
-<td>可以轻松地拥有同一个模型的多个视图，这些视图可以在运行时连接和断开。</td>
-<td>增加复杂性。可能导致许多不必要的用户操作更新。</td>
-</tr>
-<tr>
-<td>黑板模式</td>
-<td>很容易添加新的应用程序。扩展数据空间的结构很简单。</td>
-<td>修改数据空间的结构非常困难，因为所有应用程序都受到了影响。可能需要同步和访问控制。</td>
-</tr>
-<tr>
-<td>解释器模式</td>
-<td>高度动态的行为是可行的。对终端用户编程性提供好处。提高灵活性，因为替换一个解释程序很容易。</td>
-<td>由于解释语言通常比编译后的语言慢，因此性能可能是一个问题。</td>
-</tr>
-</tbody>
-</table>]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[window 对象知识总结]]></title>
-        <id>https://faded.auspicious.space/post/window-object-summary/</id>
-        <link href="https://faded.auspicious.space/post/window-object-summary/">
-        </link>
-        <updated>2020-04-24T05:17:21.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://yq.aliyun.com/articles/74458">window对象知识总结</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://yq.aliyun.com/articles/74458">window对象知识总结</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="window-对象属性">window 对象属性</h1>
-<table>
-<thead>
-<tr>
-<th>属性名</th>
-<th>属性功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>closed</td>
-<td>返回窗口是否已被关闭</td>
-</tr>
-<tr>
-<td>defaultStatus</td>
-<td>设置或返回窗口状态栏中的默认文本</td>
-</tr>
-<tr>
-<td>document</td>
-<td>对 document 对象的只读引用</td>
-</tr>
-<tr>
-<td>history</td>
-<td>对 history 对象的只读引用</td>
-</tr>
-<tr>
-<td>innerheight</td>
-<td>返回窗口的文档显示区的高度</td>
-</tr>
-<tr>
-<td>innerwidth</td>
-<td>返回窗口的文档显示区的宽度</td>
-</tr>
-<tr>
-<td>length</td>
-<td>设置或返回窗口中的框架数量</td>
-</tr>
-<tr>
-<td>location</td>
-<td>用于窗口或框架的 location 对象</td>
-</tr>
-<tr>
-<td>name</td>
-<td>设置或返回窗口的名称</td>
-</tr>
-<tr>
-<td>navigator</td>
-<td>对 navigator 对象的只读引用</td>
-</tr>
-<tr>
-<td>opener</td>
-<td>返回对创建此窗口的窗口的引用</td>
-</tr>
-<tr>
-<td>outerheight</td>
-<td>返回窗口的外部高度</td>
-</tr>
-<tr>
-<td>outerwidth</td>
-<td>返回窗口的外部宽度</td>
-</tr>
-<tr>
-<td>pageXOffset</td>
-<td>设置或返回当前页面相对于窗口显示区左上角的 X 位置</td>
-</tr>
-<tr>
-<td>pageYOffset</td>
-<td>设置或返回当前页面相对于窗口显示区左上角的 Y 位置</td>
-</tr>
-<tr>
-<td>parent</td>
-<td>返回父窗口</td>
-</tr>
-<tr>
-<td>screen</td>
-<td>对 screen 对象的只读引用</td>
-</tr>
-<tr>
-<td>self</td>
-<td>返回对当前窗口的引用。等价于 window 属性</td>
-</tr>
-<tr>
-<td>status</td>
-<td>设置窗口状态栏的文本</td>
-</tr>
-<tr>
-<td>top</td>
-<td>返回最顶层的先辈窗口</td>
-</tr>
-<tr>
-<td>window</td>
-<td>window 属性等价于 self 属性，它包含了对窗口自身的引用</td>
-</tr>
-<tr>
-<td>screenLeft/screenTop/screenX/screenY</td>
-<td>只读整数。声明了窗口的左上角在屏幕上的的 x 坐标和 y 坐标。IE、Safari 和 Opera 支持 screenLeft 和 screenTop，而 Firefox 和 Safari 支持 screenX 和 screenY</td>
-</tr>
-</tbody>
-</table>
-<h1 id="window-对象方法">window 对象方法</h1>
-<table>
-<thead>
-<tr>
-<th>对象名</th>
-<th>对象功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>alert()</td>
-<td>显示带有一段消息和一个确认按钮的警告框</td>
-</tr>
-<tr>
-<td>blur()</td>
-<td>把键盘焦点从顶层窗口移开</td>
-</tr>
-<tr>
-<td>clearInterval()</td>
-<td>取消由 setInterval() 设置的 timeout</td>
-</tr>
-<tr>
-<td>clearTimeout()</td>
-<td>取消由 setTimeout() 方法设置的 timeout</td>
-</tr>
-<tr>
-<td>close()</td>
-<td>关闭浏览器窗口</td>
-</tr>
-<tr>
-<td>confirm()</td>
-<td>显示带有一段消息以及确认按钮和取消按钮的对话框</td>
-</tr>
-<tr>
-<td>createPopup()</td>
-<td>创建一个 pop-up 窗口</td>
-</tr>
-<tr>
-<td>focus()</td>
-<td>把键盘焦点给予一个窗口</td>
-</tr>
-<tr>
-<td>moveBy()</td>
-<td>可相对窗口的当前坐标把它移动指定的像素</td>
-</tr>
-<tr>
-<td>moveTo()</td>
-<td>把窗口的左上角移动到一个指定的坐标</td>
-</tr>
-<tr>
-<td>open()</td>
-<td>打开一个新的浏览器窗口或查找一个已命名的窗口</td>
-</tr>
-<tr>
-<td>print()</td>
-<td>打印当前窗口的内容</td>
-</tr>
-<tr>
-<td>prompt()</td>
-<td>显示可提示用户输入的对话框</td>
-</tr>
-<tr>
-<td>resizeBy()</td>
-<td>按照指定的像素调整窗口的大小</td>
-</tr>
-<tr>
-<td>resizeTo()</td>
-<td>把窗口的大小调整到指定的宽度和高度</td>
-</tr>
-<tr>
-<td>scrollBy()</td>
-<td>按照指定的像素值来滚动内容</td>
-</tr>
-<tr>
-<td>scrollTo()</td>
-<td>把内容滚动到指定的坐标</td>
-</tr>
-<tr>
-<td>setInterval()</td>
-<td>按照指定的周期（以毫秒计）来调用函数或计算表达式</td>
-</tr>
-<tr>
-<td>setTimeout()</td>
-<td>在指定的毫秒数后调用函数或计算表达式</td>
-</tr>
-</tbody>
-</table>
-<h1 id="window-对象描述">window 对象描述</h1>
-<p>window 对象表示一个浏览器窗口或一个框架。在客户端 JavaScript 中，window 对象是全局对象，所有的表达式都在当前的环境中计算。也就是说，要引用当前窗口根本不需要特殊的语法，可以把那个窗口的属性作为全局变量来使用。例如，可以只写 <code>document</code>，而不必写 <code>window.document</code></p>
-<p>同样，可以把当前窗口对象的方法当作函数来使用，如只写 <code>alert()</code>，而不必写 <code>window.alert()</code></p>
-<p>除了上面列出的属性和方法，window 对象还实现了核心 JavaScript 所定义的所有全局属性和方法</p>
-<p>window 对象的 <code>window</code> 属性和 <code>self</code> 属性引用的都是它自己。当你想明确地引用当前窗口，而不仅仅是隐式地引用它时，可以使用这两个属性。除了这两个属性之外，<code>parent</code> 属性、<code>top</code> 属性以及 <code>frame[]</code> 数组都引用了与当前 window 对象相关的其他 window 对象</p>
-<p>要引用窗口中的一个框架，可以使用如下语法：</p>
-<ul>
-<li><code>frame[i]</code>：当前窗口的框架</li>
-<li><code>self.frame[i]</code>：当前窗口的框架</li>
-<li><code>w.frame[i]</code>：窗口 <code>w</code> 的框架</li>
-</ul>
-<p>要引用一个框架的父窗口（或父框架），可以使用下面的语法：</p>
-<ul>
-<li><code>parent</code>：当前窗口的父窗口。</li>
-<li><code>self.parent</code>：当前窗口的父窗口。</li>
-<li><code>w.parent</code>：窗口 <code>w</code> 的父窗口。</li>
-</ul>
-<p>要从顶层窗口含有的任何一个框架中引用它，可以使用如下语法：</p>
-<ul>
-<li><code>top</code>：当前框架的顶层窗口。</li>
-<li><code>self.top</code>：当前框架的顶层窗口。</li>
-<li><code>f.top</code>：框架 <code>f</code> 的顶层窗口。</li>
-</ul>
-<p>新的顶层浏览器窗口由方法 <code>window.open()</code> 创建。当调用该方法时，应把 <code>open()</code> 调用的返回值存储在一个变量中，然后使用那个变量来引用新窗口。新窗口的 <code>opener</code> 属性反过来引用了打开它的那个窗口</p>
-<p>一般来说，window 对象的方法都是对浏览器窗口或框架进行某种操作；而 <code>alert()</code> 方法、<code>confirm()</code> 方法和 <code>prompt</code> 方法则不同，它们通过简单的对话框与用户进行交互。</p>
-<h1 id="全局的-window-对象">全局的 window 对象</h1>
-<p>JavaScript 中的任何一个全局函数或变量都是 <code>window</code> 的属性。</p>
-<pre><code class="language-html">&lt;script type=&quot;text/javascript&quot;&gt;
-    var name = &quot;aaaa&quot;;
-    document.write(window.name);
-&lt;/script&gt;
-</code></pre>
-<h1 id="window-与-self-对象">window 与 self 对象</h1>
-<p><code>self</code> 对象与 <code>window</code> 对象完全相同，<code>self</code> 通常用于确认就是在当前的窗体内</p>
-<pre><code class="language-html">&lt;script type=&quot;text/javascript&quot;&gt;
-    document.write(window == self);　　　　    　//必须相等，永远都相等
-    document.write(window.top == window.self);　//判断当前框架是否是主框架
-&lt;/script&gt;
-</code></pre>
-<p><code>window</code>、<code>self</code>、<code>window.self</code> 三者是等价的。</p>
-<h1 id="window-的子对象">window 的子对象</h1>
-<p><code>window</code> 的主对象主要有：</p>
-<ul>
-<li>JavaScript <code>document</code> 对象</li>
-<li>JavaScript <code>frames</code> 对象</li>
-<li>JavaScript <code>history</code> 对象</li>
-<li>JavaScript <code>location</code> 对象</li>
-<li>JavaScript <code>navigator</code> 对象</li>
-<li>JavaScript <code>screen</code> 对象</li>
-</ul>
-<h1 id="window-函数索引仅对-ie-有效">window 函数索引（仅对 IE 有效）</h1>
-<h2 id="窗体控制函数">窗体控制函数</h2>
-<ul>
-<li><code>moveBy()</code>：从当前位置水平移动窗体 <code>x</code> 个像素，垂直移动窗体 <code>y</code> 个像素，<code>x</code> 为负数，将向左移动窗体，<code>y</code> 为负数，将向上移动窗体。</li>
-<li><code>moveTo()</code>：移动窗体左上角到相对于屏幕左上角的 <code>(x, y)</code> 点，当使用负数做为参数时会把窗体移出屏幕的可视区域。</li>
-<li><code>resizeBy()</code>：相对窗体当前的大小，宽度调整 <code>w</code> 个像素，高度调整 <code>h</code> 个像素。如果参数为负值，将缩小窗体，反之扩大窗体。</li>
-<li><code>resizeTo()</code>：把窗体宽度调整为 <code>w</code> 个像素，高度调整为 <code>h</code>个像素。</li>
-</ul>
-<pre><code class="language-html">&lt;body&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn1&quot; value=&quot;先设置窗体固定大小！&quot; onclick=&quot;window.resizeTo(500,500);&quot; /&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn2&quot; value=&quot;再缩小10像素！&quot; onclick=&quot;window.resizeBy(-10,-10);&quot; /&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn2&quot; value=&quot;上！&quot; onclick=&quot;window.moveBy(0,-5);&quot; /&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn2&quot; value=&quot;下！&quot; onclick=&quot;window.moveBy(0, 5);&quot; /&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn2&quot; value=&quot;左！&quot; onclick=&quot;window.moveBy(-5, 0);&quot; /&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn2&quot; value=&quot;右！&quot; onclick=&quot;window.moveBy(5, 0);&quot; /&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn2&quot; value=&quot;距离左上角左边100像素，顶部200像素&quot; onclick=&quot;window.moveTo(100, 200);&quot; /&gt;
-&lt;/body&gt;
-</code></pre>
-<h2 id="窗体滚动轴控制函数">窗体滚动轴控制函数</h2>
-<ul>
-<li><code>scrollTo()</code>：在窗体中如果有滚动条，将横向滚动条移动到相对于窗体宽度为 <code>x</code> 个像素的位置，将纵向滚动条移动到相对于窗体高度为 <code>y</code> 个像素的位置。</li>
-<li><code>scrollBy()</code>：如果有滚动条，将横向滚动条移动到相对于当前横向滚动条的 <code>x</code> 个像素的位置（就是向左移动 <code>x</code> 像素），将纵向滚动条移动到相对于当前纵向滚动条高度为 <code>y</code> 个像素的位置（就是向下移动 <code>y</code> 像素）。</li>
-</ul>
-<p>注意区别，一个是相对当前窗口，一个是相当现在滚动条的位置。</p>
-<pre><code class="language-html">&lt;div style=&quot;height:150%; width:150%; background-color:#ddd&quot;&gt;
-    &lt;input type=&quot;button&quot; id=&quot;btn1&quot; value=&quot;移动滚动条！&quot; onclick=&quot;window.scrollTo(100,100);&quot; /&gt;　　//相当于设置绝对位置
-    &lt;input type=&quot;button&quot; id=&quot;btn1&quot; value=&quot;移动滚动条！&quot; onclick=&quot;window.scrollBy(100,100);&quot; /&gt;　　//相当于累加
-&lt;/div&gt;
-</code></pre>
-<h2 id="窗体焦点控制函数">窗体焦点控制函数</h2>
-<ul>
-<li><code>focus()</code>：使窗体或空间获得焦点。</li>
-<li><code>blur()</code>：使窗体或控件失去焦点。</li>
-</ul>
-<pre><code class="language-html">&lt;div&gt;
-    &lt;input type=&quot;button&quot; value=&quot;获得焦点&quot; onclick=&quot;document.getElementById('testInput').focus()&quot; /&gt;
-    &lt;input type=&quot;button&quot; value=&quot;失去焦点&quot; onclick=&quot;document.getElementById('testInput').blur()&quot; /&gt;
-    &lt;input type=&quot;text&quot; value=&quot;text&quot; id=&quot;testInput&quot; onblur=&quot;alert('我已失去焦点')&quot; /&gt;
-&lt;/div&gt;
-</code></pre>
-<h2 id="新建窗体函数">新建窗体函数</h2>
-<ul>
-<li><code>open()</code>：打开（弹出）一个新的窗体。</li>
-<li><code>close()</code>：关闭窗体。</li>
-<li><code>opener</code>：通过 <code>opener</code> 可以实现跨窗体之间的通讯，但是要保证是在同一域名下，而且一个窗体要包含另一个窗体的 <code>opener</code>。</li>
-</ul>
-<p>格式：<code>window.open(url, name, features, replace);</code></p>
-<h3 id="open-函数参数说明">open 函数参数说明</h3>
-<ul>
-<li><code>url</code>：要载入窗体的 URL。</li>
-<li><code>name</code>：新建窗体的名称（也可以是 HTML <code>target</code> 属性的取值，目标）。</li>
-<li><code>features</code>：代表窗体特性的字符串，字符串中每个特性使用逗号分隔。</li>
-<li><code>replace</code>：一个布尔值，说明新载入的页面是否替换当前载入的页面，此参数通常不用指定。</li>
-</ul>
-<h3 id="open-方法示例">open 方法示例</h3>
-<pre><code class="language-html">&lt;a href=&quot;2.html&quot; target=&quot;2&quot;&gt;在新窗口打开连接&lt;/a&gt;
-&lt;a href=&quot;#&quot; onclick=&quot;window.open('http://www.google.com','2');&quot;&gt;在已建立连接的页面打开新地址&lt;/a&gt;
-</code></pre>
-<p>首先使用普通 HTML 链接打开一个页面( <code>target</code> 名为 <code>dreamdu</code>)，之后使用 <code>open</code> 函数打开另一个页面，浏览器首先要查找是否有名称为 <code>dreamdu</code> 的窗体，如果有，就在这个窗体中加载 <code>open</code> 的地址。</p>
-<h4 id="经过设置的-open">经过设置的 open</h4>
-<pre><code class="language-javascript">window.open ('page.html', 'newwindow', 'height=100, width=400, top=0,left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
-</code></pre>
-<h4 id="弹窗方法">弹窗方法</h4>
-<ul>
-<li>方法一：<code>&lt;body onload=&quot;openwin()&quot;&gt;</code> 浏览器读页面时弹出窗口；</li>
-<li>方法二：<code>&lt;body onunload=&quot;openwin()&quot;&gt;</code> 浏览器离开页面时弹出窗口。</li>
-</ul>
-<h3 id="open-函数第三个参数-features-说明">open 函数第三个参数 features 说明</h3>
-<table>
-<thead>
-<tr>
-<th>参数名称</th>
-<th>类型</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>height</td>
-<td>Number</td>
-<td>设置窗体的高度，不能小于100</td>
-</tr>
-<tr>
-<td>left</td>
-<td>Number</td>
-<td>说明创建窗体的左坐标，不能为负值</td>
-</tr>
-<tr>
-<td>location</td>
-<td>Boolean</td>
-<td>窗体是否显示地址栏，默认值为 no</td>
-</tr>
-<tr>
-<td>resizable</td>
-<td>Boolean</td>
-<td>窗体是否允许通过拖动边线调整大小，默认值为 no</td>
-</tr>
-<tr>
-<td>scrollable</td>
-<td>Boolean</td>
-<td>窗体中内部超出窗口可视范围时是否允许拖动，默认值为 no</td>
-</tr>
-<tr>
-<td>toolbar</td>
-<td>Boolean</td>
-<td>窗体是否显示工具栏，默认值为 no</td>
-</tr>
-<tr>
-<td>top</td>
-<td>Number</td>
-<td>说明创建窗体的上坐标，不能为负值</td>
-</tr>
-<tr>
-<td>status</td>
-<td>Boolean</td>
-<td>窗体是否显示状态栏，默认值为 no</td>
-</tr>
-<tr>
-<td>width</td>
-<td>Number</td>
-<td>创建窗体的宽度，不能小于 100</td>
-</tr>
-</tbody>
-</table>
-<p>特性字符串中的每个特性使用逗号分隔，每个特性之间不允许有空格。</p>
-<p><code>window.open</code> 函数新建立窗体后会返回新建窗体的 <code>window</code> 对象，通过此对象可以控制窗体（移动，改变大小，关闭）。</p>
-<h2 id="close-函数">close 函数</h2>
-<pre><code class="language-html">&lt;input type=&quot;button&quot; value=&quot;关闭已经打开的窗体！&quot; onclick=&quot;window.close();&quot; /&gt;
-</code></pre>
-<p><code>self.close();</code> 配合上 <code>setTimeout()</code> 可以实现，打开的窗口定时关闭的效果。</p>
-<h2 id="对话框函数">对话框函数</h2>
-<ul>
-<li><code>alert()</code>：弹出消息对话框（对话框中有一个 OK 按钮）；</li>
-<li><code>confirm()</code>：弹出消息对话框（对话框中包含一个 OK 按钮与 Cancel 按钮）；<code>confirm()</code> 消息对话框是排它的，也就是在用户点击对话框的按钮前，不能进行任何其它操作。<pre><code class="language-javascript">
-if (confirm(&quot;确定跳大？&quot;)) {
-    alert(&quot;果断跳大&quot;);
-} else {
-    alert(&quot;猥琐打钱&quot;);
-</code></pre>
-</li>
-</ul>
-<p>}<br>
-```</p>
-<ul>
-<li><code>prompt()</code>：弹出消息对话框（对话框中包含一个 OK 按钮、Cancel 按钮与一个文本输入框）；函数有两个参数：
-<ul>
-<li><code>str1</code>：要显示在消息对话框中的文本，不可修改；</li>
-<li><code>str2</code>：文本框中的内容，可以修改。</li>
-</ul>
-<pre><code class="language-javascript">
-var sResult = prompt(&quot;请在下面输入你的姓名&quot;, &quot;aaa&quot;);
-if (sResult != null) {
-    alert(sResult + &quot;已经超越神的杀戮&quot;);
-} else {
-    alert(&quot;无名氏已经超越神的杀戮&quot;);
-}
-</code></pre>
-</li>
-</ul>
-<h2 id="时间等待与间隔函数">时间等待与间隔函数</h2>
-<h3 id="settimeout-函数-cleartimeout-函数">setTimeout() 函数 / clearTimeout() 函数</h3>
-<p>在指定的时间后调用函数。</p>
-<h4 id="语法">语法：</h4>
-<ul>
-<li><code>setTimeout(fun, time);</code>：<code>fun</code>：函数体或函数名，<code>time</code>：指定时间，单位为毫秒；</li>
-<li><code>clearTimeout(id);</code>：取消指定的 <code>setTimeout</code> 函数将要执行的代码。<pre><code class="language-javascript">
-setTimeout(function () {
-    document.write(&quot;隔3秒后触发&quot;);   
-}, 3000)    //在3秒后输出
-setTimeout(fun1, 5000);     //在5秒后输出
-function fun1() {
-    document.write(&quot;函数名的方式5秒后触发&quot;);
-}
-</code></pre>
-</li>
-</ul>
-<h3 id="setinterval-函数-clearinterval-函数">setInterval() 函数 / clearInterval() 函数</h3>
-<p>在间隔指定的事件后重复调用函数。</p>
-<h4 id="语法-2">语法：</h4>
-<ul>
-<li><code>setInterval(fun1, time)</code>：<code>fun</code>：函数体或函数名，<code>time</code>：指定的时间，单位为毫秒。会返回一个值，这个值是统计该函数的个数用的，第一个是 1，第二个就是 2，指明是第几个 <code>setInterval</code> 函数。</li>
-<li><code>clearInterval(value)</code>：<code>value</code>：<code>setInterval()</code> 函数返回的值，根据这个值可以停止 <code>setInterval()</code> 的重复。</li>
-</ul>
-<p>注意，JavaScript 是单线程的，因此，这个定时函数实际上是通过插入执行队列的方式来实现。</p>
-<p>如下面的代码：</p>
-<pre><code class="language-javascript">function fn() {
-    setTimeout(function () { alert('can you see me?'); }, 1000);
-    while (true) { }
-}
-</code></pre>
-<p><code>alert();</code> 永远都不会执行，因为线程一直被死循环占用了。</p>
-<h2 id="windowlocation-子对象">window.location 子对象</h2>
-<p>解析 URL 对象 <code>location:location</code> 对象的属性有：<code>href</code>，<code>protocal</code>，<code>host</code>，<code>hostname</code>，<code>port</code>，<code>pathname</code>，<code>search</code>，<code>hash</code>。</p>
-<pre><code class="language-javascript">document.write(location.href + &quot;&lt;br/&gt;&quot;);        // http://localhost:4889/javascriptTest.html
-document.write(location.protocol + &quot;&lt;br/&gt;&quot;);    // http:
-document.write(location.host + &quot;&lt;br/&gt;&quot;);        // localhost:4889
-document.write(location.hostname + &quot;&lt;br/&gt;&quot;);    // localhost
-document.write(location.port + &quot;&lt;br/&gt;&quot;);        // 4889
-document.write(location.pathname + &quot;&lt;br/&gt;&quot;);    // /javascriptTest.html
-document.write(location.search + &quot;换行&lt;br/&gt;&quot;);  //http://localhost:4889/javascriptTest.html?id=1&amp;name=张三 如果路径是这样，则输出  ?id=1&amp;name=%E5%BC%A0%E4%B8%89
-document.write(location.hash);                  //http: //localhost:4889/javascriptTest.html#kk=你好?id=1&amp;name=张三 如果路径是这样，则输出  #kk=你好?id=1&amp;name=张三
-</code></pre>
-<h3 id="载入新文档">载入新文档</h3>
-<pre><code class="language-javascript">location.reload()　　               // 重新加载页面
-location.replace()　                // 本窗口载入新文档
-location.assign()　                 // 本窗口载入新文档
-location = &quot;http://www.baidu.com&quot; 　// 跳转到指定网址
-location = &quot;search.html&quot;　　　　　　 // 相对路径跳转
-location = &quot;#top&quot;　　　　　　        // 跳转到页面顶部
-</code></pre>
-<h3 id="浏览历史">浏览历史</h3>
-<ul>
-<li><code>history</code> 对象的 <code>back()</code> 与 <code>forward()</code>：与浏览器的“后退”，“前进”功能一样。</li>
-<li><code>history.go(-2);</code> 后退两个历史记录。</li>
-</ul>
-<h3 id="浏览器和屏幕信息">浏览器和屏幕信息</h3>
-<pre><code class="language-javascript">navigator.appName 　　// Web 浏览器全称
-navigator.appVersion　// Web 浏览器厂商和版本的详细字符串
-navigator.userAgent 　// 客户端绝大部分信息
-navigator.platform　　// 浏览器运行所在的操作系统
-</code></pre>
-<pre><code class="language-javascript">document.write(navigator.userAgent + &quot;&lt;br/&gt;&quot;); // Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11
-document.write(navigator.appName + &quot;&lt;br/&gt;&quot;);   // Netscape
-document.write(navigator.appVersion + &quot;&lt;br/&gt;&quot;); // 5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) document.write(navigator.platform);             //Win32
-</code></pre>
-<h3 id="窗口的关系">窗口的关系</h3>
-<ul>
-<li><code>parent == self</code>：只有顶级窗口才返回 <code>true</code>；</li>
-<li><code>parent</code> 和 <code>top</code> 属性允许脚本引用它的窗体的祖先，通常窗体是通过元素创建的，可以用来获取顶级窗口。</li>
-</ul>
-<h1 id="event-事件对象">event 事件对象</h1>
-<p>最有用的两个操作：阻止事件冒泡。有时 <code>return false;</code> 不管用，这个或许就管用了。</p>
-<pre><code class="language-javascript">// IE：
-window.event.cancelBubble = true;//停止冒泡
-window.event.returnValue = false;//阻止事件的默认行为
-
-// Firefox：
-event.preventDefault();  // 取消事件的默认行为  
-event.stopPropagation(); // 阻止事件的传播
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[KeyCode 对照表]]></title>
-        <id>https://faded.auspicious.space/post/keycode-map/</id>
-        <link href="https://faded.auspicious.space/post/keycode-map/">
-        </link>
-        <updated>2020-04-24T04:51:17.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="http://www.t086.com/article/4315">Keycode对照表</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="http://www.t086.com/article/4315">Keycode对照表</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="字母和数字键的键码值keycode">字母和数字键的键码值(keyCode)</h1>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">A</td>
-<td style="text-align:center">65</td>
-<td style="text-align:center">J</td>
-<td style="text-align:center">74</td>
-<td style="text-align:center">S</td>
-<td style="text-align:center">83</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">49</td>
-</tr>
-<tr>
-<td style="text-align:center">B</td>
-<td style="text-align:center">66</td>
-<td style="text-align:center">K</td>
-<td style="text-align:center">75</td>
-<td style="text-align:center">T</td>
-<td style="text-align:center">84</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">50</td>
-</tr>
-<tr>
-<td style="text-align:center">C</td>
-<td style="text-align:center">67</td>
-<td style="text-align:center">L</td>
-<td style="text-align:center">76</td>
-<td style="text-align:center">U</td>
-<td style="text-align:center">85</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">51</td>
-</tr>
-<tr>
-<td style="text-align:center">D</td>
-<td style="text-align:center">68</td>
-<td style="text-align:center">M</td>
-<td style="text-align:center">77</td>
-<td style="text-align:center">V</td>
-<td style="text-align:center">86</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">52</td>
-</tr>
-<tr>
-<td style="text-align:center">E</td>
-<td style="text-align:center">69</td>
-<td style="text-align:center">N</td>
-<td style="text-align:center">78</td>
-<td style="text-align:center">W</td>
-<td style="text-align:center">87</td>
-<td style="text-align:center">5</td>
-<td style="text-align:center">53</td>
-</tr>
-<tr>
-<td style="text-align:center">F</td>
-<td style="text-align:center">70</td>
-<td style="text-align:center">O</td>
-<td style="text-align:center">79</td>
-<td style="text-align:center">X</td>
-<td style="text-align:center">88</td>
-<td style="text-align:center">6</td>
-<td style="text-align:center">54</td>
-</tr>
-<tr>
-<td style="text-align:center">G</td>
-<td style="text-align:center">71</td>
-<td style="text-align:center">P</td>
-<td style="text-align:center">80</td>
-<td style="text-align:center">Y</td>
-<td style="text-align:center">89</td>
-<td style="text-align:center">7</td>
-<td style="text-align:center">55</td>
-</tr>
-<tr>
-<td style="text-align:center">H</td>
-<td style="text-align:center">72</td>
-<td style="text-align:center">Q</td>
-<td style="text-align:center">81</td>
-<td style="text-align:center">Z</td>
-<td style="text-align:center">90</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">56</td>
-</tr>
-<tr>
-<td style="text-align:center">I</td>
-<td style="text-align:center">73</td>
-<td style="text-align:center">R</td>
-<td style="text-align:center">82</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">48</td>
-<td style="text-align:center">9</td>
-<td style="text-align:center">57</td>
-</tr>
-</tbody>
-</table>
-<h1 id="数字键盘上的键的键码值keycode">数字键盘上的键的键码值(keyCode)</h1>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">0</td>
-<td style="text-align:center">96</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">104</td>
-</tr>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">97</td>
-<td style="text-align:center">9</td>
-<td style="text-align:center">105</td>
-</tr>
-<tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">98</td>
-<td style="text-align:center">*</td>
-<td style="text-align:center">106</td>
-</tr>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">99</td>
-<td style="text-align:center">+</td>
-<td style="text-align:center">107</td>
-</tr>
-<tr>
-<td style="text-align:center">4</td>
-<td style="text-align:center">100</td>
-<td style="text-align:center">Enter</td>
-<td style="text-align:center">108</td>
-</tr>
-<tr>
-<td style="text-align:center">5</td>
-<td style="text-align:center">101</td>
-<td style="text-align:center">-</td>
-<td style="text-align:center">109</td>
-</tr>
-<tr>
-<td style="text-align:center">6</td>
-<td style="text-align:center">102</td>
-<td style="text-align:center">.</td>
-<td style="text-align:center">110</td>
-</tr>
-<tr>
-<td style="text-align:center">7</td>
-<td style="text-align:center">103</td>
-<td style="text-align:center">/</td>
-<td style="text-align:center">111</td>
-</tr>
-</tbody>
-</table>
-<h1 id="功能键键码表keycode">功能键键码表(keyCode)</h1>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">F1</td>
-<td style="text-align:center">112</td>
-<td style="text-align:center">F7</td>
-<td style="text-align:center">118</td>
-</tr>
-<tr>
-<td style="text-align:center">F2</td>
-<td style="text-align:center">113</td>
-<td style="text-align:center">F8</td>
-<td style="text-align:center">119</td>
-</tr>
-<tr>
-<td style="text-align:center">F3</td>
-<td style="text-align:center">114</td>
-<td style="text-align:center">F9</td>
-<td style="text-align:center">120</td>
-</tr>
-<tr>
-<td style="text-align:center">F4</td>
-<td style="text-align:center">115</td>
-<td style="text-align:center">F10</td>
-<td style="text-align:center">121</td>
-</tr>
-<tr>
-<td style="text-align:center">F5</td>
-<td style="text-align:center">116</td>
-<td style="text-align:center">F11</td>
-<td style="text-align:center">122</td>
-</tr>
-<tr>
-<td style="text-align:center">F6</td>
-<td style="text-align:center">117</td>
-<td style="text-align:center">F12</td>
-<td style="text-align:center">123</td>
-</tr>
-</tbody>
-</table>
-<h1 id="控制键键码表keycode">控制键键码表(keyCode)</h1>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">BackSpace</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">Esc</td>
-<td style="text-align:center">27</td>
-<td style="text-align:center">Right Arrow</td>
-<td style="text-align:center">39</td>
-<td style="text-align:center">-_</td>
-<td style="text-align:center">189</td>
-</tr>
-<tr>
-<td style="text-align:center">Tab</td>
-<td style="text-align:center">9</td>
-<td style="text-align:center">Spacebar</td>
-<td style="text-align:center">32</td>
-<td style="text-align:center">Dw Arrow</td>
-<td style="text-align:center">40</td>
-<td style="text-align:center">.&gt;</td>
-<td style="text-align:center">190</td>
-</tr>
-<tr>
-<td style="text-align:center">Clear</td>
-<td style="text-align:center">12</td>
-<td style="text-align:center">Page Up</td>
-<td style="text-align:center">33</td>
-<td style="text-align:center">Insert</td>
-<td style="text-align:center">45</td>
-<td style="text-align:center">/?</td>
-<td style="text-align:center">191</td>
-</tr>
-<tr>
-<td style="text-align:center">Enter</td>
-<td style="text-align:center">13</td>
-<td style="text-align:center">Page Down</td>
-<td style="text-align:center">34</td>
-<td style="text-align:center">Delete</td>
-<td style="text-align:center">46</td>
-<td style="text-align:center">`~</td>
-<td style="text-align:center">192</td>
-</tr>
-<tr>
-<td style="text-align:center">Shift</td>
-<td style="text-align:center">16</td>
-<td style="text-align:center">End</td>
-<td style="text-align:center">35</td>
-<td style="text-align:center">Num Lock</td>
-<td style="text-align:center">144</td>
-<td style="text-align:center">[{</td>
-<td style="text-align:center">219</td>
-</tr>
-<tr>
-<td style="text-align:center">Control</td>
-<td style="text-align:center">17</td>
-<td style="text-align:center">Home</td>
-<td style="text-align:center">36</td>
-<td style="text-align:center">;:</td>
-<td style="text-align:center">186</td>
-<td style="text-align:center">|</td>
-<td style="text-align:center">220</td>
-</tr>
-<tr>
-<td style="text-align:center">Alt</td>
-<td style="text-align:center">18</td>
-<td style="text-align:center">Left Arrow</td>
-<td style="text-align:center">37</td>
-<td style="text-align:center">=+</td>
-<td style="text-align:center">187</td>
-<td style="text-align:center">]}</td>
-<td style="text-align:center">221</td>
-</tr>
-<tr>
-<td style="text-align:center">Cape Lock</td>
-<td style="text-align:center">20</td>
-<td style="text-align:center">Up Arrow</td>
-<td style="text-align:center">38</td>
-<td style="text-align:center">,&lt;</td>
-<td style="text-align:center">188</td>
-<td style="text-align:center">'&quot;</td>
-<td style="text-align:center">222</td>
-</tr>
-</tbody>
-</table>
-<h1 id="多媒体键码值keycode">多媒体键码值(keyCode)</h1>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">按键</th>
-<th style="text-align:center">键码</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">音量加</td>
-<td style="text-align:center">175</td>
-</tr>
-<tr>
-<td style="text-align:center">音量减</td>
-<td style="text-align:center">174</td>
-</tr>
-<tr>
-<td style="text-align:center">停止</td>
-<td style="text-align:center">179</td>
-</tr>
-<tr>
-<td style="text-align:center">静音</td>
-<td style="text-align:center">173</td>
-</tr>
-<tr>
-<td style="text-align:center">浏览器</td>
-<td style="text-align:center">172</td>
-</tr>
-<tr>
-<td style="text-align:center">邮件</td>
-<td style="text-align:center">180</td>
-</tr>
-<tr>
-<td style="text-align:center">搜索</td>
-<td style="text-align:center">170</td>
-</tr>
-<tr>
-<td style="text-align:center">收藏</td>
-<td style="text-align:center">171</td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[TCP 状态机]]></title>
-        <id>https://faded.auspicious.space/post/tcp-state-machine/</id>
-        <link href="https://faded.auspicious.space/post/tcp-state-machine/">
-        </link>
-        <updated>2020-04-24T04:33:45.000Z</updated>
-        <summary type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/3c7a0771b67e">TCP状态机</a></p>
-</blockquote>
-]]></summary>
-        <content type="html"><![CDATA[<blockquote>
-<p><a href="https://www.jianshu.com/p/3c7a0771b67e">TCP状态机</a></p>
-</blockquote>
-<!-- more -->
-<h1 id="前言">前言</h1>
-<p>本文将会首先介绍 TCP 的各个状态，然后描述 TCP 三次握手和四次挥手时的状态变化，最后重点介绍 <code>TIME_WAIT</code> 状态。</p>
-<h1 id="tcp-连接状态">TCP 连接状态</h1>
-<p>一个 TCP 连接在它的生命周期内会有不同的状态。</p>
-<p>下图说明了 TCP 连接可能会有的状态，以及基于事件的状态转换。事件中有的是应用程序的操作，有的是接收到了网络发过来的请求。<br>
-<img src="https://faded.auspicious.space/post-images/1587702959414.png" alt="" loading="lazy"></p>
-<p>TCP状态及其描述如下表：</p>
-<table>
-<thead>
-<tr>
-<th>状态</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LISTEN</td>
-<td>等待来自远程 TCP 应用程序的请求</td>
-</tr>
-<tr>
-<td>SYN_SENT</td>
-<td>发送连接请求后等待来自远程端点的确认。TCP 第一次握手后客户端所处的状态</td>
-</tr>
-<tr>
-<td>SYN-RECEIVED</td>
-<td>该端点已经接收到连接请求并发送确认。该端点正在等待最终确认。TCP 第二次握手后服务端所处的状态</td>
-</tr>
-<tr>
-<td>ESTABLISHED</td>
-<td>代表连接已经建立起来了。这是连接数据传输阶段的正常状态</td>
-</tr>
-<tr>
-<td>FIN_WAIT_1</td>
-<td>等待来自远程 TCP 的终止连接请求或终止请求的确认</td>
-</tr>
-<tr>
-<td>FIN_WAIT_2</td>
-<td>在此端点发送终止连接请求后，等待来自远程 TCP 的连接终止请求</td>
-</tr>
-<tr>
-<td>CLOSE_WAIT</td>
-<td>该端点已经收到来自远程端点的关闭请求，此 TCP 正在等待本地应用程序的连接终止请求</td>
-</tr>
-<tr>
-<td>CLOSING</td>
-<td>等待来自远程 TCP 的连接终止请求确认</td>
-</tr>
-<tr>
-<td>LAST_ACK</td>
-<td>等待先前发送到远程 TCP 的连接终止请求的确认</td>
-</tr>
-<tr>
-<td>TIME_WAIT</td>
-<td>等待足够的时间来确保远程  TCP 接收到其连接终止请求的确认</td>
-</tr>
-</tbody>
-</table>
-<h1 id="tcp三次握手">TCP三次握手</h1>
-<p>当一个 TCP 连接建立时，发生了以下事情：</p>
-<ol>
-<li>服务端必须准备接收传入的连接。这通常通过调用 <code>socket</code>，<code>bind</code> 和 <code>listen</code> 来完成，称为被动打开。</li>
-<li>客户端通过调用 <code>connect</code> 方法来发起一个主动的打开。客户端 TCP 会发送一个“同步”（<code>SYN</code>）段，它告诉服务器客户端在连接上发送的数据的初始序列号。通常情况下，<code>SYN</code> 没有发送数据，它只包含一个 IP 头，TCP 头和可能的 TCP 选项。</li>
-<li>服务器必须确认（<code>ACK</code>）客户端的 <code>SYN</code>，并且服务器还必须发送自己的 <code>SYN</code>，其中包含服务器将在连接上发送的数据的初始序列号。</li>
-<li>客户端必须确认服务器的 <code>SYN</code>。</li>
-</ol>
-<p>下图显示了 TCP 三次握手的过程，以及客户端和服务端状态的变化。</p>
-<figure data-type="image" tabindex="1"><img src="https://faded.auspicious.space/post-images/1587703398483.png" alt="" loading="lazy"></figure>
-<h1 id="tcp四次挥手">TCP四次挥手</h1>
-<p>一个 TCP 连接需要四步断开：</p>
-<ol>
-<li>一个应用程序首先执行 <code>close</code>，发送 <code>FIN</code> 段，这个操作被称为主动关闭，这意味着这一端完成数据的发送。</li>
-<li>执行 <code>FIN</code> 的另一端执行被动关闭，该端发送 <code>ACK</code>，确认该 <code>FIN</code>。</li>
-<li>被动关闭的一端执行 <code>close</code>，向主动关闭的一方发送 <code>FIN</code>。</li>
-<li>主动关闭的一方确认收到的 <code>FIN</code>。</li>
-</ol>
-<p>下图显示了一次典型的 TCP 四次挥手的过程，以及主动关闭方和被动关闭方的状态变化。在图中是客户端主动断开了连接，这里只是举个例子，服务端一样可以主动断开连接。<br>
-<img src="https://faded.auspicious.space/post-images/1587703504332.png" alt="" loading="lazy"></p>
-<h1 id="time_wait状态">TIME_WAIT状态</h1>
-<p><code>TIME_WAIT</code> 状态应该是最让人疑惑的一个状态了。在上图中可以看到，执行主动断开的节点最后会进入这个状态，该节点会在此状态保存 2 倍的 MSL（最大段生存期）。</p>
-<p>TCP 的每个实现都必须为 MSL 选择一个值。RFC 1122 推荐的值为两分钟，伯克利派的实现使用 30 秒。这也就是说 <code>TIME_WAIT</code> 状态会维持 1 到 4 分钟。MSL 是任何 IP 数据报可以在网络中生存的最长时间。这个时间是有限制的，因为每个数据报都包含一个 8 位的跳数限制，最大值是 255。虽然这是一个跳数限制而不是一个真正的时间限制，但是根据这个限制来假设数据报的最长生命周期依然是有意义的。</p>
-<p>网络中数据报丢失的原因通常是路由异常。一旦路由崩溃或者两个路由之间的链路断开，路由协议需要几秒或几分钟才能稳定，并找到一条备用路径。在这段时间内，可能发生路由回路。同时假设丢失是一个 TCP 数据报，则发生 TCP 超时，并且重新发送分组，重传的分组通过一些备用路径达到最终目的地。但是一段时间后（该时间小于 MSL），路由循环被更正，在循环中丢失的数据报被发送到最终目的地。这个原始的数据报被称为丢失的副本或漫游副本。TCP 协议必须处理这些数据报。</p>
-<p>维持 <code>TIME_WAIT</code> 有两个原因：</p>
-<ol>
-<li>可靠地实现 TCP 的全双工连接终止。</li>
-<li>允许旧的重复数据段在网络中过期</li>
-</ol>
-<p>在四次挥手中，假设最后的 <code>ACK</code> 丢失了，被动关闭方会重发 <code>FIN</code>。主动关闭端必须维护状态，来允许被动关闭方重发最后的 <code>ACK</code>；如果它没有维护这个状态，将会对重发 <code>FIN</code> 返回 <code>RST</code>，被动关闭方会认为这是个错误。如果 TCP 正在执行彻底终止数据流的两个方向所需的所有工作（即全双工关闭），则必须正确处理这四个段中任何一个的丢失。所以执行主动关闭的一方必须在结束时保持 <code>TIME_WAIT</code> 状态：因为它可能必须重传最后的 <code>ACK</code>。</p>
-<p>现在来聊维持 <code>TIME_WAIT</code> 状态的第二个原因。假设在主机 12.106.32.254 的 1500 端口和 206.168.112.219 的 21 端口之间有一个 TCP 连接。此连接关闭后，在相通的地址和端口建立了另外一个连接。由于 IP 地址和端口相同，所以后一种连接被称为先前连接的“化身”。TCP 必须防止连接中的旧副本在稍后再次出现，并被误解为属于同一连接的新“化身”。为此，TCP 将不会启动当前处于 <code>TIME_WAIT</code> 状态的连接的新“化身”。由于 <code>TIME_WAIT</code> 状态的持续时间时两倍的 MSL，因此 TCP 允许一个方向的数据在 MSL 秒内丢失，也允许回复在一个 MSL 秒内丢失。通过强制执行此规则，可以保证当一个 TCP 连接成功建立时，来自先前连接的所有旧的副本在网络中已过期。</p>
 ]]></content>
     </entry>
 </feed>
